@@ -1,0 +1,78 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DBG DRIVER IO MOTOR SENSOR
+
+BO_ 1 EmptyMessage: 0 DBG
+
+BO_ 100 DriverHeartbeat: 1 DRIVER
+ SG_ Command : 0|8@1+ (1,0) [0|0] "" SENSOR,MOTOR
+
+BO_ 101 MotorCommand: 1 DRIVER
+ SG_ Steer : 0|4@1- (1,-5) [-5|5] "" MOTOR
+ SG_ Drive : 4|4@1+ (1,0) [0|9] "" MOTOR
+
+BO_ 400 MotorStatus: 3 MOTOR
+ SG_ WheelError : 0|1@1+ (1,0) [0|0] "" DRIVER,IO
+ SG_ SpeedKph : 8|16@1+ (0.001,0) [0|0] "km/h" DRIVER,IO
+
+BO_ 200 SensorSonars: 8 SENSOR
+ SG_ Mux M : 0|4@1+ (1,0) [0|0] "" DRIVER,IO
+ SG_ ErrCount : 4|12@1+ (1,0) [0|0] "" DRIVER,IO
+ SG_ Left m0 : 16|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+ SG_ Middle m0 : 28|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+ SG_ Right m0 : 40|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+ SG_ Rear m0 : 52|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+ SG_ NoFiltLeft m1 : 16|12@1+ (0.1,0) [0|0] "" DBG
+ SG_ NoFiltMiddle m1 : 28|12@1+ (0.1,0) [0|0] "" DBG
+ SG_ NoFiltRight m1 : 40|12@1+ (0.1,0) [0|0] "" DBG
+ SG_ NoFiltRear m1 : 52|12@1+ (0.1,0) [0|0] "" DBG
+
+BO_ 500 IODebug: 6 IO
+ SG_ TestUnsigned : 0|8@1+ (1,0) [0|0] "" DBG
+ SG_ TestEnum : 8|6@1+ (1,0) [0|0] "" DBG
+ SG_ TestSigned : 16|8@1- (1,0) [0|0] "" DBG
+ SG_ TestFloat : 24|8@1+ (0.5,0) [0|0] "" DBG
+ SG_ TestBoolEnum : 32|1@1+ (1,0) [0|0] "" DBG
+ SG_ TestScaledEnum : 40|2@1+ (2,0) [0|6] "" DBG
+
+EV_ BrakeEngaged: 0 [0|1] "" 0 10 DUMMY_NODE_VECTOR0 Vector__XXX;
+EV_ Torque: 1 [0|30000] "mNm" 500 16 DUMMY_NODE_VECTOR0 Vector__XXX;
+
+CM_ EV_ BrakeEngaged "Brake fully engaged";
+CM_ BU_ DRIVER "The driver controller driving the car";
+CM_ BU_ MOTOR "The motor controller of the car";
+CM_ BU_ SENSOR "The sensor controller of the car";
+CM_ BO_ 100 "Sync message used to synchronize the controllers";
+
+BA_DEF_ "BusType" STRING ;
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "None","Cyclic","OnEvent";
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 0;
+BA_DEF_ SG_  "FieldType" STRING ;
+BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
+BA_DEF_DEF_ "BusType" "CAN";
+BA_DEF_DEF_ "FieldType" "";
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_DEF_DEF_ "GenSigStartValue" 0;
+
+BA_ "GenMsgSendType" BO_ 1 0;
+BA_ "GenMsgSendType" BO_ 100 1;
+BA_ "GenMsgCycleTime" BO_ 100 1000;
+BA_ "GenMsgSendType" BO_ 101 1;
+BA_ "GenMsgCycleTime" BO_ 101 100;
+BA_ "GenMsgSendType" BO_ 200 1;
+BA_ "GenMsgCycleTime" BO_ 200 100;
+BA_ "GenMsgSendType" BO_ 400 1;
+BA_ "GenMsgCycleTime" BO_ 400 100;
+BA_ "GenMsgSendType" BO_ 500 2;
+BA_ "FieldType" SG_ 100 Command "Command";
+BA_ "FieldType" SG_ 500 TestEnum "TestEnum";
+BA_ "GenSigStartValue" SG_ 500 TestEnum 2;
+
+VAL_ 100 Command 2 "Reboot" 1 "Sync" 0 "None" ;
+VAL_ 500 TestEnum 2 "Two" 1 "One" ;
+VAL_ 500 TestScaledEnum 3 "Six" 2 "Four" 1 "Two" 0 "Zero" ;
+VAL_ 500 TestBoolEnum 1 "One" 0 "Zero" ;

@@ -1,0 +1,894 @@
+([]dbc.Def) (len=43) {
+ (*dbc.VersionDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:1:1,
+  Version: (string) ""
+ }),
+ (*dbc.NewSymbolsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:3:1,
+  Symbols: ([]dbc.Keyword) <nil>
+ }),
+ (*dbc.BitTimingDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:5:1,
+  BaudRate: (uint64) 0,
+  BTR1: (uint64) 0,
+  BTR2: (uint64) 0
+ }),
+ (*dbc.NodesDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:7:1,
+  NodeNames: ([]dbc.Identifier) (len=5) {
+   (dbc.Identifier) (len=3) "DBG",
+   (dbc.Identifier) (len=6) "DRIVER",
+   (dbc.Identifier) (len=2) "IO",
+   (dbc.Identifier) (len=5) "MOTOR",
+   (dbc.Identifier) (len=6) "SENSOR"
+  }
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:9:1,
+  MessageID: (dbc.MessageID) 1,
+  Name: (dbc.Identifier) (len=12) "EmptyMessage",
+  Size: (uint64) 0,
+  Transmitter: (dbc.Identifier) (len=3) "DBG",
+  Signals: ([]dbc.SignalDef) <nil>
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:11:1,
+  MessageID: (dbc.MessageID) 100,
+  Name: (dbc.Identifier) (len=15) "DriverHeartbeat",
+  Size: (uint64) 1,
+  Transmitter: (dbc.Identifier) (len=6) "DRIVER",
+  Signals: ([]dbc.SignalDef) (len=1) {
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:12:2,
+    Name: (dbc.Identifier) (len=7) "Command",
+    StartBit: (uint64) 0,
+    Size: (uint64) 8,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "SENSOR",
+     (dbc.Identifier) (len=5) "MOTOR"
+    }
+   }
+  }
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:14:1,
+  MessageID: (dbc.MessageID) 101,
+  Name: (dbc.Identifier) (len=12) "MotorCommand",
+  Size: (uint64) 1,
+  Transmitter: (dbc.Identifier) (len=6) "DRIVER",
+  Signals: ([]dbc.SignalDef) (len=2) {
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:15:2,
+    Name: (dbc.Identifier) (len=5) "Steer",
+    StartBit: (uint64) 0,
+    Size: (uint64) 4,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) true,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) -5,
+    Factor: (float64) 1,
+    Minimum: (float64) -5,
+    Maximum: (float64) 5,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=5) "MOTOR"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:16:2,
+    Name: (dbc.Identifier) (len=5) "Drive",
+    StartBit: (uint64) 4,
+    Size: (uint64) 4,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 9,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=5) "MOTOR"
+    }
+   }
+  }
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:18:1,
+  MessageID: (dbc.MessageID) 400,
+  Name: (dbc.Identifier) (len=11) "MotorStatus",
+  Size: (uint64) 3,
+  Transmitter: (dbc.Identifier) (len=5) "MOTOR",
+  Signals: ([]dbc.SignalDef) (len=2) {
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:19:2,
+    Name: (dbc.Identifier) (len=10) "WheelError",
+    StartBit: (uint64) 0,
+    Size: (uint64) 1,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:20:2,
+    Name: (dbc.Identifier) (len=8) "SpeedKph",
+    StartBit: (uint64) 8,
+    Size: (uint64) 16,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.001,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) (len=4) "km/h",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   }
+  }
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:22:1,
+  MessageID: (dbc.MessageID) 200,
+  Name: (dbc.Identifier) (len=12) "SensorSonars",
+  Size: (uint64) 8,
+  Transmitter: (dbc.Identifier) (len=6) "SENSOR",
+  Signals: ([]dbc.SignalDef) (len=10) {
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:23:2,
+    Name: (dbc.Identifier) (len=3) "Mux",
+    StartBit: (uint64) 0,
+    Size: (uint64) 4,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) true,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:24:2,
+    Name: (dbc.Identifier) (len=8) "ErrCount",
+    StartBit: (uint64) 4,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:25:2,
+    Name: (dbc.Identifier) (len=4) "Left",
+    StartBit: (uint64) 16,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:26:2,
+    Name: (dbc.Identifier) (len=6) "Middle",
+    StartBit: (uint64) 28,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:27:2,
+    Name: (dbc.Identifier) (len=5) "Right",
+    StartBit: (uint64) 40,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:28:2,
+    Name: (dbc.Identifier) (len=4) "Rear",
+    StartBit: (uint64) 52,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=2) {
+     (dbc.Identifier) (len=6) "DRIVER",
+     (dbc.Identifier) (len=2) "IO"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:29:2,
+    Name: (dbc.Identifier) (len=10) "NoFiltLeft",
+    StartBit: (uint64) 16,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 1,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:30:2,
+    Name: (dbc.Identifier) (len=12) "NoFiltMiddle",
+    StartBit: (uint64) 28,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 1,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:31:2,
+    Name: (dbc.Identifier) (len=11) "NoFiltRight",
+    StartBit: (uint64) 40,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 1,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:32:2,
+    Name: (dbc.Identifier) (len=10) "NoFiltRear",
+    StartBit: (uint64) 52,
+    Size: (uint64) 12,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) true,
+    MultiplexerSwitch: (uint64) 1,
+    Offset: (float64) 0,
+    Factor: (float64) 0.1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   }
+  }
+ }),
+ (*dbc.MessageDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:34:1,
+  MessageID: (dbc.MessageID) 500,
+  Name: (dbc.Identifier) (len=7) "IODebug",
+  Size: (uint64) 6,
+  Transmitter: (dbc.Identifier) (len=2) "IO",
+  Signals: ([]dbc.SignalDef) (len=6) {
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:35:2,
+    Name: (dbc.Identifier) (len=12) "TestUnsigned",
+    StartBit: (uint64) 0,
+    Size: (uint64) 8,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:36:2,
+    Name: (dbc.Identifier) (len=8) "TestEnum",
+    StartBit: (uint64) 8,
+    Size: (uint64) 6,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:37:2,
+    Name: (dbc.Identifier) (len=10) "TestSigned",
+    StartBit: (uint64) 16,
+    Size: (uint64) 8,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) true,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:38:2,
+    Name: (dbc.Identifier) (len=9) "TestFloat",
+    StartBit: (uint64) 24,
+    Size: (uint64) 8,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 0.5,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:39:2,
+    Name: (dbc.Identifier) (len=12) "TestBoolEnum",
+    StartBit: (uint64) 32,
+    Size: (uint64) 1,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 1,
+    Minimum: (float64) 0,
+    Maximum: (float64) 0,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   },
+   (dbc.SignalDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:40:2,
+    Name: (dbc.Identifier) (len=14) "TestScaledEnum",
+    StartBit: (uint64) 40,
+    Size: (uint64) 2,
+    IsBigEndian: (bool) false,
+    IsSigned: (bool) false,
+    IsMultiplexerSwitch: (bool) false,
+    IsMultiplexed: (bool) false,
+    MultiplexerSwitch: (uint64) 0,
+    Offset: (float64) 0,
+    Factor: (float64) 2,
+    Minimum: (float64) 0,
+    Maximum: (float64) 6,
+    Unit: (string) "",
+    Receivers: ([]dbc.Identifier) (len=1) {
+     (dbc.Identifier) (len=3) "DBG"
+    }
+   }
+  }
+ }),
+ (*dbc.EnvironmentVariableDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:42:1,
+  Name: (dbc.Identifier) (len=12) "BrakeEngaged",
+  Type: (dbc.EnvironmentVariableType) 0,
+  Minimum: (float64) 0,
+  Maximum: (float64) 1,
+  Unit: (string) "",
+  InitialValue: (float64) 0,
+  ID: (uint64) 10,
+  AccessType: (dbc.AccessType) (len=18) "DUMMY_NODE_VECTOR0",
+  AccessNodes: ([]dbc.Identifier) (len=1) {
+   (dbc.Identifier) (len=11) "Vector__XXX"
+  }
+ }),
+ (*dbc.EnvironmentVariableDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:43:1,
+  Name: (dbc.Identifier) (len=6) "Torque",
+  Type: (dbc.EnvironmentVariableType) 1,
+  Minimum: (float64) 0,
+  Maximum: (float64) 30000,
+  Unit: (string) (len=3) "mNm",
+  InitialValue: (float64) 500,
+  ID: (uint64) 16,
+  AccessType: (dbc.AccessType) (len=18) "DUMMY_NODE_VECTOR0",
+  AccessNodes: ([]dbc.Identifier) (len=1) {
+   (dbc.Identifier) (len=11) "Vector__XXX"
+  }
+ }),
+ (*dbc.CommentDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:45:1,
+  ObjectType: (dbc.ObjectType) (len=3) "EV_",
+  NodeName: (dbc.Identifier) "",
+  MessageID: (dbc.MessageID) 0,
+  SignalName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) (len=12) "BrakeEngaged",
+  Comment: (string) (len=19) "Brake fully engaged"
+ }),
+ (*dbc.CommentDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:46:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BU_",
+  NodeName: (dbc.Identifier) (len=6) "DRIVER",
+  MessageID: (dbc.MessageID) 0,
+  SignalName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  Comment: (string) (len=37) "The driver controller driving the car"
+ }),
+ (*dbc.CommentDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:47:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BU_",
+  NodeName: (dbc.Identifier) (len=5) "MOTOR",
+  MessageID: (dbc.MessageID) 0,
+  SignalName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  Comment: (string) (len=31) "The motor controller of the car"
+ }),
+ (*dbc.CommentDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:48:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BU_",
+  NodeName: (dbc.Identifier) (len=6) "SENSOR",
+  MessageID: (dbc.MessageID) 0,
+  SignalName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  Comment: (string) (len=32) "The sensor controller of the car"
+ }),
+ (*dbc.CommentDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:49:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  NodeName: (dbc.Identifier) "",
+  MessageID: (dbc.MessageID) 100,
+  SignalName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  Comment: (string) (len=48) "Sync message used to synchronize the controllers"
+ }),
+ (*dbc.AttributeDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:51:1,
+  ObjectType: (dbc.ObjectType) "",
+  Name: (dbc.Identifier) (len=7) "BusType",
+  Type: (dbc.AttributeValueType) (len=6) "STRING",
+  MinimumInt: (int64) 0,
+  MaximumInt: (int64) 0,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) <nil>
+ }),
+ (*dbc.AttributeDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:52:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  Name: (dbc.Identifier) (len=14) "GenMsgSendType",
+  Type: (dbc.AttributeValueType) (len=4) "ENUM",
+  MinimumInt: (int64) 0,
+  MaximumInt: (int64) 0,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) (len=3) {
+   (string) (len=4) "None",
+   (string) (len=6) "Cyclic",
+   (string) (len=7) "OnEvent"
+  }
+ }),
+ (*dbc.AttributeDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:53:1,
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  Name: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  Type: (dbc.AttributeValueType) (len=3) "INT",
+  MinimumInt: (int64) 0,
+  MaximumInt: (int64) 0,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) <nil>
+ }),
+ (*dbc.AttributeDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:54:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  Name: (dbc.Identifier) (len=9) "FieldType",
+  Type: (dbc.AttributeValueType) (len=6) "STRING",
+  MinimumInt: (int64) 0,
+  MaximumInt: (int64) 0,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) <nil>
+ }),
+ (*dbc.AttributeDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:55:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  Name: (dbc.Identifier) (len=16) "GenSigStartValue",
+  Type: (dbc.AttributeValueType) (len=3) "INT",
+  MinimumInt: (int64) 0,
+  MaximumInt: (int64) 10000,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) <nil>
+ }),
+ (*dbc.AttributeDefaultValueDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:56:1,
+  AttributeName: (dbc.Identifier) (len=7) "BusType",
+  DefaultIntValue: (int64) 0,
+  DefaultFloatValue: (float64) 0,
+  DefaultStringValue: (string) (len=3) "CAN"
+ }),
+ (*dbc.AttributeDefaultValueDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:57:1,
+  AttributeName: (dbc.Identifier) (len=9) "FieldType",
+  DefaultIntValue: (int64) 0,
+  DefaultFloatValue: (float64) 0,
+  DefaultStringValue: (string) ""
+ }),
+ (*dbc.AttributeDefaultValueDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:58:1,
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  DefaultIntValue: (int64) 0,
+  DefaultFloatValue: (float64) 0,
+  DefaultStringValue: (string) ""
+ }),
+ (*dbc.AttributeDefaultValueDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:59:1,
+  AttributeName: (dbc.Identifier) (len=16) "GenSigStartValue",
+  DefaultIntValue: (int64) 0,
+  DefaultFloatValue: (float64) 0,
+  DefaultStringValue: (string) ""
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:61:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 1,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=4) "None"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:62:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 100,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=6) "Cyclic"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:63:1,
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 100,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 1000,
+  FloatValue: (float64) 0,
+  StringValue: (string) ""
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:64:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 101,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=6) "Cyclic"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:65:1,
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 101,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 100,
+  FloatValue: (float64) 0,
+  StringValue: (string) ""
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:66:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 200,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=6) "Cyclic"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:67:1,
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 200,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 100,
+  FloatValue: (float64) 0,
+  StringValue: (string) ""
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:68:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 400,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=6) "Cyclic"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:69:1,
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 400,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 100,
+  FloatValue: (float64) 0,
+  StringValue: (string) ""
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:70:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=7) "OnEvent"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:71:1,
+  AttributeName: (dbc.Identifier) (len=9) "FieldType",
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 100,
+  SignalName: (dbc.Identifier) (len=7) "Command",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=7) "Command"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:72:1,
+  AttributeName: (dbc.Identifier) (len=9) "FieldType",
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=8) "TestEnum",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=8) "TestEnum"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:73:1,
+  AttributeName: (dbc.Identifier) (len=16) "GenSigStartValue",
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=8) "TestEnum",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 2,
+  FloatValue: (float64) 0,
+  StringValue: (string) ""
+ }),
+ (*dbc.ValueDescriptionsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 100,
+  SignalName: (dbc.Identifier) (len=7) "Command",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=3) {
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:18,
+    Value: (float64) 2,
+    Description: (string) (len=6) "Reboot"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:29,
+    Value: (float64) 1,
+    Description: (string) (len=4) "Sync"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:38,
+    Value: (float64) 0,
+    Description: (string) (len=4) "None"
+   }
+  }
+ }),
+ (*dbc.ValueDescriptionsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=8) "TestEnum",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=2) {
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:19,
+    Value: (float64) 2,
+    Description: (string) (len=3) "Two"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:27,
+    Value: (float64) 1,
+    Description: (string) (len=3) "One"
+   }
+  }
+ }),
+ (*dbc.ValueDescriptionsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=14) "TestScaledEnum",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=4) {
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:25,
+    Value: (float64) 3,
+    Description: (string) (len=3) "Six"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:33,
+    Value: (float64) 2,
+    Description: (string) (len=4) "Four"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:42,
+    Value: (float64) 1,
+    Description: (string) (len=3) "Two"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:50,
+    Value: (float64) 0,
+    Description: (string) (len=4) "Zero"
+   }
+  }
+ }),
+ (*dbc.ValueDescriptionsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=12) "TestBoolEnum",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=2) {
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:23,
+    Value: (float64) 1,
+    Description: (string) (len=3) "One"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:31,
+    Value: (float64) 0,
+    Description: (string) (len=4) "Zero"
+   }
+  }
+ })
+}
