@@ -91,6 +91,10 @@ func TestRunMessageTransmitter_TransmitEventMessage(t *testing.T) {
 	g.Go(func() error {
 		return canrunner.RunMessageTransmitter(ctx, tx, node, msg, clock)
 	})
+	// then message should be queried for if it has cyclic transmission enabled
+	node.EXPECT().Lock()
+	msg.EXPECT().IsCyclicTransmissionEnabled()
+	node.EXPECT().Unlock()
 	// then the node should be locked
 	node.EXPECT().Lock()
 	// and the time should be queried

@@ -152,6 +152,16 @@ func RunMessageTransmitter(
 		cyclicTransmissionTicker.Stop()
 		cyclicTransmissionTicker = nil
 	}
+	setCyclicTransmission := func() {
+		l.Lock()
+		isCyclicTransmissionEnabled := m.IsCyclicTransmissionEnabled()
+		l.Unlock()
+		if isCyclicTransmissionEnabled {
+			enableCyclicTransmission()
+		} else {
+			disableCyclicTransmission()
+		}
+	}
 	transmit := func() error {
 		l.Lock()
 		hook := m.BeforeTransmitHook()
@@ -173,20 +183,14 @@ func RunMessageTransmitter(
 	}
 	ctxDone := ctx.Done()
 	transmitEventChan := m.TransmitEventChan()
+	setCyclicTransmission()
 	wakeUpChan := m.WakeUpChan()
 	for {
 		select {
 		case <-ctxDone:
 			return nil
 		case <-wakeUpChan:
-			l.Lock()
-			isCyclicTransmissionEnabled := m.IsCyclicTransmissionEnabled()
-			l.Unlock()
-			if isCyclicTransmissionEnabled {
-				enableCyclicTransmission()
-			} else {
-				disableCyclicTransmission()
-			}
+			setCyclicTransmission()
 		case <-transmitEventChan:
 			if err := transmit(); err != nil {
 				return err
