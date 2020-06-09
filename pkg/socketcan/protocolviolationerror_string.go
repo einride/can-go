@@ -35,7 +35,7 @@ var (
 
 func (i ProtocolViolationError) String() string {
 	switch {
-	case 0 <= i && i <= 2:
+	case i <= 2:
 		return _ProtocolViolationError_name_0[_ProtocolViolationError_index_0[i]:_ProtocolViolationError_index_0[i+1]]
 	case i == 4:
 		return _ProtocolViolationError_name_1

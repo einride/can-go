@@ -2,7 +2,7 @@ package socketcan
 
 type TransceiverError uint8
 
-//go:generate gobin -m -run golang.org/x/tools/cmd/stringer -type TransceiverError -trimprefix TransceiverError
+//go:generate stringer -type TransceiverError -trimprefix TransceiverError
 
 const (
 	TransceiverErrorUnspecified     TransceiverError = 0x00

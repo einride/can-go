@@ -2,7 +2,7 @@ package socketcan
 
 type ControllerError uint8
 
-//go:generate gobin -m -run golang.org/x/tools/cmd/stringer -type ControllerError -trimprefix ControllerError
+//go:generate stringer -type ControllerError -trimprefix ControllerError
 
 const (
 	ControllerErrorUnspecified      ControllerError = 0x00
