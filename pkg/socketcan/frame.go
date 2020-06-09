@@ -27,7 +27,7 @@ const (
 	indexOfData = indexOfPadding + lengthOfPadding
 )
 
-// error frame flag indices
+// error frame flag indices.
 const (
 	// indexOfLostArbitrationBit is the byte index of the lost arbitration bit in an error frame.
 	indexOfLostArbitrationBit = 0
@@ -45,10 +45,9 @@ const (
 	LengthOfControllerSpecificInformation = 3
 )
 
-// compile-time assertion that lengthOfFrame = indexOfData + maxLengthOfData
 var _ [lengthOfFrame]struct{} = [indexOfData + maxLengthOfData]struct{}{}
 
-// id flags (copied from x/sys/unix)
+// id flags (copied from x/sys/unix).
 const (
 	idFlagExtended = 0x80000000
 	idFlagError    = 0x20000000

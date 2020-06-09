@@ -30,8 +30,7 @@ type fileConn struct {
 	ra net.Addr
 }
 
-// ensure net.Conn interface
-var _ net.Conn = &fileConn{}
+var _ = net.Conn(&fileConn{})
 
 func (c *fileConn) Read(b []byte) (int, error) {
 	n, err := c.f.Read(b)

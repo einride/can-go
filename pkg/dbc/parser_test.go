@@ -23,7 +23,7 @@ func TestParse_ExampleDBC(t *testing.T) {
 	p := NewParser(inputFile, data)
 	require.NoError(t, p.Parse())
 	if shouldUpdateGoldenFiles() {
-		require.NoError(t, ioutil.WriteFile(goldenFile, []byte(dump(p.Defs())), 0644))
+		require.NoError(t, ioutil.WriteFile(goldenFile, []byte(dump(p.Defs())), 0600))
 	}
 	goldenFileData, err := ioutil.ReadFile(goldenFile)
 	require.NoError(t, err)

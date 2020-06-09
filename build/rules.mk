@@ -25,4 +25,3 @@ $(error Coreutils not installed. OSX users run: brew install coreutils)
 endif
 
 include $(BUILD_DIR)/git.mk
-include $(BUILD_DIR)/go.mk

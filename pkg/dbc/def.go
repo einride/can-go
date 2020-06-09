@@ -306,7 +306,7 @@ func (d *SignalDef) parseFrom(p *Parser) {
 	if p.peekToken().typ != ':' {
 		tok := p.nextToken()
 		if tok.typ != scanner.Ident {
-			p.fail(tok.pos, "expected ident")
+			p.failf(tok.pos, "expected ident")
 		}
 		switch {
 		case tok.txt == "M":
@@ -315,11 +315,11 @@ func (d *SignalDef) parseFrom(p *Parser) {
 			d.IsMultiplexed = true
 			i, err := strconv.Atoi(tok.txt[1:])
 			if err != nil || i < 0 {
-				p.fail(tok.pos, "invalid multiplexer value")
+				p.failf(tok.pos, "invalid multiplexer value")
 			}
 			d.MultiplexerSwitch = uint64(i)
 		default:
-			p.fail(tok.pos, "expected multiplexer")
+			p.failf(tok.pos, "expected multiplexer")
 		}
 	}
 	p.token(':')
