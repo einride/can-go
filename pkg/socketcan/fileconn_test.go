@@ -9,7 +9,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"go.einride.tech/can/internal/mocks/mocksocketcan"
+	"go.einride.tech/can/internal/gen/mock/mocksocketcan"
 )
 
 func TestUnwrapPathError(t *testing.T) {

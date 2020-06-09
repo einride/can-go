@@ -20,19 +20,19 @@ clean:
 
 .PHONY: mockgen-generate
 mockgen-generate: \
-	internal/mocks/mockcanrunner/mocks.go \
-	internal/mocks/mockclock/mocks.go \
-	internal/mocks/mocksocketcan/mocks.go
+	internal/gen/mock/mockcanrunner/mocks.go \
+	internal/gen/mock/mockclock/mocks.go \
+	internal/gen/mock/mocksocketcan/mocks.go
 
-internal/mocks/mockcanrunner/mocks.go: pkg/canrunner/run.go $(mockgen)
+internal/gen/mock/mockcanrunner/mocks.go: pkg/canrunner/run.go $(mockgen)
 	$(mockgen) -destination $@ -package mockcanrunner go.einride.tech/can/pkg/canrunner \
 		Node,TransmittedMessage,ReceivedMessage,FrameTransmitter,FrameReceiver
 
-internal/mocks/mockclock/mocks.go: internal/clock/clock.go $(mockgen)
+internal/gen/mock/mockclock/mocks.go: internal/clock/clock.go $(mockgen)
 	$(mockgen) -destination $@ -package mockclock go.einride.tech/can/internal/clock \
 		Clock,Ticker
 
-internal/mocks/mocksocketcan/mocks.go: pkg/socketcan/fileconn.go $(mockgen)
+internal/gen/mock/mocksocketcan/mocks.go: pkg/socketcan/fileconn.go $(mockgen)
 	$(mockgen) -destination $@ -package mocksocketcan -source $<
 
 .PHONY: stringer-generate
