@@ -8,7 +8,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fatih/color v1.7.0
 	github.com/golang/mock v1.4.4-0.20200519145626-92f53b0a566c
-	github.com/golang/protobuf v1.3.2
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.9 // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect

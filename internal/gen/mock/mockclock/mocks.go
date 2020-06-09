@@ -6,7 +6,6 @@ package mockclock
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	clock "go.einride.tech/can/internal/clock"
 	reflect "reflect"
 	time "time"
@@ -75,20 +74,6 @@ func (m *MockClock) Now() time.Time {
 func (mr *MockClockMockRecorder) Now() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Now", reflect.TypeOf((*MockClock)(nil).Now))
-}
-
-// NowProto mocks base method.
-func (m *MockClock) NowProto() *timestamp.Timestamp {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NowProto")
-	ret0, _ := ret[0].(*timestamp.Timestamp)
-	return ret0
-}
-
-// NowProto indicates an expected call of NowProto.
-func (mr *MockClockMockRecorder) NowProto() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NowProto", reflect.TypeOf((*MockClock)(nil).NowProto))
 }
 
 // MockTicker is a mock of Ticker interface.

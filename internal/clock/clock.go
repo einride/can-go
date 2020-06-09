@@ -3,8 +3,6 @@ package clock
 
 import (
 	"time"
-
-	"github.com/golang/protobuf/ptypes/timestamp"
 )
 
 // Clock provides capabilities from the time standard library package.
@@ -17,9 +15,6 @@ type Clock interface {
 
 	// Now returns the current local time.
 	Now() time.Time
-
-	// NowProto returns a new Protobuf timestamp representing the current local time.
-	NowProto() *timestamp.Timestamp
 }
 
 // Ticker wraps the time.Ticker class.
