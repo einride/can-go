@@ -2,7 +2,7 @@ package socketcan
 
 type ErrorClass uint32
 
-//go:generate gobin -m -run golang.org/x/tools/cmd/stringer -type ErrorClass -trimprefix ErrorClass
+//go:generate stringer -type ErrorClass -trimprefix ErrorClass
 
 const (
 	ErrorClassTxTimeout         ErrorClass = 0x00000001

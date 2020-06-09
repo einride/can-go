@@ -5,7 +5,7 @@ import "strings"
 // SendType represents the send type of a message.
 type SendType uint8
 
-//go:generate gobin -m -run golang.org/x/tools/cmd/stringer -type SendType -trimprefix SendType
+//go:generate stringer -type SendType -trimprefix SendType
 
 const (
 	// SendTypeNone means the send type is unknown or not specified.

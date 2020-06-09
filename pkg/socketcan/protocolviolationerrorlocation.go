@@ -2,8 +2,7 @@ package socketcan
 
 type ProtocolViolationErrorLocation uint8
 
-// nolint: lll
-//go:generate gobin -m -run golang.org/x/tools/cmd/stringer -type ProtocolViolationErrorLocation -trimprefix ProtocolViolationErrorLocation
+//go:generate stringer -type ProtocolViolationErrorLocation -trimprefix ProtocolViolationErrorLocation
 
 const (
 	ProtocolViolationErrorLocationUnspecified    ProtocolViolationErrorLocation = 0x00
