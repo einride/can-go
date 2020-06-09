@@ -1,8 +1,0 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.13-stretch-node
-    steps:
-      - checkout
-      - run: make
