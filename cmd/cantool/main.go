@@ -144,7 +144,7 @@ func analyzers() []*analysis.Analyzer {
 	}
 }
 
-func genGo(inputFile string, outputFile string) error {
+func genGo(inputFile, outputFile string) error {
 	if err := os.MkdirAll(filepath.Dir(outputFile), 0755); err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func genGo(inputFile string, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(outputFile, output, 0644); err != nil {
+	if err := ioutil.WriteFile(outputFile, output, 0600); err != nil {
 		return err
 	}
 	fmt.Println("wrote:", outputFile)
@@ -190,7 +190,7 @@ func resolveFileOrDirectory(fileOrDirectory string) ([]string, error) {
 	return files, nil
 }
 
-func printError(source []byte, pos scanner.Position, msg string, name string) {
+func printError(source []byte, pos scanner.Position, msg, name string) {
 	fmt.Printf("\n%s: %s (%s)\n", pos, color.RedString("%s", msg), name)
 	fmt.Printf("%s\n", getSourceLine(source, pos))
 	fmt.Printf("%s\n", caretAtPosition(pos))

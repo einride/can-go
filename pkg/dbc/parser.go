@@ -39,7 +39,7 @@ func NewParser(filename string, data []byte) *Parser {
 	p.sc.Whitespace = defaultWhitespace
 	p.sc.Filename = filename
 	p.sc.Error = func(sc *scanner.Scanner, msg string) {
-		p.fail(sc.Pos(), msg)
+		p.failf(sc.Pos(), msg)
 	}
 	return p
 }
@@ -111,7 +111,7 @@ func (p *Parser) Parse() (err Error) {
 	return nil
 }
 
-func (p *Parser) fail(pos scanner.Position, format string, a ...interface{}) {
+func (p *Parser) failf(pos scanner.Position, format string, a ...interface{}) {
 	panic(&parseError{pos: pos, reason: fmt.Sprintf(format, a...)})
 }
 
@@ -130,7 +130,7 @@ func (p *Parser) useWhitespace(whitespace uint64) {
 func (p *Parser) nextRune() rune {
 	if p.hasLookahead {
 		if utf8.RuneCountInString(p.lookahead.txt) > 1 {
-			p.fail(p.lookahead.pos, "cannot get next rune when lookahead contains a token")
+			p.failf(p.lookahead.pos, "cannot get next rune when lookahead contains a token")
 		}
 		p.hasLookahead = false
 		r, _ := utf8.DecodeRuneInString(p.lookahead.txt)
@@ -142,7 +142,7 @@ func (p *Parser) nextRune() rune {
 func (p *Parser) peekRune() rune {
 	if p.hasLookahead {
 		if utf8.RuneCountInString(p.lookahead.txt) > 1 {
-			p.fail(p.lookahead.pos, "cannot peek next rune when lookahead contains a token")
+			p.failf(p.lookahead.pos, "cannot peek next rune when lookahead contains a token")
 		}
 		r, _ := utf8.DecodeRuneInString(p.lookahead.txt)
 		return r
@@ -185,36 +185,36 @@ func (p *Parser) peekToken() token {
 // Data types
 //
 
-// string parses a string that may contain newlines
+// string parses a string that may contain newlines.
 func (p *Parser) string() string {
 	tok := p.nextToken()
 	if tok.typ != '"' {
-		p.fail(tok.pos, `expected token "`)
+		p.failf(tok.pos, `expected token "`)
 	}
 	var b strings.Builder
 ReadLoop:
 	for {
 		switch r := p.nextRune(); r {
 		case scanner.EOF:
-			p.fail(tok.pos, "unterminated string")
+			p.failf(tok.pos, "unterminated string")
 		case '"':
 			break ReadLoop
 		case '\n':
 			if _, err := b.WriteRune(' '); err != nil {
-				p.fail(tok.pos, err.Error())
+				p.failf(tok.pos, err.Error())
 			}
 		case '\\':
 			if p.peekRune() == '"' {
 				_ = p.nextRune() // include escaped quotes in string
 				if _, err := b.WriteString(`\"`); err != nil {
-					p.fail(tok.pos, err.Error())
+					p.failf(tok.pos, err.Error())
 				}
 				continue
 			}
 			fallthrough
 		default:
 			if _, err := b.WriteRune(r); err != nil {
-				p.fail(tok.pos, err.Error())
+				p.failf(tok.pos, err.Error())
 			}
 		}
 	}
@@ -224,11 +224,11 @@ ReadLoop:
 func (p *Parser) identifier() Identifier {
 	tok := p.nextToken()
 	if tok.typ != scanner.Ident {
-		p.fail(tok.pos, "expected ident")
+		p.failf(tok.pos, "expected ident")
 	}
 	id := Identifier(tok.txt)
 	if err := id.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return id
 }
@@ -237,14 +237,14 @@ func (p *Parser) stringIdentifier() Identifier {
 	tok := p.peekToken()
 	id := Identifier(p.string())
 	if err := id.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return id
 }
 
 func (p *Parser) keyword(kw Keyword) token {
 	if p.peekKeyword() != kw {
-		p.fail(p.peekToken().pos, "expected keyword: %v", kw)
+		p.failf(p.peekToken().pos, "expected keyword: %v", kw)
 	}
 	return p.nextToken()
 }
@@ -252,7 +252,7 @@ func (p *Parser) keyword(kw Keyword) token {
 func (p *Parser) peekKeyword() Keyword {
 	tok := p.peekToken()
 	if tok.typ != scanner.Ident {
-		p.fail(p.peekToken().pos, "expected ident")
+		p.failf(p.peekToken().pos, "expected ident")
 	}
 	return Keyword(tok.txt)
 }
@@ -260,7 +260,7 @@ func (p *Parser) peekKeyword() Keyword {
 func (p *Parser) token(typ rune) {
 	tok := p.nextToken()
 	if tok.typ != typ {
-		p.fail(
+		p.failf(
 			p.peekToken().pos, "expected token: %v, found: %v (%v)",
 			scanner.TokenString(typ), scanner.TokenString(tok.typ), tok.txt)
 	}
@@ -278,7 +278,7 @@ func (p *Parser) enumValue(values []string) string {
 		// SPECIAL-CASE: Enum values by index encountered in the wild
 		i := p.uint()
 		if i >= uint64(len(values)) {
-			p.fail(tok.pos, "enum index out of bounds")
+			p.failf(tok.pos, "enum index out of bounds")
 		}
 		return values[i]
 	}
@@ -293,11 +293,11 @@ func (p *Parser) float() float64 {
 	}
 	tok := p.nextToken()
 	if tok.typ != scanner.Int && tok.typ != scanner.Float {
-		p.fail(p.peekToken().pos, "expected int or float")
+		p.failf(p.peekToken().pos, "expected int or float")
 	}
 	f, err := strconv.ParseFloat(tok.txt, 64)
 	if err != nil {
-		p.fail(tok.pos, "invalid float")
+		p.failf(tok.pos, "invalid float")
 	}
 	if isNegative {
 		f *= -1
@@ -313,11 +313,11 @@ func (p *Parser) int() int64 {
 	}
 	tok := p.nextToken()
 	if tok.typ != scanner.Int {
-		p.fail(tok.pos, "expected int")
+		p.failf(tok.pos, "expected int")
 	}
 	i, err := strconv.ParseInt(tok.txt, 10, 64)
 	if err != nil {
-		p.fail(tok.pos, "invalid int")
+		p.failf(tok.pos, "invalid int")
 	}
 	if isNegative {
 		i *= -1
@@ -328,11 +328,11 @@ func (p *Parser) int() int64 {
 func (p *Parser) uint() uint64 {
 	tok := p.nextToken()
 	if tok.typ != scanner.Int {
-		p.fail(tok.pos, "expected int")
+		p.failf(tok.pos, "expected int")
 	}
 	i, err := strconv.ParseUint(tok.txt, 10, 64)
 	if err != nil {
-		p.fail(tok.pos, "invalid uint")
+		p.failf(tok.pos, "invalid uint")
 	}
 	return i
 }
@@ -346,13 +346,13 @@ func (p *Parser) intInRange(min, max int) int {
 	tok := p.nextToken()
 	i, err := strconv.Atoi(tok.txt)
 	if err != nil {
-		p.fail(tok.pos, "invalid int")
+		p.failf(tok.pos, "invalid int")
 	}
 	if isNegative {
 		i *= -1
 	}
 	if i < min || i > max {
-		p.fail(tok.pos, "invalid value")
+		p.failf(tok.pos, "invalid value")
 	}
 	return i
 }
@@ -364,7 +364,7 @@ func (p *Parser) optionalUint() uint64 {
 	tok := p.nextToken()
 	i, err := strconv.ParseUint(tok.txt, 10, 64)
 	if err != nil {
-		p.fail(tok.pos, "invalid uint")
+		p.failf(tok.pos, "invalid uint")
 	}
 	return i
 }
@@ -376,7 +376,7 @@ func (p *Parser) anyOf(tokenTypes ...rune) rune {
 			return tok.typ
 		}
 	}
-	p.fail(tok.pos, "unexpected token")
+	p.failf(tok.pos, "unexpected token")
 	return 0
 }
 
@@ -387,7 +387,7 @@ func (p *Parser) optionalObjectType() ObjectType {
 	}
 	objectType := ObjectType(p.identifier())
 	if err := objectType.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return objectType
 }
@@ -396,7 +396,7 @@ func (p *Parser) messageID() MessageID {
 	tok := p.peekToken()
 	messageID := MessageID(p.uint())
 	if err := messageID.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return messageID
 }
@@ -405,7 +405,7 @@ func (p *Parser) signalValueType() SignalValueType {
 	tok := p.peekToken()
 	signalValueType := SignalValueType(p.uint())
 	if err := signalValueType.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return signalValueType
 }
@@ -414,7 +414,7 @@ func (p *Parser) environmentVariableType() EnvironmentVariableType {
 	tok := p.peekToken()
 	environmentVariableType := EnvironmentVariableType(p.uint())
 	if err := environmentVariableType.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return environmentVariableType
 }
@@ -423,7 +423,7 @@ func (p *Parser) attributeValueType() AttributeValueType {
 	tok := p.peekToken()
 	attributeValueType := AttributeValueType(p.identifier())
 	if err := attributeValueType.Validate(); err != nil {
-		p.fail(tok.pos, err.Error())
+		p.failf(tok.pos, err.Error())
 	}
 	return attributeValueType
 }
@@ -432,7 +432,7 @@ func (p *Parser) accessType() AccessType {
 	tok := p.peekToken()
 	accessType := AccessType(p.identifier())
 	if err := accessType.Validate(); err != nil {
-		p.fail(tok.pos, "invalid access type")
+		p.failf(tok.pos, "invalid access type")
 	}
 	return accessType
 }

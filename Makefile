@@ -8,19 +8,11 @@ all: \
 	git-verify-nodiff
 
 include build/rules.mk
+include tools/golangci-lint/rules.mk
 
 .PHONY: clean
 clean:
 	rm -rf $(FILES_DIR)
-
-.PHONY: go-lint
-go-lint: $(GOLANGCI_LINT)
-	# funlen: too strict
-	# dupl: allow duplication in tests
-	# interfacer: deprecated
-	# godox: allow TODOs
-	# lll: long go:generate directives
-	$(GOLANGCI_LINT) run --enable-all --disable funlen,dupl,interfacer,godox,lll
 
 .PHONY: go-mock-gen
 go-mock-gen: \

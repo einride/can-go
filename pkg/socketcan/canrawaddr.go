@@ -4,7 +4,7 @@ import "net"
 
 const canRawNetwork = "can"
 
-// canRawAddr represents a CAN_RAW address
+// canRawAddr represents a CAN_RAW address.
 type canRawAddr struct {
 	device string
 }

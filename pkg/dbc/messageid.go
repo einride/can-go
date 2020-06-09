@@ -2,7 +2,7 @@ package dbc
 
 import "fmt"
 
-// MessageID represents a message ID. A message ID
+// MessageID represents a message ID.
 type MessageID uint32
 
 // ID constants.
