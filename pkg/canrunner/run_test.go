@@ -2,6 +2,7 @@ package canrunner_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"go.einride.tech/can/pkg/canrunner"
 	"go.einride.tech/can/pkg/descriptor"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/xerrors"
 )
 
 func TestRunMessageReceiver_NoMessages(t *testing.T) {
@@ -28,7 +28,7 @@ func TestRunMessageReceiver_NoMessages(t *testing.T) {
 	rx.EXPECT().Receive().Return(false)
 	rx.EXPECT().Err().Return(os.ErrClosed)
 	// then an error is returned
-	require.True(t, xerrors.Is(canrunner.RunMessageReceiver(ctx, rx, node, clock), os.ErrClosed))
+	require.True(t, errors.Is(canrunner.RunMessageReceiver(ctx, rx, node, clock), os.ErrClosed))
 }
 
 func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
