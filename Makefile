@@ -9,6 +9,7 @@ all: \
 
 include build/rules.mk
 include tools/golangci-lint/rules.mk
+include tools/git-verify-nodiff/rules.mk
 
 .PHONY: clean
 clean:

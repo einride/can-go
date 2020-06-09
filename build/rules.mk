@@ -23,5 +23,3 @@ endif
 ifneq ($(shell which realpath >/dev/null; echo $$?),0)
 $(error Coreutils not installed. OSX users run: brew install coreutils)
 endif
-
-include $(BUILD_DIR)/git.mk
