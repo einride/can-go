@@ -2,6 +2,7 @@ package socketcan
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -11,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/xerrors"
 )
 
 func TestTransmitter_TransmitMessage(t *testing.T) {
@@ -68,7 +68,7 @@ func TestTransmitter_TransmitMessage_Error(t *testing.T) {
 	defer done()
 	err := tr.TransmitMessage(ctx, msg)
 	require.Error(t, err)
-	require.Equal(t, cause, xerrors.Unwrap(err))
+	require.Equal(t, cause, errors.Unwrap(err))
 }
 
 func TestTransmitter_TransmitFrame_Error(t *testing.T) {
@@ -80,7 +80,7 @@ func TestTransmitter_TransmitFrame_Error(t *testing.T) {
 		defer done()
 		err := tr.TransmitFrame(ctx, can.Frame{})
 		require.Error(t, err)
-		require.Equal(t, cause, xerrors.Unwrap(err))
+		require.Equal(t, cause, errors.Unwrap(err))
 	})
 	t.Run("write", func(t *testing.T) {
 		cause := fmt.Errorf("boom")
@@ -90,7 +90,7 @@ func TestTransmitter_TransmitFrame_Error(t *testing.T) {
 		defer done()
 		err := tr.TransmitFrame(ctx, can.Frame{})
 		require.Error(t, err)
-		require.Equal(t, cause, xerrors.Unwrap(err))
+		require.Equal(t, cause, errors.Unwrap(err))
 	})
 }
 

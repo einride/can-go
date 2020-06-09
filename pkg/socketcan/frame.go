@@ -101,7 +101,7 @@ func (f *frame) decodeFrame() can.Frame {
 	return can.Frame{
 		ID:         f.id(),
 		Length:     f.dataLengthCode,
-		Data:       can.Data(f.data),
+		Data:       f.data,
 		IsExtended: f.isExtended(),
 		IsRemote:   f.isRemote(),
 	}

@@ -1,11 +1,10 @@
 package socketcan
 
 import (
+	"errors"
 	"net"
 	"os"
 	"time"
-
-	"golang.org/x/xerrors"
 )
 
 // file is an interface for mocking file operations performed by fileConn.
@@ -30,7 +29,7 @@ type fileConn struct {
 	ra net.Addr
 }
 
-var _ = net.Conn(&fileConn{})
+var _ net.Conn = &fileConn{}
 
 func (c *fileConn) Read(b []byte) (int, error) {
 	n, err := c.f.Read(b)
@@ -87,7 +86,7 @@ func (c *fileConn) Close() error {
 // unwrapPathError unwraps one level of *os.PathError from the provided error.
 func unwrapPathError(err error) error {
 	var pe *os.PathError
-	if xerrors.As(err, &pe) {
+	if errors.As(err, &pe) {
 		return pe.Err
 	}
 	return err
