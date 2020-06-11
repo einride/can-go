@@ -8,7 +8,8 @@ import (
 	"testing"
 	"testing/quick"
 
-	"github.com/stretchr/testify/assert"
+	"gotest.tools/v3/assert"
+	is "gotest.tools/v3/assert/cmp"
 )
 
 func TestFrame_JSON(t *testing.T) {
@@ -67,14 +68,14 @@ func TestFrame_JSON(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("JSON|frame=%v", tt.frame), func(t *testing.T) {
-			assert.Equal(t, tt.jsonFrame, tt.frame.JSON())
+			assert.Check(t, is.Equal(tt.jsonFrame, tt.frame.JSON()))
 		})
 		t.Run(fmt.Sprintf("UnmarshalJSON|frame=%v", tt.frame), func(t *testing.T) {
 			var frame Frame
 			if err := json.Unmarshal([]byte(tt.jsonFrame), &frame); err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, tt.frame, frame)
+			assert.Check(t, is.DeepEqual(tt.frame, frame))
 		})
 	}
 }
@@ -83,11 +84,11 @@ func TestFrame_UnmarshalJSON_Invalid(t *testing.T) {
 	var f Frame
 	t.Run("invalid JSON", func(t *testing.T) {
 		data := `foobar`
-		assert.NotNil(t, f.UnmarshalJSON([]uint8(data)))
+		assert.Check(t, f.UnmarshalJSON([]uint8(data)) != nil)
 	})
 	t.Run("invalid payload", func(t *testing.T) {
 		data := `{"id":1,"data":"foobar","extended":false,"remote":false}`
-		assert.NotNil(t, f.UnmarshalJSON([]uint8(data)))
+		assert.Check(t, f.UnmarshalJSON([]uint8(data)) != nil)
 	})
 }
 

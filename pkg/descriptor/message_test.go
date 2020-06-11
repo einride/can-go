@@ -3,7 +3,8 @@ package descriptor
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
+	is "gotest.tools/v3/assert/cmp"
 )
 
 func TestMessage_MultiplexerSignal(t *testing.T) {
@@ -19,8 +20,8 @@ func TestMessage_MultiplexerSignal(t *testing.T) {
 		},
 	}
 	actualMux, ok := m.MultiplexerSignal()
-	require.True(t, ok)
-	require.Equal(t, mux, actualMux)
+	assert.Assert(t, ok)
+	assert.DeepEqual(t, mux, actualMux)
 }
 
 func TestMessage_MultiplexerSignal_NotFound(t *testing.T) {
@@ -31,6 +32,6 @@ func TestMessage_MultiplexerSignal_NotFound(t *testing.T) {
 		},
 	}
 	actualMux, ok := m.MultiplexerSignal()
-	require.False(t, ok)
-	require.Nil(t, actualMux)
+	assert.Assert(t, !ok)
+	assert.Assert(t, is.Nil(actualMux))
 }

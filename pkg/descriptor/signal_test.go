@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
+	"gotest.tools/v3/assert"
 )
 
 func TestSignal_FromPhysical_SaturatedCast(t *testing.T) {
@@ -18,7 +18,7 @@ func TestSignal_FromPhysical_SaturatedCast(t *testing.T) {
 		Length: 16,
 	}
 	// without a saturated cast, the result would be math.MaxUint16 + 1, which would wrap around to 0
-	require.Equal(t, uint16(math.MaxUint16), uint16(s.FromPhysical(180)))
+	assert.Equal(t, uint16(math.MaxUint16), uint16(s.FromPhysical(180)))
 }
 
 func TestSignal_SaturatedCastSigned(t *testing.T) {
@@ -27,8 +27,8 @@ func TestSignal_SaturatedCastSigned(t *testing.T) {
 		IsSigned: true,
 		Length:   6,
 	}
-	require.Equal(t, int64(31), s.SaturatedCastSigned(254))
-	require.Equal(t, int64(-32), s.SaturatedCastSigned(-255))
+	assert.Equal(t, int64(31), s.SaturatedCastSigned(254))
+	assert.Equal(t, int64(-32), s.SaturatedCastSigned(-255))
 }
 
 func TestSignal_SaturatedCastUnsigned(t *testing.T) {
@@ -36,7 +36,7 @@ func TestSignal_SaturatedCastUnsigned(t *testing.T) {
 		Name:   "TestSignal",
 		Length: 6,
 	}
-	require.Equal(t, uint64(63), s.SaturatedCastUnsigned(255))
+	assert.Equal(t, uint64(63), s.SaturatedCastUnsigned(255))
 }
 
 func TestSignal_UnmarshalSigned_BigEndian(t *testing.T) {
@@ -50,7 +50,7 @@ func TestSignal_UnmarshalSigned_BigEndian(t *testing.T) {
 	const value int64 = -8
 	var data can.Data
 	data.SetSignedBitsBigEndian(s.Start, s.Length, value)
-	require.Equal(t, value, s.UnmarshalSigned(data))
+	assert.Equal(t, value, s.UnmarshalSigned(data))
 }
 
 func TestSignal_MarshalUnsigned_BigEndian(t *testing.T) {
@@ -65,7 +65,7 @@ func TestSignal_MarshalUnsigned_BigEndian(t *testing.T) {
 	expected.SetUnsignedBitsBigEndian(s.Start, s.Length, value)
 	var actual can.Data
 	s.MarshalUnsigned(&actual, value)
-	require.Equal(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestSignal_MarshalSigned_BigEndian(t *testing.T) {
@@ -81,5 +81,5 @@ func TestSignal_MarshalSigned_BigEndian(t *testing.T) {
 	expected.SetSignedBitsBigEndian(s.Start, s.Length, value)
 	var actual can.Data
 	s.MarshalSigned(&actual, value)
-	require.Equal(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

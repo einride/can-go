@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestReinterpretSign(t *testing.T) {
@@ -59,10 +59,10 @@ func TestReinterpretSign(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%+v", tt), func(t *testing.T) {
-			require.Equal(t, tt.signed, AsSigned(tt.unsigned, tt.length))
-			require.Equal(t, tt.unsigned, AsUnsigned(tt.signed, tt.length))
-			require.Equal(t, tt.signed, AsSigned(AsUnsigned(tt.signed, tt.length), tt.length))
-			require.Equal(t, tt.unsigned, AsUnsigned(AsSigned(tt.unsigned, tt.length), tt.length))
+			assert.Equal(t, tt.signed, AsSigned(tt.unsigned, tt.length))
+			assert.Equal(t, tt.unsigned, AsUnsigned(tt.signed, tt.length))
+			assert.Equal(t, tt.signed, AsSigned(AsUnsigned(tt.signed, tt.length), tt.length))
+			assert.Equal(t, tt.unsigned, AsUnsigned(AsSigned(tt.unsigned, tt.length), tt.length))
 		})
 	}
 }

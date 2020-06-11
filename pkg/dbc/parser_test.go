@@ -8,7 +8,7 @@ import (
 	"text/scanner"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func shouldUpdateGoldenFiles() bool {
@@ -19,15 +19,15 @@ func TestParse_ExampleDBC(t *testing.T) {
 	const inputFile = "../../testdata/dbc/example/example.dbc"
 	const goldenFile = "../../testdata/dbc/example/example.dbc.golden"
 	data, err := ioutil.ReadFile(inputFile)
-	require.NoError(t, err)
+	assert.NilError(t, err)
 	p := NewParser(inputFile, data)
-	require.NoError(t, p.Parse())
+	assert.NilError(t, p.Parse())
 	if shouldUpdateGoldenFiles() {
-		require.NoError(t, ioutil.WriteFile(goldenFile, []byte(dump(p.Defs())), 0600))
+		assert.NilError(t, ioutil.WriteFile(goldenFile, []byte(dump(p.Defs())), 0600))
 	}
 	goldenFileData, err := ioutil.ReadFile(goldenFile)
-	require.NoError(t, err)
-	require.Equal(t, string(goldenFileData), dump(p.Defs()))
+	assert.NilError(t, err)
+	assert.Equal(t, string(goldenFileData), dump(p.Defs()))
 }
 
 func TestParser_Parse(t *testing.T) {
@@ -1024,8 +1024,8 @@ func TestParser_Parse(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewParser(tt.name, []byte(tt.text))
-			require.NoError(t, p.Parse())
-			require.Equal(t, tt.defs, p.Defs())
+			assert.NilError(t, p.Parse())
+			assert.DeepEqual(t, tt.defs, p.Defs())
 		})
 	}
 }
@@ -1066,7 +1066,7 @@ func TestParser_Parse_Error(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewParser(tt.name, []byte(tt.text))
-			require.Equal(t, tt.err, p.Parse())
+			assert.Error(t, p.Parse(), tt.err.Error())
 		})
 	}
 }

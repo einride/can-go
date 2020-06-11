@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
 	"go.einride.tech/can/internal/gen/mock/mockcanrunner"
 	"go.einride.tech/can/internal/gen/mock/mockclock"
 	"go.einride.tech/can/pkg/canrunner"
 	"go.einride.tech/can/pkg/descriptor"
 	"golang.org/x/sync/errgroup"
+	"gotest.tools/v3/assert"
 )
 
 func TestRunMessageReceiver_NoMessages(t *testing.T) {
@@ -28,7 +28,7 @@ func TestRunMessageReceiver_NoMessages(t *testing.T) {
 	rx.EXPECT().Receive().Return(false)
 	rx.EXPECT().Err().Return(os.ErrClosed)
 	// then an error is returned
-	require.True(t, errors.Is(canrunner.RunMessageReceiver(ctx, rx, node, clock), os.ErrClosed))
+	assert.Assert(t, errors.Is(canrunner.RunMessageReceiver(ctx, rx, node, clock), os.ErrClosed))
 }
 
 func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
@@ -49,7 +49,7 @@ func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
 	node.EXPECT().Lock()
 	// and the message should be queried for a hook with the same context
 	afterReceiveHook := func(c context.Context) error {
-		require.Equal(t, ctx, c)
+		assert.DeepEqual(t, ctx, c)
 		return nil
 	}
 	msg.EXPECT().AfterReceiveHook().Return(afterReceiveHook)
@@ -65,7 +65,7 @@ func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
 	rx.EXPECT().Receive().Return(false)
 	rx.EXPECT().Err().Return(nil)
 	// then the receiver should return
-	require.NoError(t, canrunner.RunMessageReceiver(ctx, rx, node, clock))
+	assert.NilError(t, canrunner.RunMessageReceiver(ctx, rx, node, clock))
 }
 
 func TestRunMessageTransmitter_TransmitEventMessage(t *testing.T) {
@@ -98,7 +98,7 @@ func TestRunMessageTransmitter_TransmitEventMessage(t *testing.T) {
 	clock.EXPECT().Now().Return(now)
 	// and the transmit hook should be queried with the same context
 	hook := func(c context.Context) error {
-		require.Equal(t, ctx, c)
+		assert.Equal(t, ctx, c)
 		return nil
 	}
 	msg.EXPECT().BeforeTransmitHook().Return(hook)
@@ -116,5 +116,5 @@ func TestRunMessageTransmitter_TransmitEventMessage(t *testing.T) {
 	// when the transmitter receives a transmit event
 	transmitEventChan <- struct{}{}
 	cancel()
-	require.NoError(t, g.Wait())
+	assert.NilError(t, g.Wait())
 }

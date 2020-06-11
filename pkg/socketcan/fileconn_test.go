@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can/internal/gen/mock/mocksocketcan"
+	"gotest.tools/v3/assert"
 )
 
 func TestUnwrapPathError(t *testing.T) {
@@ -37,7 +37,7 @@ func TestUnwrapPathError(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
-			require.Equal(t, tt.expected, unwrapPathError(tt.err))
+			assert.Error(t, unwrapPathError(tt.err), tt.expected.Error())
 		})
 	}
 }
@@ -69,16 +69,16 @@ func TestFileConn_ReadWrite(t *testing.T) {
 				var data []byte
 				tt.mockFn(f.EXPECT(), data).Return(42, nil)
 				n, err := tt.fn(fc, data)
-				require.Equal(t, 42, n)
-				require.NoError(t, err)
+				assert.Equal(t, 42, n)
+				assert.NilError(t, err)
 			})
 			t.Run("error", func(t *testing.T) {
 				var data []byte
 				cause := fmt.Errorf("boom")
 				tt.mockFn(f.EXPECT(), data).Return(0, &os.PathError{Err: cause})
 				n, err := tt.fn(fc, data)
-				require.Equal(t, 0, n)
-				require.Error(t, &net.OpError{Op: tt.op, Net: fc.net, Addr: fc.RemoteAddr(), Err: err})
+				assert.Equal(t, 0, n)
+				assert.ErrorContains(t, &net.OpError{Op: tt.op, Net: fc.net, Addr: fc.RemoteAddr(), Err: err}, "boom")
 			})
 		})
 	}
@@ -87,10 +87,10 @@ func TestFileConn_ReadWrite(t *testing.T) {
 func TestFileConn_Addr(t *testing.T) {
 	fc := &fileConn{la: &canRawAddr{device: "can0"}, ra: &canRawAddr{device: "can1"}}
 	t.Run("local", func(t *testing.T) {
-		require.Equal(t, fc.la, fc.LocalAddr())
+		assert.Equal(t, fc.la, fc.LocalAddr())
 	})
 	t.Run("remote", func(t *testing.T) {
-		require.Equal(t, fc.ra, fc.RemoteAddr())
+		assert.Equal(t, fc.ra, fc.RemoteAddr())
 	})
 }
 
@@ -124,13 +124,13 @@ func TestFileConn_SetDeadlines(t *testing.T) {
 			fc := &fileConn{f: f, net: "can", ra: &canRawAddr{device: "can0"}}
 			t.Run("no error", func(t *testing.T) {
 				tt.mockFn(f.EXPECT(), time.Unix(0, 1)).Return(nil)
-				require.NoError(t, tt.fn(fc, time.Unix(0, 1)))
+				assert.NilError(t, tt.fn(fc, time.Unix(0, 1)))
 			})
 			t.Run("error", func(t *testing.T) {
 				cause := fmt.Errorf("boom")
 				tt.mockFn(f.EXPECT(), time.Unix(0, 1)).Return(&os.PathError{Err: cause})
 				err := tt.fn(fc, time.Unix(0, 1))
-				require.Equal(t, &net.OpError{Op: tt.op, Net: fc.net, Addr: fc.RemoteAddr(), Err: cause}, err)
+				assert.Error(t, err, (&net.OpError{Op: tt.op, Net: fc.net, Addr: fc.RemoteAddr(), Err: cause}).Error())
 			})
 		})
 	}
@@ -143,12 +143,12 @@ func TestFileConn_Close(t *testing.T) {
 	fc := &fileConn{f: f, net: "can", ra: &canRawAddr{device: "can0"}}
 	t.Run("no error", func(t *testing.T) {
 		f.EXPECT().Close().Return(nil)
-		require.NoError(t, fc.Close())
+		assert.NilError(t, fc.Close())
 	})
 	t.Run("error", func(t *testing.T) {
 		cause := fmt.Errorf("boom")
 		f.EXPECT().Close().Return(&os.PathError{Err: cause})
 		err := fc.Close()
-		require.Equal(t, &net.OpError{Op: "close", Net: fc.net, Addr: fc.RemoteAddr(), Err: cause}, err)
+		assert.Error(t, err, (&net.OpError{Op: "close", Net: fc.net, Addr: fc.RemoteAddr(), Err: cause}).Error())
 	})
 }

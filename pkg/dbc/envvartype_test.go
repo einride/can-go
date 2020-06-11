@@ -3,7 +3,7 @@ package dbc
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestEnvironmentVariableType_Validate(t *testing.T) {
@@ -12,10 +12,10 @@ func TestEnvironmentVariableType_Validate(t *testing.T) {
 		EnvironmentVariableTypeFloat,
 		EnvironmentVariableTypeString,
 	} {
-		require.NoError(t, tt.Validate())
+		assert.NilError(t, tt.Validate())
 	}
 }
 
 func TestEnvironmentVariableType_Validate_Error(t *testing.T) {
-	require.Error(t, EnvironmentVariableType(42).Validate())
+	assert.Error(t, EnvironmentVariableType(42).Validate(), "invalid environment variable type: 42")
 }

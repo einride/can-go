@@ -3,7 +3,7 @@ package descriptor
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestSendType_UnmarshalString(t *testing.T) {
@@ -19,8 +19,8 @@ func TestSendType_UnmarshalString(t *testing.T) {
 		tt := tt
 		t.Run(tt.str, func(t *testing.T) {
 			var actual SendType
-			require.NoError(t, actual.UnmarshalString(tt.str))
-			require.Equal(t, tt.expected, actual)
+			assert.NilError(t, actual.UnmarshalString(tt.str))
+			assert.Equal(t, tt.expected, actual)
 		})
 	}
 }

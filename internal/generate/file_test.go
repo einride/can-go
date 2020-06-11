@@ -4,15 +4,15 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func runTestInDir(t *testing.T, dir string) func() {
 	// change working directory to project root
 	wd, err := os.Getwd()
-	require.NoError(t, err)
-	require.NoError(t, os.Chdir(dir))
+	assert.NilError(t, err)
+	assert.NilError(t, os.Chdir(dir))
 	return func() {
-		require.NoError(t, os.Chdir(wd))
+		assert.NilError(t, os.Chdir(wd))
 	}
 }

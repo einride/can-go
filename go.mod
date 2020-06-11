@@ -12,11 +12,11 @@ require (
 	github.com/mattn/go-isatty v0.0.9 // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
-	github.com/stretchr/testify v1.4.0
 	go.uber.org/goleak v0.10.0
 	golang.org/x/net v0.0.0-20200602114024-627f9648deb9
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
 	golang.org/x/tools v0.0.0-20200609164405-eb789aa7ce50
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
+	gotest.tools/v3 v3.0.2
 )

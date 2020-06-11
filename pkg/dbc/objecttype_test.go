@@ -3,7 +3,7 @@ package dbc
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestObjectType_Validate(t *testing.T) {
@@ -14,10 +14,10 @@ func TestObjectType_Validate(t *testing.T) {
 		ObjectTypeSignal,
 		ObjectTypeEnvironmentVariable,
 	} {
-		require.NoError(t, tt.Validate())
+		assert.NilError(t, tt.Validate())
 	}
 }
 
 func TestObjectType_Validate_Error(t *testing.T) {
-	require.Error(t, ObjectType("foo").Validate())
+	assert.ErrorContains(t, ObjectType("foo").Validate(), "invalid object type")
 }

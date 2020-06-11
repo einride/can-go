@@ -4,8 +4,8 @@ import (
 	"testing"
 	"testing/quick"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
+	"gotest.tools/v3/assert"
 )
 
 func TestFrame_MarshalUnmarshalBinary_Property_Idempotent(t *testing.T) {
@@ -20,7 +20,7 @@ func TestFrame_MarshalUnmarshalBinary_Property_Idempotent(t *testing.T) {
 		f.marshalBinary(newData[:])
 		return newData
 	}
-	require.NoError(t, quick.CheckEqual(f, g, nil))
+	assert.NilError(t, quick.CheckEqual(f, g, nil))
 }
 
 func TestFrame_EncodeDecode(t *testing.T) {
@@ -79,18 +79,18 @@ func TestFrame_EncodeDecode(t *testing.T) {
 			t.Run("encode", func(t *testing.T) {
 				var actual frame
 				actual.encodeFrame(tt.frame)
-				require.Equal(t, tt.socketCANFrame, actual)
+				assert.Equal(t, tt.socketCANFrame, actual)
 			})
 			t.Run("decode", func(t *testing.T) {
-				require.Equal(t, tt.frame, tt.socketCANFrame.decodeFrame())
+				assert.Equal(t, tt.frame, tt.socketCANFrame.decodeFrame())
 			})
 		})
 	}
 }
 
 func TestFrame_IsError(t *testing.T) {
-	require.True(t, (&frame{idAndFlags: 0x20000001}).isError())
-	require.False(t, (&frame{idAndFlags: 0x00000001}).isError())
+	assert.Assert(t, (&frame{idAndFlags: 0x20000001}).isError())
+	assert.Assert(t, !(&frame{idAndFlags: 0x00000001}).isError())
 }
 
 func TestFrame_DecodeErrorFrame(t *testing.T) {
@@ -188,7 +188,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
-			require.Equal(t, tt.expected, tt.f.decodeErrorFrame())
+			assert.Equal(t, tt.expected, tt.f.decodeErrorFrame())
 		})
 	}
 }

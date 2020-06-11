@@ -5,7 +5,7 @@ import (
 	"testing"
 	"testing/quick"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestData_Bit(t *testing.T) {
@@ -52,7 +52,7 @@ func TestData_Bit(t *testing.T) {
 				j, ttBit := j, ttBit
 				t.Run(fmt.Sprintf("tt=%v,bit=%v", i, j), func(t *testing.T) {
 					bit := tt.data.Bit(ttBit.i)
-					require.Equal(t, ttBit.bit, bit)
+					assert.Equal(t, ttBit.bit, bit)
 				})
 			}
 		})
@@ -63,7 +63,7 @@ func TestData_Bit(t *testing.T) {
 				for _, tBit := range tt.bits {
 					data.SetBit(tBit.i, tBit.bit)
 				}
-				require.Equal(t, tt.data, data)
+				assert.DeepEqual(t, tt.data, data)
 			})
 		})
 	}
@@ -78,7 +78,7 @@ func TestData_Property_SetGetBit(t *testing.T) {
 		data.SetBit(i, bit)
 		return data.Bit(i)
 	}
-	require.NoError(t, quick.CheckEqual(f, g, nil))
+	assert.NilError(t, quick.CheckEqual(f, g, nil))
 }
 
 func TestData_LittleEndian(t *testing.T) {
@@ -133,7 +133,7 @@ func TestData_LittleEndian(t *testing.T) {
 				j, signal := j, signal
 				t.Run(fmt.Sprintf("signal:%v", j), func(t *testing.T) {
 					actual := tt.data.UnsignedBitsLittleEndian(signal.start, signal.length)
-					require.Equal(t, signal.unsigned, actual)
+					assert.Equal(t, signal.unsigned, actual)
 				})
 			}
 		})
@@ -142,7 +142,7 @@ func TestData_LittleEndian(t *testing.T) {
 				j, signal := j, signal
 				t.Run(fmt.Sprintf("signal:%v", j), func(t *testing.T) {
 					actual := tt.data.SignedBitsLittleEndian(signal.start, signal.length)
-					require.Equal(t, signal.signed, actual)
+					assert.Equal(t, signal.signed, actual)
 				})
 			}
 		})
@@ -154,7 +154,7 @@ func TestData_LittleEndian(t *testing.T) {
 					data.SetUnsignedBitsLittleEndian(signal.start, signal.length, signal.unsigned)
 				})
 			}
-			require.Equal(t, tt.data, data)
+			assert.DeepEqual(t, tt.data, data)
 		})
 		t.Run(fmt.Sprintf("SetSignedBits:%v", i), func(t *testing.T) {
 			var data Data
@@ -164,7 +164,7 @@ func TestData_LittleEndian(t *testing.T) {
 					data.SetSignedBitsLittleEndian(signal.start, signal.length, signal.signed)
 				})
 			}
-			require.Equal(t, tt.data, data)
+			assert.DeepEqual(t, tt.data, data)
 		})
 	}
 }
@@ -234,7 +234,7 @@ func TestData_BigEndian(t *testing.T) {
 				j, signal := j, signal
 				t.Run(fmt.Sprintf("signal:%v", j), func(t *testing.T) {
 					actual := tt.data.UnsignedBitsBigEndian(signal.start, signal.length)
-					require.Equal(t, signal.unsigned, actual)
+					assert.Equal(t, signal.unsigned, actual)
 				})
 			}
 		})
@@ -243,7 +243,7 @@ func TestData_BigEndian(t *testing.T) {
 				j, signal := j, signal
 				t.Run(fmt.Sprintf("signal:%v", j), func(t *testing.T) {
 					actual := tt.data.SignedBitsBigEndian(signal.start, signal.length)
-					require.Equal(t, signal.signed, actual)
+					assert.Equal(t, signal.signed, actual)
 				})
 			}
 		})
@@ -255,7 +255,7 @@ func TestData_BigEndian(t *testing.T) {
 					data.SetUnsignedBitsBigEndian(signal.start, signal.length, signal.unsigned)
 				})
 			}
-			require.Equal(t, tt.data, data)
+			assert.DeepEqual(t, tt.data, data)
 		})
 		t.Run(fmt.Sprintf("SetSignedBits:%v", i), func(t *testing.T) {
 			var data Data
@@ -265,14 +265,14 @@ func TestData_BigEndian(t *testing.T) {
 					data.SetSignedBitsBigEndian(signal.start, signal.length, signal.signed)
 				})
 			}
-			require.Equal(t, tt.data, data)
+			assert.DeepEqual(t, tt.data, data)
 		})
 	}
 }
 
 func TestInvertEndian_Property_Idempotent(t *testing.T) {
 	for i := uint8(0); i < 64; i++ {
-		require.Equal(t, i, invertEndian(invertEndian(i)))
+		assert.Equal(t, i, invertEndian(invertEndian(i)))
 	}
 }
 
@@ -284,7 +284,7 @@ func TestPackUnpackBigEndian(t *testing.T) {
 		data.UnpackBigEndian(data.PackBigEndian())
 		return data
 	}
-	require.NoError(t, quick.CheckEqual(f, g, nil))
+	assert.NilError(t, quick.CheckEqual(f, g, nil))
 }
 
 func TestPackUnpackLittleEndian(t *testing.T) {
@@ -295,13 +295,13 @@ func TestPackUnpackLittleEndian(t *testing.T) {
 		data.UnpackLittleEndian(data.PackLittleEndian())
 		return data
 	}
-	require.NoError(t, quick.CheckEqual(f, g, nil))
+	assert.NilError(t, quick.CheckEqual(f, g, nil))
 }
 
 func TestData_CheckBitRange(t *testing.T) {
 	// example case that big-endian signals and little-endian signals use different indexing
-	require.NoError(t, CheckBitRangeBigEndian(8, 55, 16))
-	require.Error(t, CheckBitRangeLittleEndian(8, 55, 16))
+	assert.NilError(t, CheckBitRangeBigEndian(8, 55, 16))
+	assert.ErrorContains(t, CheckBitRangeLittleEndian(8, 55, 16), "bit range out of bounds")
 }
 
 func BenchmarkData_UnpackLittleEndian(b *testing.B) {

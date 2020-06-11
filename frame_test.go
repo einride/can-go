@@ -5,14 +5,13 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 // If this mocks ever starts failing, the documentation needs to be updated
 // to prefer pass-by-pointer over pass-by-value.
 func TestFrame_Size(t *testing.T) {
-	require.True(t, unsafe.Sizeof(Frame{}) <= 16, "Frame size is <= 16 bytes")
+	assert.Assert(t, unsafe.Sizeof(Frame{}) <= 16, "Frame size is <= 16 bytes")
 }
 
 func TestFrame_Validate_Error(t *testing.T) {
@@ -22,7 +21,7 @@ func TestFrame_Validate_Error(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
-			assert.NotNil(t, tt.Validate(), "should return validation error")
+			assert.Check(t, tt.Validate() != nil, "should return validation error")
 		})
 	}
 }

@@ -3,7 +3,7 @@ package dbc
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestAccessType_Validate(t *testing.T) {
@@ -13,10 +13,10 @@ func TestAccessType_Validate(t *testing.T) {
 		AccessTypeWrite,
 		AccessTypeReadWrite,
 	} {
-		require.NoError(t, tt.Validate())
+		assert.NilError(t, tt.Validate())
 	}
 }
 
 func TestAccessType_Validate_Error(t *testing.T) {
-	require.Error(t, AccessType("foo").Validate())
+	assert.ErrorContains(t, AccessType("foo").Validate(), "invalid access type")
 }

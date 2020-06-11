@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
 	"go.einride.tech/can/pkg/generated"
 	"go.einride.tech/can/pkg/socketcan"
 	examplecan "go.einride.tech/can/testdata/gen/go/example"
 	"golang.org/x/sync/errgroup"
+	"gotest.tools/v3/assert"
 )
 
 func TestExampleDatabase_MarshalUnmarshal(t *testing.T) {
@@ -64,12 +64,12 @@ func TestExampleDatabase_MarshalUnmarshal(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			f, err := tt.m.MarshalFrame()
-			require.NoError(t, err)
-			require.Equal(t, tt.f, f)
+			assert.NilError(t, err)
+			assert.Equal(t, tt.f, f)
 			// allocate new message of same type as tt.m
 			msg := reflect.New(reflect.ValueOf(tt.m).Elem().Type()).Interface().(generated.Message)
-			require.NoError(t, msg.UnmarshalFrame(f))
-			require.Equal(t, tt.m, msg)
+			assert.NilError(t, msg.UnmarshalFrame(f))
+			assert.Assert(t, reflect.DeepEqual(tt.m, msg))
 		})
 	}
 }
@@ -108,15 +108,15 @@ func TestExampleDatabase_UnmarshalFrame_Error(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.err, tt.m.UnmarshalFrame(tt.f).Error())
+			assert.Equal(t, tt.err, tt.m.UnmarshalFrame(tt.f).Error())
 		})
 	}
 }
 
 func TestExampleDatabase_TestEnum_String(t *testing.T) {
-	require.Equal(t, "One", examplecan.IODebug_TestEnum_One.String())
-	require.Equal(t, "Two", examplecan.IODebug_TestEnum_Two.String())
-	require.Equal(t, "IODebug_TestEnum(3)", examplecan.IODebug_TestEnum(3).String())
+	assert.Equal(t, "One", examplecan.IODebug_TestEnum_One.String())
+	assert.Equal(t, "Two", examplecan.IODebug_TestEnum_Two.String())
+	assert.Equal(t, "IODebug_TestEnum(3)", examplecan.IODebug_TestEnum(3).String())
 }
 
 func TestExampleDatabase_Message_String(t *testing.T) {
@@ -124,14 +124,14 @@ func TestExampleDatabase_Message_String(t *testing.T) {
 	msg := examplecan.NewMotorStatus().
 		SetSpeedKph(42).
 		SetWheelError(true)
-	require.Equal(t, expected, msg.String())
-	require.Equal(t, expected, fmt.Sprintf("%v", msg))
+	assert.Equal(t, expected, msg.String())
+	assert.Equal(t, expected, fmt.Sprintf("%v", msg))
 }
 
 func TestExampleDatabase_OutOfBoundsValue(t *testing.T) {
 	const expected = examplecan.IODebug_TestEnum(63)
 	actual := examplecan.NewIODebug().SetTestEnum(255).TestEnum()
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestExampleDatabase_MultiplexedSignals(t *testing.T) {
@@ -191,21 +191,21 @@ func TestExampleDatabase_MultiplexedSignals(t *testing.T) {
 			// to a CAN frame
 			msg.SetMux(tt.expectedMux)
 			f1, err := msg.MarshalFrame()
-			require.NoError(t, err)
+			assert.NilError(t, err)
 			// When we unmarshal the CAN frame back to a message
-			require.NoError(t, unmarshal1.UnmarshalFrame(f1))
+			assert.NilError(t, unmarshal1.UnmarshalFrame(f1))
 			// Then only the multiplexed signals with multiplexer value 0
 			// should be unmarshaled
-			require.Equal(t, tt.expectedMux, unmarshal1.Mux(), "Mux")
-			require.Equal(t, tt.expectedErrCount, unmarshal1.ErrCount(), "ErrCount")
-			require.Equal(t, tt.expectedLeft, unmarshal1.Left(), "Left")
-			require.Equal(t, tt.expectedMiddle, unmarshal1.Middle(), "Middle")
-			require.Equal(t, tt.expectedRight, unmarshal1.Right(), "Right")
-			require.Equal(t, tt.expectedRear, unmarshal1.Rear(), "Rear")
-			require.Equal(t, tt.expectedNoFiltLeft, unmarshal1.NoFiltLeft(), "NoFiltLeft")
-			require.Equal(t, tt.expectedNoFiltMiddle, unmarshal1.NoFiltMiddle(), "NoFiltMiddle")
-			require.Equal(t, tt.expectedNoFiltRight, unmarshal1.NoFiltRight(), "NoFiltRight")
-			require.Equal(t, tt.expectedNoFiltRear, unmarshal1.NoFiltRear(), "NoFiltRear")
+			assert.Equal(t, tt.expectedMux, unmarshal1.Mux(), "Mux")
+			assert.Equal(t, tt.expectedErrCount, unmarshal1.ErrCount(), "ErrCount")
+			assert.Equal(t, tt.expectedLeft, unmarshal1.Left(), "Left")
+			assert.Equal(t, tt.expectedMiddle, unmarshal1.Middle(), "Middle")
+			assert.Equal(t, tt.expectedRight, unmarshal1.Right(), "Right")
+			assert.Equal(t, tt.expectedRear, unmarshal1.Rear(), "Rear")
+			assert.Equal(t, tt.expectedNoFiltLeft, unmarshal1.NoFiltLeft(), "NoFiltLeft")
+			assert.Equal(t, tt.expectedNoFiltMiddle, unmarshal1.NoFiltMiddle(), "NoFiltMiddle")
+			assert.Equal(t, tt.expectedNoFiltRight, unmarshal1.NoFiltRight(), "NoFiltRight")
+			assert.Equal(t, tt.expectedNoFiltRear, unmarshal1.NoFiltRear(), "NoFiltRear")
 		})
 	}
 }
@@ -222,15 +222,15 @@ func TestExampleDatabase_CopyFrom(t *testing.T) {
 	to := examplecan.NewIODebug().CopyFrom(from)
 	// Then:
 	// all fields should be equal...
-	require.Equal(t, from.String(), to.String())
-	require.Equal(t, from.TestScaledEnum(), to.TestScaledEnum())
-	require.Equal(t, from.TestBoolEnum(), to.TestBoolEnum())
-	require.Equal(t, from.TestFloat(), to.TestFloat())
-	require.Equal(t, from.TestSigned(), to.TestSigned())
-	require.Equal(t, from.TestUnsigned(), to.TestUnsigned())
+	assert.Equal(t, from.String(), to.String())
+	assert.Equal(t, from.TestScaledEnum(), to.TestScaledEnum())
+	assert.Equal(t, from.TestBoolEnum(), to.TestBoolEnum())
+	assert.Equal(t, from.TestFloat(), to.TestFloat())
+	assert.Equal(t, from.TestSigned(), to.TestSigned())
+	assert.Equal(t, from.TestUnsigned(), to.TestUnsigned())
 	// ...and changes to the original should not affect the new message
 	from.SetTestUnsigned(100)
-	require.Equal(t, uint8(10), to.TestUnsigned())
+	assert.Equal(t, uint8(10), to.TestUnsigned())
 }
 
 func TestExample_Nodes(t *testing.T) {
@@ -299,7 +299,7 @@ func TestExample_Nodes(t *testing.T) {
 		t.Fatalf("expected speed not received: %v", expectedSpeedKph)
 	}
 	cancel()
-	require.NoError(t, g.Wait())
+	assert.NilError(t, g.Wait())
 }
 
 func TestExample_Node_NoEmptyMessages(t *testing.T) {
@@ -319,15 +319,15 @@ func TestExample_Node_NoEmptyMessages(t *testing.T) {
 	motor.Tx().MotorStatus().SetCyclicTransmissionEnabled(true)
 	c, err := socketcan.Dial("can", "vcan0")
 	r := socketcan.NewReceiver(c)
-	require.NoError(t, err)
+	assert.NilError(t, err)
 	g := errgroup.Group{}
 	g.Go(func() error {
 		return motor.Run(ctx)
 	})
-	require.True(t, r.Receive())
-	require.Equal(t, examplecan.NewMotorStatus().SetSpeedKph(100).SetWheelError(true).Frame(), r.Frame())
+	assert.Assert(t, r.Receive())
+	assert.Equal(t, examplecan.NewMotorStatus().SetSpeedKph(100).SetWheelError(true).Frame(), r.Frame())
 	cancel()
-	require.NoError(t, g.Wait())
+	assert.NilError(t, g.Wait())
 }
 
 func requireVCAN0(t *testing.T) {
