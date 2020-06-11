@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
 	"go.einride.tech/can/pkg/descriptor"
 	"go.einride.tech/can/pkg/generated"
+	"gotest.tools/v3/assert"
 )
 
 func TestServeMessagesHTTP_Single(t *testing.T) {
@@ -24,10 +24,10 @@ func TestServeMessagesHTTP_Single(t *testing.T) {
 		})
 	}))
 	res, err := http.Get(ts.URL)
-	require.NoError(t, err)
+	assert.NilError(t, err)
 	response, err := ioutil.ReadAll(res.Body)
-	require.NoError(t, err)
-	require.NoError(t, res.Body.Close())
+	assert.NilError(t, err)
+	assert.NilError(t, res.Body.Close())
 	const expected = `
 DriverHeartbeat
 ===============
@@ -39,7 +39,7 @@ DelayTime: 2s
 ===============
 Command: 0 (0x0) None
 `
-	require.Equal(t, strings.TrimSpace(expected), string(response))
+	assert.Equal(t, strings.TrimSpace(expected), string(response))
 }
 
 func TestServeMessagesHTTP_Multi(t *testing.T) {
@@ -56,10 +56,10 @@ func TestServeMessagesHTTP_Multi(t *testing.T) {
 		})
 	}))
 	res, err := http.Get(ts.URL)
-	require.NoError(t, err)
+	assert.NilError(t, err)
 	response, err := ioutil.ReadAll(res.Body)
-	require.NoError(t, err)
-	require.NoError(t, res.Body.Close())
+	assert.NilError(t, err)
+	assert.NilError(t, res.Body.Close())
 	const expected = `
 DriverHeartbeat
 ===============
@@ -82,7 +82,7 @@ DelayTime: 2s
 ===============
 Command: 1 (0x1) Sync
 `
-	require.Equal(t, strings.TrimSpace(expected), string(response))
+	assert.Equal(t, strings.TrimSpace(expected), string(response))
 }
 
 type testMessage struct {

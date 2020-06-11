@@ -13,12 +13,17 @@ type Identifier string
 const maxIdentifierLength = 128
 
 // Validate returns an error for invalid DBC identifiers.
-func (id Identifier) Validate() error {
+func (id Identifier) Validate() (err error) {
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("invalid identifier '%s': %w", id, err)
+		}
+	}()
 	if len(id) == 0 {
 		return fmt.Errorf("zero-length")
 	}
 	if len(id) > maxIdentifierLength {
-		return fmt.Errorf("length %v: exceeds max length: %v", len(id), maxIdentifierLength)
+		return fmt.Errorf("length %v exceeds max length %v", len(id), maxIdentifierLength)
 	}
 	for i, r := range id {
 		if i == 0 && r != '_' && !identifiers.IsAlphaChar(r) { // first char

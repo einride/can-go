@@ -3,14 +3,14 @@ package identifiers
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestIsCamelCase(t *testing.T) {
-	require.True(t, IsCamelCase("SOC"))
-	require.True(t, IsCamelCase("Camel"))
-	require.True(t, IsCamelCase("CamelCase"))
-	require.False(t, IsCamelCase("camelCase"))
-	require.False(t, IsCamelCase("snake_case"))
-	require.False(t, IsCamelCase("kebab-case"))
+	assert.Assert(t, IsCamelCase("SOC"))
+	assert.Assert(t, IsCamelCase("Camel"))
+	assert.Assert(t, IsCamelCase("CamelCase"))
+	assert.Assert(t, !IsCamelCase("camelCase"))
+	assert.Assert(t, !IsCamelCase("snake_case"))
+	assert.Assert(t, !IsCamelCase("kebab-case"))
 }

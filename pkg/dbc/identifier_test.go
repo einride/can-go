@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestIdentifier_Validate(t *testing.T) {
@@ -19,7 +19,7 @@ func TestIdentifier_Validate(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
-			require.NoError(t, tt.Validate())
+			assert.NilError(t, tt.Validate())
 		})
 	}
 }
@@ -36,7 +36,7 @@ func TestIdentifier_Validate_Error(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
-			require.Error(t, tt.Validate())
+			assert.ErrorContains(t, tt.Validate(), "invalid identifier")
 		})
 	}
 }

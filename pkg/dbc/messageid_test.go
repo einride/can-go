@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestMessageID_Validate(t *testing.T) {
@@ -20,7 +20,7 @@ func TestMessageID_Validate(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
-			require.NoError(t, tt.Validate())
+			assert.NilError(t, tt.Validate())
 		})
 	}
 }
@@ -33,7 +33,7 @@ func TestMessageID_Validate_Error(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
-			require.Error(t, tt.Validate())
+			assert.ErrorContains(t, tt.Validate(), "invalid")
 		})
 	}
 }
@@ -49,7 +49,7 @@ func TestMessageID_ToCAN(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt.messageID), func(t *testing.T) {
-			require.Equal(t, tt.expected, tt.messageID.ToCAN())
+			assert.Equal(t, tt.expected, tt.messageID.ToCAN())
 		})
 	}
 }
@@ -65,7 +65,7 @@ func TestMessageID_IsExtended(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(fmt.Sprintf("%v", tt.messageID), func(t *testing.T) {
-			require.Equal(t, tt.expected, tt.messageID.IsExtended())
+			assert.Equal(t, tt.expected, tt.messageID.IsExtended())
 		})
 	}
 }

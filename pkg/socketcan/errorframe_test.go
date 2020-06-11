@@ -3,7 +3,7 @@ package socketcan
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestErrorFrame_String(t *testing.T) {
@@ -56,7 +56,7 @@ func TestErrorFrame_String(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
-			require.Equal(t, tt.expected, tt.f.String())
+			assert.Equal(t, tt.expected, tt.f.String())
 		})
 	}
 }

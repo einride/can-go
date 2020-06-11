@@ -3,7 +3,7 @@ package dbc
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestSignalValueType_Validate(t *testing.T) {
@@ -12,10 +12,10 @@ func TestSignalValueType_Validate(t *testing.T) {
 		SignalValueTypeFloat32,
 		SignalValueTypeFloat64,
 	} {
-		require.NoError(t, tt.Validate())
+		assert.NilError(t, tt.Validate())
 	}
 }
 
 func TestSignalValueType_Validate_Error(t *testing.T) {
-	require.Error(t, SignalValueType(42).Validate())
+	assert.Error(t, SignalValueType(42).Validate(), "invalid signal value type: 42")
 }

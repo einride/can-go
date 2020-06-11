@@ -3,15 +3,15 @@ package socketcan
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/assert"
 )
 
 func TestCanRawAddr_Network(t *testing.T) {
 	addr := &canRawAddr{device: "can0"}
-	require.Equal(t, "can0", addr.String())
+	assert.Equal(t, "can0", addr.String())
 }
 
 func TestCanRawAddr_String(t *testing.T) {
 	addr := &canRawAddr{device: "can0"}
-	require.Equal(t, "can", addr.Network())
+	assert.Equal(t, "can", addr.Network())
 }

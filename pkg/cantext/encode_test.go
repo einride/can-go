@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
 	"go.einride.tech/can/pkg/descriptor"
 	"go.einride.tech/can/pkg/generated"
+	"gotest.tools/v3/assert"
 )
 
 func TestMarshal(t *testing.T) {
@@ -48,11 +48,11 @@ MotorStatus
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run("standard", func(t *testing.T) {
 				txt := Marshal(tt.msg)
-				require.Equal(t, strings.TrimSpace(tt.expected), string(txt))
+				assert.Equal(t, strings.TrimSpace(tt.expected), string(txt))
 			})
 			t.Run("compact", func(t *testing.T) {
 				txt := MarshalCompact(tt.msg)
-				require.Equal(t, strings.TrimSpace(tt.expectedCompact), string(txt))
+				assert.Equal(t, strings.TrimSpace(tt.expectedCompact), string(txt))
 			})
 		})
 	}
@@ -61,37 +61,37 @@ MotorStatus
 func TestAppendID(t *testing.T) {
 	const expected = "ID: 100 (0x64)"
 	actual := string(AppendID([]byte{}, newDriverHeartbeatDescriptor()))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestAppendSender(t *testing.T) {
 	const expected = "Sender: DRIVER"
 	actual := string(AppendSender([]byte{}, newDriverHeartbeatDescriptor()))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestAppendSendType(t *testing.T) {
 	const expected = "SendType: Cyclic"
 	actual := string(AppendSendType([]byte{}, newDriverHeartbeatDescriptor()))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestAppendCycleTime(t *testing.T) {
 	const expected = "CycleTime: 100ms"
 	actual := string(AppendCycleTime([]byte{}, newDriverHeartbeatDescriptor()))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestAppendDelayTime(t *testing.T) {
 	const expected = "DelayTime: 2s"
 	actual := string(AppendDelayTime([]byte{}, newDriverHeartbeatDescriptor()))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func TestAppendFrame(t *testing.T) {
 	const expected = "Frame: 042#123456"
 	actual := string(AppendFrame([]byte{}, can.Frame{ID: 0x42, Length: 3, Data: can.Data{0x12, 0x34, 0x56}}))
-	require.Equal(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }
 
 func newDriverHeartbeatDescriptor() *descriptor.Message {

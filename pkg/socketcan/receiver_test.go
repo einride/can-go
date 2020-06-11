@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can"
+	"gotest.tools/v3/assert"
 )
 
 func TestReceiver_ReceiveFrames_Options(t *testing.T) {
@@ -17,12 +17,12 @@ func TestReceiver_ReceiveFrames_Options(t *testing.T) {
 		}
 		expected := can.Frame{ID: 0x01, Length: 2, Data: can.Data{0x12, 0x34}}
 		receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(input)), opt)
-		require.True(t, receiver.Receive(), "expecting 1 CAN frames")
-		require.NoError(t, receiver.Err())
-		require.False(t, receiver.HasErrorFrame())
-		require.Equal(t, expected, receiver.Frame())
-		require.False(t, receiver.Receive(), "expecting exactly 1 CAN frames")
-		require.NoError(t, receiver.Err())
+		assert.Assert(t, receiver.Receive(), "expecting 1 CAN frames")
+		assert.NilError(t, receiver.Err())
+		assert.Assert(t, !receiver.HasErrorFrame())
+		assert.DeepEqual(t, expected, receiver.Frame())
+		assert.Assert(t, !receiver.Receive(), "expecting exactly 1 CAN frames")
+		assert.NilError(t, receiver.Err())
 	}
 
 	// no options
@@ -34,7 +34,7 @@ func TestReceiver_ReceiveFrames_Options(t *testing.T) {
 		run = true
 	}
 	testReceive(ReceiverFrameInterceptor(intFunc))
-	require.True(t, run)
+	assert.Assert(t, run)
 }
 
 func TestReceiver_ReceiveFrames(t *testing.T) {
@@ -94,13 +94,13 @@ func TestReceiver_ReceiveFrames(t *testing.T) {
 		t.Run(tt.msg, func(t *testing.T) {
 			receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(tt.input)))
 			for i, expected := range tt.expectedFrames {
-				require.True(t, receiver.Receive(), "expecting %d CAN frames", i+1)
-				require.NoError(t, receiver.Err())
-				require.False(t, receiver.HasErrorFrame())
-				require.Equal(t, expected, receiver.Frame())
+				assert.Assert(t, receiver.Receive(), "expecting %d CAN frames", i+1)
+				assert.NilError(t, receiver.Err())
+				assert.Assert(t, !receiver.HasErrorFrame())
+				assert.DeepEqual(t, expected, receiver.Frame())
 			}
-			require.False(t, receiver.Receive(), "expecting exactly %d CAN frames", len(tt.expectedFrames))
-			require.NoError(t, receiver.Err())
+			assert.Assert(t, !receiver.Receive(), "expecting exactly %d CAN frames", len(tt.expectedFrames))
+			assert.NilError(t, receiver.Err())
 		})
 	}
 }
@@ -119,18 +119,18 @@ func TestReceiver_ReceiveErrorFrame(t *testing.T) {
 	}
 	receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(input)))
 	// expect frame
-	require.True(t, receiver.Receive())
-	require.False(t, receiver.HasErrorFrame())
-	require.Equal(t, can.Frame{ID: 0x01, Length: 2, Data: can.Data{0x12, 0x34}}, receiver.Frame())
+	assert.Assert(t, receiver.Receive())
+	assert.Assert(t, !receiver.HasErrorFrame())
+	assert.Equal(t, can.Frame{ID: 0x01, Length: 2, Data: can.Data{0x12, 0x34}}, receiver.Frame())
 	// expect error frame
-	require.True(t, receiver.Receive())
-	require.True(t, receiver.HasErrorFrame())
-	require.Equal(t, ErrorFrame{ErrorClass: ErrorClassTxTimeout}, receiver.ErrorFrame())
+	assert.Assert(t, receiver.Receive())
+	assert.Assert(t, receiver.HasErrorFrame())
+	assert.Equal(t, ErrorFrame{ErrorClass: ErrorClassTxTimeout}, receiver.ErrorFrame())
 	// expect frame
-	require.True(t, receiver.Receive())
-	require.False(t, receiver.HasErrorFrame())
-	require.Equal(t, can.Frame{ID: 0x02, Length: 2, Data: can.Data{0x12, 0x34}}, receiver.Frame())
+	assert.Assert(t, receiver.Receive())
+	assert.Assert(t, !receiver.HasErrorFrame())
+	assert.Equal(t, can.Frame{ID: 0x02, Length: 2, Data: can.Data{0x12, 0x34}}, receiver.Frame())
 	// expect end of stream
-	require.False(t, receiver.Receive())
-	require.NoError(t, receiver.Err())
+	assert.Assert(t, !receiver.Receive())
+	assert.NilError(t, receiver.Err())
 }

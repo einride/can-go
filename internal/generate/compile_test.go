@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"go.einride.tech/can/pkg/descriptor"
 	examplecan "go.einride.tech/can/testdata/gen/go/example"
+	"gotest.tools/v3/assert"
 )
 
 func TestCompile_ExampleDBC(t *testing.T) {
@@ -295,7 +295,7 @@ func TestCompile_ExampleDBC(t *testing.T) {
 		},
 	}
 	input, err := ioutil.ReadFile(exampleDBCFile)
-	require.NoError(t, err)
+	assert.NilError(t, err)
 	result, err := Compile(exampleDBCFile, input)
 	if err != nil {
 		t.Fatal(err)
@@ -303,5 +303,5 @@ func TestCompile_ExampleDBC(t *testing.T) {
 	if len(result.Warnings) > 0 {
 		t.Fatal(result.Warnings)
 	}
-	require.Equal(t, exampleDatabase, result.Database)
+	assert.DeepEqual(t, exampleDatabase, result.Database)
 }
