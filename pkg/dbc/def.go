@@ -32,6 +32,37 @@ func (d *VersionDef) Position() scanner.Position {
 	return d.Pos
 }
 
+// nolint: gochecknoglobals
+var validNewSymbols = map[string]struct{}{
+	"NS_DESC_":         {},
+	"CM_":              {},
+	"BA_DEF_":          {},
+	"BA_":              {},
+	"VAL_":             {},
+	"CAT_DEF_":         {},
+	"CAT_":             {},
+	"FILTER":           {},
+	"BA_DEF_DEF_":      {},
+	"EV_DATA_":         {},
+	"ENVVAR_DATA_":     {},
+	"SGTYPE_":          {},
+	"SGTYPE_VAL_":      {},
+	"BA_DEF_SGTYPE_":   {},
+	"BA_SGTYPE_":       {},
+	"SIG_TYPE_REF_":    {},
+	"VAL_TABLE_":       {},
+	"SIG_GROUP_":       {},
+	"SIG_VALTYPE_":     {},
+	"SIGTYPE_VALTYPE_": {},
+	"BO_TX_BU_":        {},
+	"BA_DEF_REL_":      {},
+	"BA_REL_":          {},
+	"BA_DEF_DEF_REL_":  {},
+	"BU_SG_REL_":       {},
+	"BU_EV_REL_":       {},
+	"BU_BO_REL_":       {},
+}
+
 // NewSymbolsDef defines new symbol entries in a DBC file.
 type NewSymbolsDef struct {
 	Pos     scanner.Position
@@ -45,10 +76,26 @@ func (d *NewSymbolsDef) parseFrom(p *Parser) {
 	defer p.useWhitespace(defaultWhitespace)
 	d.Pos = p.keyword(KeywordNewSymbols).pos
 	p.token(':')
-	for p.peekToken().typ == '\t' {
-		p.token('\t')
+	for {
+		for p.peekToken().typ == '\t' {
+			p.token('\t')
+		}
+		for p.peekToken().typ == ' ' {
+			p.token(' ')
+		}
+		tok := p.peekToken()
+		if tok.typ != scanner.Ident || !d.validIdent(tok.txt) {
+			break
+		}
 		d.Symbols = append(d.Symbols, Keyword(p.identifier()))
 	}
+}
+
+func (d *NewSymbolsDef) validIdent(kw string) bool {
+	if _, ok := validNewSymbols[kw]; !ok {
+		return false
+	}
+	return true
 }
 
 // Position returns the position of the definition.
