@@ -1,6 +1,8 @@
 package valuedescriptions
 
 import (
+	"fmt"
+
 	"go.einride.tech/can/internal/identifiers"
 	"go.einride.tech/can/pkg/dbc"
 	"go.einride.tech/can/pkg/dbc/analysis"
@@ -28,7 +30,12 @@ func run(pass *analysis.Pass) error {
 		for _, vd := range valueDescriptions {
 			vd := vd
 			if !identifiers.IsCamelCase(vd.Description) {
-				pass.Reportf(vd.Pos, "value description must be CamelCase")
+				// Descriptor has format "<value> <quote><description>"
+				//
+				// So we increase the column position by the size of value + 2 (space and quotes) so the lint
+				// error marker is on the description and not on the value
+				vd.Pos.Column += len(fmt.Sprintf("%d", int64(vd.Value))) + 2
+				pass.Reportf(vd.Pos, "value description must be CamelCase (numbers ignored)")
 			}
 		}
 	}
