@@ -5,6 +5,7 @@ all: \
 	mockgen-generate \
 	testdata \
 	go-lint \
+	go-review \
 	go-test \
 	go-mod-tidy \
 	git-verify-nodiff
@@ -12,6 +13,7 @@ all: \
 include tools/git-verify-nodiff/rules.mk
 include tools/golangci-lint/rules.mk
 include tools/gomock/rules.mk
+include tools/goreview/rules.mk
 include tools/stringer/rules.mk
 
 .PHONY: clean
