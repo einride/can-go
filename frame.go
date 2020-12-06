@@ -41,11 +41,15 @@ func (f *Frame) Validate() error {
 	if f.IsExtended && f.ID > MaxExtendedID {
 		return fmt.Errorf(
 			"invalid extended CAN id: %v does not fit in %v bits",
-			f.ID, extendedIDBits)
+			f.ID,
+			extendedIDBits,
+		)
 	} else if !f.IsExtended && f.ID > MaxID {
 		return fmt.Errorf(
 			"invalid standard CAN id: %v does not fit in %v bits",
-			f.ID, idBits)
+			f.ID,
+			idBits,
+		)
 	}
 	// Validate: Data
 	if f.Length > MaxDataLength {
