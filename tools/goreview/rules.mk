@@ -1,11 +1,17 @@
 goreview_cwd := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-goreview := $(goreview_cwd)/bin/goreview
+goreview_version := 0.15.0
+goreview := $(goreview_cwd)/$(goreview_version)/goreview
 
-$(goreview): $(goreview_cwd)/go.mod
-	@echo building goreview...
-	@cd $(goreview_cwd) && go build -o $@ github.com/einride/goreview/cmd/goreview
-	@cd $(goreview_cwd) && go mod tidy
+goreview_archive_url := https://github.com/einride/goreview/releases/download/v$(goreview_version)/goreview_$(goreview_version)_$(shell uname)_$(shell uname -m).tar.gz
 
+$(goreview): $(goreview_cwd)/rules.mk
+	$(info [goreview] fetching $(goreview_version) binary...)
+	@mkdir -p $(dir $@)
+	@curl -sSL $(goreview_archive_url) -o - | tar -xz --directory $(dir $@)
+	@chmod +x $@
+	@touch $@
+
+# go-review: review Go code for Einride-specific conventions
 .PHONY: go-review
 go-review: $(goreview)
 	$(info [$@] reviewing Go code for Einride-specific conventions...)
