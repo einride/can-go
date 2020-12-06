@@ -1,12 +1,16 @@
-# :electric_plug: CAN Go [![GoDoc][doc-img]][doc]
+# :electric_plug: CAN Go [![PkgGoDev](https://pkg.go.dev/badge/go.einride.tech/can)](https://pkg.go.dev/go.einride.tech/can)
 
 CAN toolkit for Go programmers.
 
 [doc-img]: https://godoc.org/go.einride.tech/can?status.svg
 [doc]: https://godoc.org/go.einride.tech/can
 
+can-go makes use of the Linux SocketCAN abstraction for CAN communication.
+(See the [SocketCAN][socketcan] documentation for more details).
 
-can-go makes use of the linux socketcan abstraction to talk to a CAN bus (See [socketcan](https://www.kernel.org/doc/Documentation/networking/can.txt) for more details)
+[socketcan]: https://www.kernel.org/doc/Documentation/networking/can.txt
+
+## Examples
 
 ### Receiving CAN frames
 
@@ -43,16 +47,17 @@ func main() {
 
 ### Generating Go code from a DBC file
 
-It is possible to generate Go code from a `.dbc` file
+It is possible to generate Go code from a `.dbc` file.
 
 ```
 $ go run go.einride.tech/can/cmd/cantool generate <dbc file root folder> <output folder>
 ```
 
-In order to generate Go code that makes sense, we currently perform some validations when
-parsing the dbc file so there may need to be some changes on the dbc file to make it work
+In order to generate Go code that makes sense, we currently perform some
+validations when parsing the DBC file so there may need to be some changes
+on the DBC file to make it work
 
-After generating go code we can easy marshal a message to a frame
+After generating Go code we can marshal a message to a frame:
 
 ```go
 // import etruckcan "github.com/myproject/myrepo/gen"
@@ -61,7 +66,7 @@ auxMsg := etruckcan.NewAuxiliary().SetHeadLights(etruckcan.Auxiliary_HeadLights_
 frame := auxMsg.Frame()
 ```
 
-Or unmarshal a frame to a message
+Or unmarshal a frame to a message:
 
 ```go
 // import etruckcan "github.com/myproject/myrepo/gen"
