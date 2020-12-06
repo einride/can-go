@@ -15,6 +15,7 @@ include tools/commitlint/rules.mk
 include tools/git-verify-nodiff/rules.mk
 include tools/golangci-lint/rules.mk
 include tools/goreview/rules.mk
+include tools/semantic-release/rules.mk
 include tools/stringer/rules.mk
 
 .PHONY: clean
