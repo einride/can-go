@@ -1,14 +1,16 @@
-commitlint_dir := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-commitlint_version := 9.1.1
-commitlint := $(commitlint_dir)/node_modules/.bin/commitlint
+commitlint_cwd := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+commitlint := $(commitlint_cwd)/node_modules/.bin/commitlint
 
-$(commitlint):
-	$(info [commitlint] installing command version $(commitlint_version)...)
-	@npm install --no-save --no-audit --prefix $(commitlint_dir) @commitlint/config-conventional@$(commitlint_version)
-	@npm install --no-save --no-audit --prefix $(commitlint_dir) @commitlint/cli@$(commitlint_version)
+$(commitlint): $(commitlint_cwd)/package.json
+	$(info [commitlint] installing package...)
+	@cd $(commitlint_cwd) && npm install --no-save --no-audit &> /dev/null
+	@touch $@
 
 .PHONY: commitlint
-commitlint: $(commitlint)
+commitlint: $(commitlint_cwd)/../../.commitlintrc.js $(commitlint)
 	$(info [$@] linting commit messages...)
 	@git fetch --tags
-	@$(commitlint) -x "$(commitlint_dir)/node_modules/@commitlint/config-conventional" --from origin/master --to HEAD
+	@NODE_PATH=$(commitlint_cwd)/node_modules $(commitlint) \
+		--config $< \
+		--from origin/master \
+		--to HEAD
