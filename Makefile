@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
 all: \
+	commitlint \
 	stringer-generate \
 	mockgen-generate \
 	testdata \
@@ -10,6 +11,7 @@ all: \
 	go-mod-tidy \
 	git-verify-nodiff
 
+include tools/commitlint/rules.mk
 include tools/git-verify-nodiff/rules.mk
 include tools/golangci-lint/rules.mk
 include tools/gomock/rules.mk

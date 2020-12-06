@@ -10,10 +10,15 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Install Go
+      - name: Setup Go
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: 12
 
       - name: Checkout
         uses: actions/checkout@v2
