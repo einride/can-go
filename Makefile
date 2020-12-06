@@ -14,7 +14,6 @@ all: \
 include tools/commitlint/rules.mk
 include tools/git-verify-nodiff/rules.mk
 include tools/golangci-lint/rules.mk
-include tools/gomock/rules.mk
 include tools/goreview/rules.mk
 include tools/stringer/rules.mk
 
@@ -28,16 +27,19 @@ mockgen-generate: \
 	internal/gen/mock/mockclock/mocks.go \
 	internal/gen/mock/mocksocketcan/mocks.go
 
-internal/gen/mock/mockcanrunner/mocks.go: pkg/canrunner/run.go $(mockgen)
-	$(mockgen) -destination $@ -package mockcanrunner go.einride.tech/can/pkg/canrunner \
+internal/gen/mock/mockcanrunner/mocks.go: pkg/canrunner/run.go go.mod
+	go run github.com/golang/mock/mockgen \
+		-destination $@ -package mockcanrunner go.einride.tech/can/pkg/canrunner \
 		Node,TransmittedMessage,ReceivedMessage,FrameTransmitter,FrameReceiver
 
-internal/gen/mock/mockclock/mocks.go: internal/clock/clock.go $(mockgen)
-	$(mockgen) -destination $@ -package mockclock go.einride.tech/can/internal/clock \
+internal/gen/mock/mockclock/mocks.go: internal/clock/clock.go go.mod
+	go run github.com/golang/mock/mockgen \
+		-destination $@ -package mockclock go.einride.tech/can/internal/clock \
 		Clock,Ticker
 
-internal/gen/mock/mocksocketcan/mocks.go: pkg/socketcan/fileconn.go $(mockgen)
-	$(mockgen) -destination $@ -package mocksocketcan -source $<
+internal/gen/mock/mocksocketcan/mocks.go: pkg/socketcan/fileconn.go go.mod
+	go run github.com/golang/mock/mockgen \
+		-destination $@ -package mocksocketcan -source $<
 
 .PHONY: stringer-generate
 stringer-generate: \
