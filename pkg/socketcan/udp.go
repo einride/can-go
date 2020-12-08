@@ -121,11 +121,11 @@ func setMulticastOpts(p *ipv4.PacketConn, ifi *net.Interface, groupAddr net.Addr
 }
 
 func udpReceiver(address string, ifi *net.Interface) (*ipv4.PacketConn, *net.UDPAddr, error) {
-	c, err := net.ListenPacket("udp4", address)
+	groupAddr, err := hostPortToUDPAddr(address)
 	if err != nil {
 		return nil, nil, fmt.Errorf("create udp receiver: %w", err)
 	}
-	groupAddr, err := hostPortToUDPAddr(address)
+	c, err := net.ListenUDP("udp4", groupAddr)
 	if err != nil {
 		return nil, nil, fmt.Errorf("create udp receiver: %w", err)
 	}
