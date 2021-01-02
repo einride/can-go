@@ -1,9 +1,17 @@
-# :electric_plug: CAN Go [![PkgGoDev](https://pkg.go.dev/badge/go.einride.tech/can)](https://pkg.go.dev/go.einride.tech/can)
+# :electric_plug: CAN Go
+
+[![PkgGoDev][pkg-badge]][pkg]
+[![GoReportCard][report-badge]][report]
+[![Codecov][codecov-badge]][codecov]
+
+[pkg-badge]: https://pkg.go.dev/badge/go.einride.tech/can
+[pkg]: https://pkg.go.dev/go.einride.tech/can
+[report-badge]: https://goreportcard.com/badge/go.einride.tech/can
+[report]: https://goreportcard.com/report/go.einride.tech/can
+[codecov-badge]: https://codecov.io/gh/einride/can-go/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/einride/can-go
 
 CAN toolkit for Go programmers.
-
-[doc-img]: https://godoc.org/go.einride.tech/can?status.svg
-[doc]: https://godoc.org/go.einride.tech/can
 
 can-go makes use of the Linux SocketCAN abstraction for CAN communication.
 (See the [SocketCAN][socketcan] documentation for more details).
