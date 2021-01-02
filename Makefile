@@ -20,7 +20,8 @@ include tools/stringer/rules.mk
 
 .PHONY: clean
 clean:
-	rm -rf tools/*/*/
+	$(info [$@] removing build files...)
+	@rm -rf tools/*/*/ build
 
 .PHONY: mockgen-generate
 mockgen-generate: \
@@ -60,7 +61,9 @@ testdata:
 
 .PHONY: go-test
 go-test:
-	go test -race -cover ./...
+	$(info [$@] running Go tests...)
+	@mkdir -p build/coverage
+	@go test -short -race -coverprofile=build/coverage/$@.txt -covermode=atomic ./...
 
 .PHONY: go-mod-tidy
 go-mod-tidy:
