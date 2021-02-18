@@ -164,6 +164,7 @@ func TestConn_ReadOnClose(t *testing.T) {
 }
 
 func requireVCAN0(t *testing.T) {
+	t.Helper()
 	if _, err := net.InterfaceByName("vcan0"); err != nil {
 		t.Skip("device vcan0 not available")
 	}

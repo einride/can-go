@@ -65,10 +65,7 @@ func generateCommand(app *kingpin.Application) {
 			}
 			outputFile := relPath + ".go"
 			outputPath := filepath.Join(*outputDir, outputFile)
-			if err := genGo(p, outputPath); err != nil {
-				return err
-			}
-			return nil
+			return genGo(p, outputPath)
 		})
 	})
 }
@@ -145,7 +142,7 @@ func analyzers() []*analysis.Analyzer {
 }
 
 func genGo(inputFile, outputFile string) error {
-	if err := os.MkdirAll(filepath.Dir(outputFile), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(outputFile), 0o755); err != nil {
 		return err
 	}
 	input, err := ioutil.ReadFile(inputFile)
@@ -163,7 +160,7 @@ func genGo(inputFile, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(outputFile, output, 0600); err != nil {
+	if err := ioutil.WriteFile(outputFile, output, 0o600); err != nil {
 		return err
 	}
 	fmt.Println("wrote:", outputFile)
