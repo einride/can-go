@@ -1,6 +1,7 @@
 package dbc
 
 import (
+	"errors"
 	"fmt"
 	"text/scanner"
 )
@@ -43,10 +44,9 @@ func (e *validationError) Reason() string {
 // When the validation error results from an invalid nested definition, the position of the nested definition is
 // returned.
 func (e *validationError) Position() scanner.Position {
-	if e.cause != nil {
-		if validationErr, ok := e.cause.(*validationError); ok {
-			return validationErr.Position()
-		}
+	var errValidation *validationError
+	if errors.As(e.cause, &errValidation) {
+		return errValidation.Position()
 	}
 	return e.pos
 }

@@ -18,7 +18,12 @@ linters:
     - unparam # allow constant parameters
     - goerr113 # allow "dynamic" errors
     - dogsled # allow blank identifiers
-    - gocyclo # allow complex functions
+    - cyclop # allow complex functions
     - nlreturn # allow return/break without whitespace
     - exhaustive # TODO: make switches exhaustive and enable
     - noctx # TODO: update http calls and enable
+    - wrapcheck # TODO: don't require error wrapping
+    - paralleltest # TODO: make tests parallel and enable
+    - forbidigo # TODO: remove Printf from CLI tools and enable
+    - exhaustivestruct # don't require exhaustive structs
+    - ifshort # has false positives in 1.37.0

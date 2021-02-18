@@ -34,10 +34,7 @@ func (utr *udpTxRx) SetDeadline(t time.Time) error {
 	if err := utr.rx.SetReadDeadline(t); err != nil {
 		return err
 	}
-	if err := utr.tx.SetWriteDeadline(t); err != nil {
-		return err
-	}
-	return nil
+	return utr.tx.SetWriteDeadline(t)
 }
 
 func (utr *udpTxRx) SetReadDeadline(t time.Time) error {
@@ -114,10 +111,7 @@ func setMulticastOpts(p *ipv4.PacketConn, ifi *net.Interface, groupAddr net.Addr
 	if err := p.SetMulticastTTL(0); err != nil {
 		return err
 	}
-	if err := p.SetTOS(0x0); err != nil {
-		return err
-	}
-	return nil
+	return p.SetTOS(0x0)
 }
 
 func udpReceiver(address string, ifi *net.Interface) (*ipv4.PacketConn, *net.UDPAddr, error) {

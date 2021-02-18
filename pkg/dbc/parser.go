@@ -258,8 +258,7 @@ func (p *Parser) peekKeyword() Keyword {
 }
 
 func (p *Parser) token(typ rune) {
-	tok := p.nextToken()
-	if tok.typ != typ {
+	if tok := p.nextToken(); tok.typ != typ {
 		p.failf(
 			p.peekToken().pos,
 			"expected token: %v, found: %v (%v)",
