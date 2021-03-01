@@ -49,7 +49,7 @@ func TestSignal_UnmarshalSigned_BigEndian(t *testing.T) {
 	}
 	const value int64 = -8
 	var data can.Data
-	data.SetSignedBitsBigEndian(s.Start, s.Length, value)
+	data.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	assert.Equal(t, value, s.UnmarshalSigned(data))
 }
 
@@ -62,7 +62,7 @@ func TestSignal_MarshalUnsigned_BigEndian(t *testing.T) {
 	}
 	const value uint64 = 8
 	var expected can.Data
-	expected.SetUnsignedBitsBigEndian(s.Start, s.Length, value)
+	expected.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	var actual can.Data
 	s.MarshalUnsigned(&actual, value)
 	assert.DeepEqual(t, expected, actual)
@@ -78,7 +78,7 @@ func TestSignal_MarshalSigned_BigEndian(t *testing.T) {
 	}
 	const value int64 = -8
 	var expected can.Data
-	expected.SetSignedBitsBigEndian(s.Start, s.Length, value)
+	expected.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	var actual can.Data
 	s.MarshalSigned(&actual, value)
 	assert.DeepEqual(t, expected, actual)

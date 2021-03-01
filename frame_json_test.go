@@ -102,7 +102,7 @@ func (Frame) Generate(rand *rand.Rand, size int) reflect.Value {
 	} else {
 		f.ID = rand.Uint32() & MaxID
 	}
-	f.Length = uint8(rand.Intn(9))
+	f.Length = uint16(rand.Intn(9))
 	if !f.IsRemote {
 		_, _ = rand.Read(f.Data[:f.Length])
 	}

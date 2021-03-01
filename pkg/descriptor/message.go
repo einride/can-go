@@ -11,7 +11,7 @@ type Message struct {
 	// IsExtended is true if the message is an extended CAN message.
 	IsExtended bool
 	// Length in bytes.
-	Length uint8
+	Length uint16
 	// SendType is the message's send type.
 	SendType SendType
 	// Description of the message.
