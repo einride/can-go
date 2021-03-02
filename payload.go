@@ -99,9 +99,6 @@ import (
 //type Packed *big.Int
 
 type Payload struct {
-	// Message length
-	Length uint16
-
 	// Binary data
 	Data []byte
 
@@ -223,7 +220,7 @@ func (p *Payload) SignedBitsBigEndian(start, length uint16) int64 {
 
 // Bit returns the value of the i:th bit in the data as a bool.
 func (p *Payload) Bit(i uint16) bool {
-	if i > 8*p.Length-1 {
+	if int(i) > 8*len(p.Data)-1 {
 		return false
 	}
 	// calculate which byte the bit belongs to
@@ -238,7 +235,7 @@ func (p *Payload) Bit(i uint16) bool {
 
 // SetBit sets the value of the i:th bit in the data.
 func (p *Payload) SetBit(i uint16, value bool) {
-	if i > 8*p.Length-1 {
+	if int(i) > 8*len(p.Data)-1 {
 		return
 	}
 	byteIndex := i / 8
