@@ -203,10 +203,15 @@ func TestDecodeEACVariables(t *testing.T) {
 
 	for _, signal := range message.Signals {
 		value := signal.UnmarshalPhysicalPayload(&payload)
+		valueDesc, _ := signal.UnmarshalValueDescriptionPayload(&payload)
 		name := signal.Name
 
 		if value != expectedMap[name].value {
 			t.Errorf("signal[%s] value = %f ; expected: %f", name, value, expectedMap[name].value)
+		}
+
+		if valueDesc != expectedMap[name].description {
+			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, expectedMap[name].description)
 		}
 	}
 }

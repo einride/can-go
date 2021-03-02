@@ -2,7 +2,6 @@ package can
 
 import (
 	"encoding/hex"
-	"fmt"
 	"math/big"
 )
 
@@ -265,51 +264,22 @@ func (p *Payload) SetBit(i uint16, value bool) {
 // 	return packed
 // }
 
+// PackLittleEndian packs the byte array into a continuous little endian big.Int
 func (p *Payload) PackLittleEndian() *big.Int {
 	if p.PackedLittleEndian == nil {
-		// Initialize a big.Int called packed
-		//var packed, _ = new(big.Int).SetString(strings.Repeat("00000000", int(p.Length)), 2)
-		packed, _ := new(big.Int).SetString(CanBitsLittleEndian(p.Data), 2)
-
-		// for i := 0; i < int(p.Length); i++ {
-		// 	//packed |= uint8(packed >> (i * 8))
-		// 	fmt.Println(fmt.Sprintf("%08b", p.Data[i]))
-		// }
-		//packed.SetBytes(p.Data)
+		packed := new(big.Int).SetBytes(reverse(p.Data))
 		p.PackedLittleEndian = packed
 	}
 	return new(big.Int).Set(p.PackedLittleEndian)
 }
 
-// CanBitsLittleEndian creates the zig zag pattern of bits feeding into a can.Data frame
-func CanBitsLittleEndian(bytes []byte) string {
-	var bits string
-	for _, n := range bytes {
-		bn := fmt.Sprintf("%08b", n)
-
-		// Need to reverse the binary strings because of the definition of bit order
-		bits += reverse(bn)
+// reverse byte array for little endian signals
+func reverse(data []byte) []byte {
+	reversedArray := make([]byte, len(data))
+	for i, j := 0, len(data)-1; i < j; i, j = i+1, j-1 {
+		reversedArray[i], reversedArray[j] = data[j], data[i]
 	}
-	return reverse(bits)
-}
-
-// CanBitsBigEndian creates the zig zag pattern of bits feeding into a can.Data frame
-func CanBitsBigEndian(bytes []byte) string {
-	var bits string
-	for _, n := range bytes {
-		bn := fmt.Sprintf("%08b", n)
-		bits += bn
-	}
-	return bits
-}
-
-// function to reverse strings
-func reverse(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
-	}
-	return string(runes)
+	return reversedArray
 }
 
 // // PackBigEndian packs the data into a contiguous uint64 value for big-endian signals.
@@ -326,9 +296,10 @@ func reverse(s string) string {
 // 	return packed
 // }
 
+// PackBigEndian packs the byte array into a continuous big endian big.Int
 func (p *Payload) PackBigEndian() *big.Int {
 	if p.PackedBigEndian == nil {
-		var packed, _ = new(big.Int).SetString(CanBitsBigEndian(p.Data), 2)
+		var packed = new(big.Int).SetBytes(p.Data)
 		p.PackedBigEndian = packed
 	}
 	return new(big.Int).Set(p.PackedBigEndian)
