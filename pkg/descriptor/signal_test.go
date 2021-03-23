@@ -1,6 +1,7 @@
 package descriptor
 
 import (
+	"encoding/hex"
 	"math"
 	"testing"
 
@@ -21,9 +22,16 @@ func TestSignal_Decode_UnsignedBigEndian(t *testing.T) {
 		Max:         1,
 	}
 	const value uint64 = 180
+
+	// Testing can.Data
 	var data can.Data
 	data.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
 	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
 }
 
@@ -40,9 +48,16 @@ func TestSignal_Decode_SignedBigEndian(t *testing.T) {
 		Max:         1,
 	}
 	const value int64 = -180
+
+	// Testing can.Data
 	var data can.Data
 	data.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
 	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
 }
 
@@ -59,9 +74,16 @@ func TestSignal_Decode_UnsignedLittleEndian(t *testing.T) {
 		Max:         1,
 	}
 	const value uint64 = 180
+
+	// Testing can.Data
 	var data can.Data
 	data.SetUnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
 	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
 	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
 }
 
@@ -78,9 +100,16 @@ func TestSignal_Decode_SignedLittleEndian(t *testing.T) {
 		Max:         1,
 	}
 	const value int64 = -180
+
+	// Testing can.Data
 	var data can.Data
 	data.SetSignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
 	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
 	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
 }
 
