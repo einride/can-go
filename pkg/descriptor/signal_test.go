@@ -8,6 +8,82 @@ import (
 	"gotest.tools/v3/assert"
 )
 
+func TestSignal_Decode_UnsignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         1,
+	}
+	const value uint64 = 180
+	var data can.Data
+	data.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_SignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         -1,
+		Max:         1,
+	}
+	const value int64 = -180
+	var data can.Data
+	data.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_UnsignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         1,
+	}
+	const value uint64 = 180
+	var data can.Data
+	data.SetUnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_SignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         -1,
+		Max:         1,
+	}
+	const value int64 = -180
+	var data can.Data
+	data.SetSignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
 func TestSignal_FromPhysical_SaturatedCast(t *testing.T) {
 	s := &Signal{
 		Name:   "TestSignal",
