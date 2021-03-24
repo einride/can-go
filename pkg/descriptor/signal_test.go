@@ -1,12 +1,221 @@
 package descriptor
 
 import (
+	"encoding/hex"
 	"math"
 	"testing"
 
 	"go.einride.tech/can"
 	"gotest.tools/v3/assert"
 )
+
+func TestSignal_Decode_UnsignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         1,
+	}
+	const value uint64 = 180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_SignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         -1,
+		Max:         1,
+	}
+	const value int64 = -180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_UnsignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         1,
+	}
+	const value uint64 = 180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetUnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_Decode_SignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       3.0517578125e-05,
+		Length:      10,
+		Start:       32,
+		Min:         -1,
+		Max:         1,
+	}
+	const value int64 = -180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetSignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.Decode(data)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.DecodePayload(&p)
+	assert.DeepEqual(t, s.Offset+float64(value)*s.Scale, actual)
+}
+
+func TestSignal_UnmarshalPhysical_UnsignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       0.5,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         50,
+	}
+	const value uint64 = 180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.UnmarshalPhysical(data)
+	assert.DeepEqual(t, s.Max, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.UnmarshalPhysicalPayload(&p)
+	assert.DeepEqual(t, s.Max, actual)
+}
+
+func TestSignal_UnmarshalPhysical_SignedBigEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: true,
+		Offset:      -1,
+		Scale:       0.5,
+		Length:      10,
+		Start:       32,
+		Min:         -50,
+		Max:         0,
+	}
+	const value int64 = -180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.UnmarshalPhysical(data)
+	assert.DeepEqual(t, s.Min, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.UnmarshalPhysicalPayload(&p)
+	assert.DeepEqual(t, s.Min, actual)
+}
+
+func TestSignal_UnmarshalPhysical_UnsignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    false,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       0.5,
+		Length:      10,
+		Start:       32,
+		Min:         0,
+		Max:         50,
+	}
+	const value uint64 = 180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetUnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.UnmarshalPhysical(data)
+	assert.DeepEqual(t, s.Max, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.UnmarshalPhysicalPayload(&p)
+	assert.DeepEqual(t, s.Max, actual)
+}
+
+func TestSignal_UnmarshalPhysical_SignedLittleEndian(t *testing.T) {
+	s := &Signal{
+		Name:        "TestSignal",
+		IsSigned:    true,
+		IsBigEndian: false,
+		Offset:      -1,
+		Scale:       0.5,
+		Length:      10,
+		Start:       32,
+		Min:         -50,
+		Max:         0,
+	}
+	const value int64 = -180
+
+	// Testing can.Data
+	var data can.Data
+	data.SetSignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
+	actual := s.UnmarshalPhysical(data)
+	assert.DeepEqual(t, s.Min, actual)
+
+	// Testing payload
+	p, _ := can.PayloadFromHex(hex.EncodeToString(data[:]))
+	actual = s.UnmarshalPhysicalPayload(&p)
+	assert.DeepEqual(t, s.Min, actual)
+}
 
 func TestSignal_FromPhysical_SaturatedCast(t *testing.T) {
 	s := &Signal{
