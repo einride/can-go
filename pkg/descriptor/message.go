@@ -57,10 +57,10 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 		var value float64
 		if m.Length > 8 {
 			valueDesc, _ = signal.UnmarshalValueDescriptionPayload(p)
-			value = signal.UnmarshalPhysicalPayload(p)
+			value = signal.DecodePayload(p)
 		} else {
 			valueDesc, _ = signal.UnmarshalValueDescription(data)
-			value = signal.UnmarshalPhysical(data)
+			value = signal.Decode(data)
 		}
 
 		s := DecodedSignal{
