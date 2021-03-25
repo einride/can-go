@@ -44,6 +44,15 @@ type Signal struct {
 	DefaultValue int
 }
 
+type DecodedSignal struct {
+	// Value is the physical value of a decoded signal
+	Value float64
+	// Description physical descritpion of a decoded signal
+	Description string
+	// Signal is a pointer to the dbc signal
+	Signal *Signal
+}
+
 // ValueDescription returns the value description for the provided value.
 func (s *Signal) ValueDescription(value int) (string, bool) {
 	for _, vd := range s.ValueDescriptions {
