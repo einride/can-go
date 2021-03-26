@@ -214,6 +214,20 @@ func TestDecodeEACVariables(t *testing.T) {
 			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, expectedMap[name].description)
 		}
 	}
+
+	for _, signal := range message.Decode(&payload) {
+		value := signal.Value
+		valueDesc := signal.Description
+		name := signal.Signal.Name
+
+		if value != expectedMap[name].value {
+			t.Errorf("signal[%s] value = %f ; expected: %f", name, value, expectedMap[name].value)
+		}
+
+		if valueDesc != expectedMap[name].description {
+			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, expectedMap[name].description)
+		}
+	}
 }
 
 func TestDecodeDisconnectState(t *testing.T) {
@@ -334,6 +348,33 @@ func TestDecodeSensorSonarsData(t *testing.T) {
 		valueFromData := signal.UnmarshalPhysical(data)
 		descFromData, _ := signal.UnmarshalValueDescription(data)
 		name := signal.Name
+
+		if value != valueFromData {
+			t.Errorf("signal[%s] value = %f ; expected: %f", name, value, valueFromData)
+		}
+
+		if valueDesc != descFromData {
+			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, descFromData)
+		}
+	}
+}
+
+func TestMessageDecodeSensorSonarsData(t *testing.T) {
+
+	data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
+	payload := can.Payload{Data: data[:]}
+
+	message, _ := db.Message(uint32(500))
+	fmt.Println(message.Length)
+
+	decodedSignals := message.Decode(&payload)
+	for _, signal := range decodedSignals {
+		value := signal.Value
+		valueDesc := signal.Description
+		name := signal.Signal.Name
+
+		valueFromData := signal.Signal.UnmarshalPhysical(data)
+		descFromData, _ := signal.Signal.UnmarshalValueDescription(data)
 
 		if value != valueFromData {
 			t.Errorf("signal[%s] value = %f ; expected: %f", name, value, valueFromData)

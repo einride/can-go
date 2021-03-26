@@ -1,6 +1,10 @@
 package descriptor
 
-import "time"
+import (
+	"time"
+
+	"go.einride.tech/can"
+)
 
 // Message describes a CAN message.
 type Message struct {
@@ -34,4 +38,40 @@ func (m *Message) MultiplexerSignal() (*Signal, bool) {
 		}
 	}
 	return nil, false
+}
+
+// Decode decodes a can Payload into a decoded signal array
+func (m *Message) Decode(p *can.Payload) []DecodedSignal {
+
+	var data can.Data
+	if m.Length <= 8 {
+		copy(data[:], p.Data)
+	}
+
+	numSignals := len(m.Signals)
+
+	signals := make([]DecodedSignal, numSignals)
+	for i, signal := range m.Signals {
+
+		var valueDesc string
+		var value float64
+		if m.Length > 8 {
+			valueDesc, _ = signal.UnmarshalValueDescriptionPayload(p)
+			value = signal.DecodePayload(p)
+		} else {
+			valueDesc, _ = signal.UnmarshalValueDescription(data)
+			value = signal.Decode(data)
+		}
+
+		s := DecodedSignal{
+			Value:       value,
+			Description: valueDesc,
+			Signal:      signal,
+		}
+
+		signals[i] = s
+
+	}
+	return signals
+
 }
