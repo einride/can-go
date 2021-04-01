@@ -47,27 +47,27 @@ BO_ 500 IODebug: 6 IO
  SG_ TestBoolEnum : 32|1@1+ (1,0) [0|0] "" DBG
  SG_ TestScaledEnum : 40|2@1+ (2,0) [0|6] "" DBG
 
-BO_ 1530 VDM_DisconnectState: 14 VDM
- SG_ VDM_LockCountRR : 91|20@0+ (1,0) [0|1048575] ""  TCM
- SG_ VDM_DiscoStateRR : 95|4@0+ (1,0) [0|5] ""  TCM
- SG_ VDM_CurrentSenseRR : 79|16@0+ (1,0) [0|65535] ""  TCM
- SG_ VDM_DiscoStateRR_Target : 64|1@0+ (1,0) [0|1] ""  TCM
- SG_ VDM_TargetSpeedRR : 63|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  TCM
- SG_ VDM_LockCountRL : 35|20@0+ (1,0) [0|1048575] ""  TCM
- SG_ VDM_DiscoStateRL : 39|4@0+ (1,0) [0|5] ""  TCM
- SG_ VDM_CurrentSenseRL : 23|16@0+ (1,0) [0|65535] ""  TCM
- SG_ VDM_DiscoStateRL_Target : 8|1@0+ (1,0) [0|1] ""  TCM
- SG_ VDM_TargetSpeedRL : 7|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  TCM
+BO_ 1530 DisconnectState: 14 MOTOR
+ SG_ LockCountRearRight : 91|20@0+ (1,0) [0|1048575] ""  IO
+ SG_ DisconnectStateRearRight : 95|4@0+ (1,0) [0|5] ""  IO
+ SG_ CurrentRearRight : 79|16@0+ (1,0) [0|65535] ""  IO
+ SG_ DisconnectStateRearRightTarget : 64|1@0+ (1,0) [0|1] ""  IO
+ SG_ TargetSpeedRearRight : 63|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
+ SG_ LockCountRearLeft : 35|20@0+ (1,0) [0|1048575] ""  IO
+ SG_ DisconnectStateRearLeft : 39|4@0+ (1,0) [0|5] ""  IO
+ SG_ CurrentRearLeft : 23|16@0+ (1,0) [0|65535] ""  IO
+ SG_ DisconnectStateRearLeftTarget : 8|1@0+ (1,0) [0|1] ""  IO
+ SG_ TargetSpeedRearLeft : 7|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
 
-BO_ 1927 TMM_EACVariables: 14 TMM
- SG_ TMM_EACEvapAirTempIn : 96|8@0+ (0.4,-20) [-19.6|82.4] "degC"  TCM
- SG_ TMM_CompressorSpeedActual : 80|16@0+ (1,-1) [0|8600] "RPM"  TCM
- SG_ TMM_FBTargetCompressorSpeed : 64|16@0+ (1,-8600) [-8599|8600] "RPM"  TCM
- SG_ TMM_FFTargetCompressorSpeed : 48|16@0+ (1,-1) [0|8600] "RPM"  TCM
- SG_ TMM_FBTargetSuctionPressure : 32|16@0+ (0.05,0) [0.05|3276.8] "kPa"  TCM
- SG_ TMM_FFTargetSuctionPressure : 16|16@0+ (0.05,0) [0.05|3276.8] "kPa"  TCM
- SG_ TMM_ChillerCoolantOutTTgt : 8|8@0+ (0.4,-20) [-19.6|82.4] "degC"  TCM
- SG_ TMM_EvapAirOutTTgt : 0|8@0+ (0.4,-20) [-19.6|82.4] "degC"  TCM
+BO_ 1927 EvaporatorVariables: 14 SENSOR
+ SG_ EvaporatorAirTempIn : 96|8@0+ (0.4,-20) [-19.6|82.4] "degC"  IO
+ SG_ CompressorSpeedActual : 80|16@0+ (1,-1) [0|8600] "RPM"  IO
+ SG_ FBTargetCompressorSpeed : 64|16@0+ (1,-8600) [-8599|8600] "RPM"  IO
+ SG_ FFTargetCompressorSpeed : 48|16@0+ (1,-1) [0|8600] "RPM"  IO
+ SG_ FBTargetSuctionPressure : 32|16@0+ (0.05,0) [0.05|3276.8] "kPa"  IO
+ SG_ FFTargetSuctionPressure : 16|16@0+ (0.05,0) [0.05|3276.8] "kPa"  IO
+ SG_ ChillerCoolantOutTempTarget : 8|8@0+ (0.4,-20) [-19.6|82.4] "degC"  IO
+ SG_ EvaporatorAirOutTempTarget : 0|8@0+ (0.4,-20) [-19.6|82.4] "degC"  IO
 
 EV_ BrakeEngaged: 0 [0|1] "" 0 10 DUMMY_NODE_VECTOR0 Vector__XXX;
 EV_ Torque: 1 [0|30000] "mNm" 500 16 DUMMY_NODE_VECTOR0 Vector__XXX;
@@ -105,10 +105,9 @@ VAL_ 100 Command 2 "Reboot" 1 "Sync" 0 "None" ;
 VAL_ 500 TestEnum 2 "Two" 1 "One" ;
 VAL_ 500 TestScaledEnum 3 "Six" 2 "Four" 1 "Two" 0 "Zero" ;
 VAL_ 500 TestBoolEnum 1 "One" 0 "Zero" ;
-VAL_ 1530 VDM_DiscoStateRR 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
-VAL_ 1530 VDM_DiscoStateRL 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+VAL_ 1530 DisconnectStateRearRight 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+VAL_ 1530 DisconnectStateRearLeft 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
 
-SIG_GROUP_ 1530 VDM_DisconnectState 1 : VDM_DiscoStateRL_Target VDM_DiscoStateRL VDM_CurrentSenseRL VDM_TargetSpeedRL VDM_LockCountRL VDM_DiscoStateRR_Target VDM_DiscoStateRR VDM_CurrentSenseRR VDM_TargetSpeedRR VDM_LockCountRR;
 `)
 )
 
@@ -125,7 +124,7 @@ func getDatabase() descriptor.Database {
 	return db
 }
 
-func TestDecodeEACVariables(t *testing.T) {
+func TestDecodeEvaporatorVariables(t *testing.T) {
 
 	c, err := generate.Compile("test.dbc", dbc)
 	if err != nil {
@@ -147,49 +146,49 @@ func TestDecodeEACVariables(t *testing.T) {
 
 	expected := []signal{
 		{
-			name:        "TMM_EvapAirOutTTgt",
+			name:        "EvaporatorAirOutTempTarget",
 			value:       6.0,
 			description: "",
 			unit:        "degC",
 		},
 		{
-			name:        "TMM_ChillerCoolantOutTTgt",
+			name:        "ChillerCoolantOutTempTarget",
 			value:       -10.0,
 			description: "",
 			unit:        "degC",
 		},
 		{
-			name:        "TMM_FFTargetSuctionPressure",
+			name:        "FFTargetSuctionPressure",
 			value:       206.75,
 			description: "",
 			unit:        "kPa",
 		},
 		{
-			name:        "TMM_FBTargetSuctionPressure",
+			name:        "FBTargetSuctionPressure",
 			value:       15.75,
 			description: "",
 			unit:        "kPa",
 		},
 		{
-			name:        "TMM_FFTargetCompressorSpeed",
+			name:        "FFTargetCompressorSpeed",
 			value:       100,
 			description: "",
 			unit:        "RPM",
 		},
 		{
-			name:        "TMM_FBTargetCompressorSpeed",
+			name:        "FBTargetCompressorSpeed",
 			value:       1000,
 			description: "",
 			unit:        "RPM",
 		},
 		{
-			name:        "TMM_CompressorSpeedActual",
+			name:        "CompressorSpeedActual",
 			value:       1000,
 			description: "",
 			unit:        "RPM",
 		},
 		{
-			name:        "TMM_EACEvapAirTempIn",
+			name:        "EvaporatorAirTempIn",
 			value:       10.0,
 			description: "",
 			unit:        "degC",
@@ -242,70 +241,70 @@ func TestDecodeDisconnectState(t *testing.T) {
 	expected := []signal{
 		{
 
-			name:        "VDM_TargetSpeedRL",
+			name:        "TargetSpeedRearLeft",
 			value:       0.0,
 			description: "",
 			unit:        "rad/s",
 		},
 		{
 
-			name:        "VDM_DiscoStateRL_Target",
+			name:        "DisconnectStateRearLeftTarget",
 			value:       0,
 			description: "",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_CurrentSenseRL",
+			name:        "CurrentRearLeft",
 			value:       4,
 			description: "",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_DiscoStateRL",
+			name:        "DisconnectStateRearLeft",
 			value:       2,
 			description: "Unlocked",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_LockCountRL",
+			name:        "LockCountRearLeft",
 			value:       1560,
 			description: "",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_TargetSpeedRR",
+			name:        "TargetSpeedRearRight",
 			value:       0,
 			description: "",
 			unit:        "rad/s",
 		},
 		{
 
-			name:        "VDM_DiscoStateRR_Target",
+			name:        "DisconnectStateRearRightTarget",
 			value:       0,
 			description: "",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_CurrentSenseRR",
+			name:        "CurrentRearRight",
 			value:       5,
 			description: "",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_DiscoStateRR",
+			name:        "DisconnectStateRearRight",
 			value:       2,
 			description: "Unlocked",
 			unit:        "",
 		},
 		{
 
-			name:        "VDM_LockCountRR",
+			name:        "LockCountRearRight",
 			value:       1536,
 			description: "",
 			unit:        "",

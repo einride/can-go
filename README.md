@@ -20,6 +20,45 @@ can-go makes use of the Linux SocketCAN abstraction for CAN communication.
 
 ## Examples
 
+### Decoding CAN messages
+
+Decoding CAN messages from byte arrays can be done using `can.Payload`
+
+```go
+func main() {
+    // Create payload from hex string
+    byteStringHex := "8000000420061880000005200600"
+    p, _ := can.PayloadFromHex(byteStringHex)
+
+    // Load example dbc file
+    dbcFile := "./testdata/dbc/example/example_payload.dbc"
+    input, _ := ioutil.ReadFile(dbcFile)
+    c, _ := generate.Compile(dbcFile, input)
+    db := *c.Database
+
+    // Decode message frame ID 1530
+    message, _ := db.Message(uint32(1530))
+    decodedSignals := message.Decode(&p)
+    for _, signal := range decodedSignals {
+        fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+    }
+}
+```
+
+```
+Signal: TargetSpeedRearLeft, Value: 0.000000, Description: 
+Signal: DisconnectStateRearLeftTarget, Value: 0.000000, Description: 
+Signal: CurrentRearLeft, Value: 4.000000, Description: 
+Signal: LockCountRearLeft, Value: 1560.000000, Description: 
+Signal: DisconnectStateRearLeft, Value: 2.000000, Description: Unlocked
+Signal: TargetSpeedRearRight, Value: 0.000000, Description: 
+Signal: DisconnectStateRearRightTarget, Value: 0.000000, Description: 
+Signal: CurrentRearRight, Value: 5.000000, Description: 
+Signal: LockCountRearRight, Value: 1536.000000, Description: 
+Signal: DisconnectStateRearRight, Value: 2.000000, Description: Unlocked
+```
+
+
 ### Receiving CAN frames
 
 Receiving CAN frames from a socketcan interface.
