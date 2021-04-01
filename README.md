@@ -26,14 +26,59 @@ Decoding CAN messages from byte arrays can be done using `can.Payload`
 
 ```go
 func main() {
+    // DBC file
+    var dbcFile = []byte(`
+    VERSION ""
+    NS_ :
+    BS_:
+    BU_: DBG DRIVER IO MOTOR SENSOR
+    
+    BO_ 1530 DisconnectState: 14 MOTOR
+    SG_ LockCountRearRight : 91|20@0+ (1,0) [0|1048575] ""  IO
+    SG_ DisconnectStateRearRight : 95|4@0+ (1,0) [0|5] ""  IO
+    SG_ CurrentRearRight : 79|16@0+ (1,0) [0|65535] ""  IO
+    SG_ DisconnectStateRearRightTarget : 64|1@0+ (1,0) [0|1] ""  IO
+    SG_ TargetSpeedRearRight : 63|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
+    SG_ LockCountRearLeft : 35|20@0+ (1,0) [0|1048575] ""  IO
+    SG_ DisconnectStateRearLeft : 39|4@0+ (1,0) [0|5] ""  IO
+    SG_ CurrentRearLeft : 23|16@0+ (1,0) [0|65535] ""  IO
+    SG_ DisconnectStateRearLeftTarget : 8|1@0+ (1,0) [0|1] ""  IO
+    SG_ TargetSpeedRearLeft : 7|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
+    
+    BA_DEF_ "BusType" STRING ;
+    BA_DEF_ BO_  "GenMsgSendType" ENUM  "None","Cyclic","OnEvent";
+    BA_DEF_ BO_ "GenMsgCycleTime" INT 0 0;
+    BA_DEF_ SG_  "FieldType" STRING ;
+    BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
+    BA_DEF_DEF_ "BusType" "CAN";
+    BA_DEF_DEF_ "FieldType" "";
+    BA_DEF_DEF_ "GenMsgCycleTime" 0;
+    BA_DEF_DEF_ "GenSigStartValue" 0;
+
+    BA_ "GenMsgSendType" BO_ 1 0;
+    BA_ "GenMsgSendType" BO_ 100 1;
+    BA_ "GenMsgCycleTime" BO_ 100 1000;
+    BA_ "GenMsgSendType" BO_ 101 1;
+    BA_ "GenMsgCycleTime" BO_ 101 100;
+    BA_ "GenMsgSendType" BO_ 200 1;
+    BA_ "GenMsgCycleTime" BO_ 200 100;
+    BA_ "GenMsgSendType" BO_ 400 1;
+    BA_ "GenMsgCycleTime" BO_ 400 100;
+    BA_ "GenMsgSendType" BO_ 500 2;
+    BA_ "FieldType" SG_ 100 Command "Command";
+    BA_ "FieldType" SG_ 500 TestEnum "TestEnum";
+    BA_ "GenSigStartValue" SG_ 500 TestEnum 2;
+    
+    VAL_ 1530 DisconnectStateRearRight 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+    VAL_ 1530 DisconnectStateRearLeft 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+    `)
+
     // Create payload from hex string
     byteStringHex := "8000000420061880000005200600"
     p, _ := can.PayloadFromHex(byteStringHex)
 
     // Load example dbc file
-    dbcFile := "./testdata/dbc/example/example_payload.dbc"
-    input, _ := ioutil.ReadFile(dbcFile)
-    c, _ := generate.Compile(dbcFile, input)
+    c, _ := generate.Compile("test.dbc", dbcFile)
     db := *c.Database
 
     // Decode message frame ID 1530
