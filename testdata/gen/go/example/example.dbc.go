@@ -2449,8 +2449,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("EmptyMessage"),
 			ID:          (uint32)(1),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(0),
 			SendType:    (descriptor.SendType)(0),
+			Length:      (uint16)(0),
 			Description: (string)(""),
 			Signals:     ([]*descriptor.Signal)(nil),
 			SenderNode:  (string)("DBG"),
@@ -2461,8 +2461,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("DriverHeartbeat"),
 			ID:          (uint32)(100),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(1),
 			SendType:    (descriptor.SendType)(1),
+			Length:      (uint16)(1),
 			Description: (string)("Sync message used to synchronize the controllers"),
 			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
 				(*descriptor.Signal)(&descriptor.Signal{
@@ -2509,8 +2509,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("MotorCommand"),
 			ID:          (uint32)(101),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(1),
 			SendType:    (descriptor.SendType)(1),
+			Length:      (uint16)(1),
 			Description: (string)(""),
 			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
 				(*descriptor.Signal)(&descriptor.Signal{
@@ -2564,8 +2564,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("SensorSonars"),
 			ID:          (uint32)(200),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(8),
 			SendType:    (descriptor.SendType)(1),
+			Length:      (uint16)(8),
 			Description: (string)(""),
 			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
 				(*descriptor.Signal)(&descriptor.Signal{
@@ -2793,8 +2793,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("MotorStatus"),
 			ID:          (uint32)(400),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(3),
 			SendType:    (descriptor.SendType)(1),
+			Length:      (uint16)(3),
 			Description: (string)(""),
 			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
 				(*descriptor.Signal)(&descriptor.Signal{
@@ -2850,8 +2850,8 @@ var d = (*descriptor.Database)(&descriptor.Database{
 			Name:        (string)("IODebug"),
 			ID:          (uint32)(500),
 			IsExtended:  (bool)(false),
-			Length:      (uint16)(6),
 			SendType:    (descriptor.SendType)(2),
+			Length:      (uint16)(6),
 			Description: (string)(""),
 			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
 				(*descriptor.Signal)(&descriptor.Signal{

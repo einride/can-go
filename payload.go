@@ -104,7 +104,7 @@ type Payload struct {
 	PackedBigEndian *big.Int
 }
 
-// Hex returns the hexadecimal representation of the byte array in a Payload
+// Hex returns the hexadecimal representation of the byte array in a Payload.
 func (p *Payload) Hex() string {
 	h := hex.EncodeToString(p.Data)
 	return h
@@ -261,7 +261,7 @@ func reverse(data []byte) []byte {
 // PackBigEndian packs the byte array into a continuous big endian big.Int.
 func (p *Payload) PackBigEndian() *big.Int {
 	if p.PackedBigEndian == nil {
-		var packed = new(big.Int).SetBytes(p.Data)
+		packed := new(big.Int).SetBytes(p.Data)
 		p.PackedBigEndian = packed
 	}
 	return new(big.Int).Set(p.PackedBigEndian)

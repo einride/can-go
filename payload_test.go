@@ -48,7 +48,6 @@ func TestUnsignedBigEndian(t *testing.T) {
 	payload := Payload{Data: data}
 	signal := signals{start: 39, length: 16, unsigned: 0xc93, signed: 3219}
 	fmt.Println(payload.UnsignedBitsBigEndian(signal.start, signal.length))
-
 }
 
 func TestSignedLittleEndian(t *testing.T) {
