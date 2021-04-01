@@ -9,9 +9,15 @@ import (
 	"go.einride.tech/can/pkg/descriptor"
 )
 
-var (
-	db  = getDatabase()
-	dbc = []byte(`
+type signal struct {
+	name        string
+	value       float64
+	description string
+	unit        string
+}
+
+func getTestDatabase() descriptor.Database {
+	dbc := []byte(`
 VERSION ""
 NS_ :
 BS_:
@@ -109,28 +115,13 @@ VAL_ 1530 DisconnectStateRearRight 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Lock
 VAL_ 1530 DisconnectStateRearLeft 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
 
 `)
-)
-
-type signal struct {
-	name        string
-	value       float64
-	description string
-	unit        string
-}
-
-func getDatabase() descriptor.Database {
 	c, _ := generate.Compile("test.dbc", dbc)
 	db := *c.Database
 	return db
 }
 
 func TestDecodeEvaporatorVariables(t *testing.T) {
-	c, err := generate.Compile("test.dbc", dbc)
-	if err != nil {
-		t.Errorf("err = %v; want nil", err)
-	}
-
-	db := *c.Database
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(1927))
 
 	canDataHexString := "008232204e027600ca4b0007d296"
@@ -139,8 +130,6 @@ func TestDecodeEvaporatorVariables(t *testing.T) {
 	if err != nil {
 		t.Errorf("err = %v; want nil", err)
 	}
-
-	fmt.Println(payload.Hex())
 
 	expected := []signal{
 		{
@@ -239,7 +228,6 @@ func TestDecodeDisconnectState(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(p.Data)
 
 	expected := []signal{
 		{
@@ -319,6 +307,7 @@ func TestDecodeDisconnectState(t *testing.T) {
 		expectedMap[s.name] = s
 	}
 
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(1530))
 	for _, signal := range message.Signals {
 		value := signal.UnmarshalPhysicalPayload(&p)
@@ -344,6 +333,7 @@ func TestDecodeSensorSonarsData(t *testing.T) {
 	data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 	payload := can.Payload{Data: data[:]}
 
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(500))
 	fmt.Println(message.Length)
 
@@ -369,6 +359,7 @@ func TestMessageDecodeSensorSonarsData(t *testing.T) {
 	data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 	payload := can.Payload{Data: data[:]}
 
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(500))
 	fmt.Println(message.Length)
 
@@ -392,6 +383,7 @@ func TestMessageDecodeSensorSonarsData(t *testing.T) {
 }
 
 func BenchmarkDecodeData(b *testing.B) {
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(500))
 	decodeSignal := func() {
 		data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
@@ -408,6 +400,7 @@ func BenchmarkDecodeData(b *testing.B) {
 func BenchmarkDecodePayload(b *testing.B) {
 	// {0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 
+	db := getTestDatabase()
 	message, _ := db.Message(uint32(500))
 	decodeSignal := func() {
 		data := can.Payload{Data: []byte{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}}
