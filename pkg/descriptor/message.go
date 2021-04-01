@@ -14,10 +14,10 @@ type Message struct {
 	ID uint32
 	// IsExtended is true if the message is an extended CAN message.
 	IsExtended bool
-	// Length in bytes.
-	Length uint16
 	// SendType is the message's send type.
 	SendType SendType
+	// Length in bytes.
+	Length uint16
 	// Description of the message.
 	Description string
 	// Signals in the message payload.
@@ -51,7 +51,6 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 
 	signals := make([]DecodedSignal, numSignals)
 	for i, signal := range m.Signals {
-
 		var valueDesc string
 		var value float64
 		if m.Length > 8 {
@@ -69,7 +68,6 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 		}
 
 		signals[i] = s
-
 	}
 	return signals
 }
