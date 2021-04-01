@@ -40,9 +40,8 @@ func (m *Message) MultiplexerSignal() (*Signal, bool) {
 	return nil, false
 }
 
-// Decode decodes a can Payload into a decoded signal array
+// Decode decodes a can Payload into a decoded signal array.
 func (m *Message) Decode(p *can.Payload) []DecodedSignal {
-
 	var data can.Data
 	if m.Length <= 8 {
 		copy(data[:], p.Data)
@@ -73,5 +72,4 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 
 	}
 	return signals
-
 }

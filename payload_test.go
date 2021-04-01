@@ -20,11 +20,7 @@ func TestPackLittleEndian(t *testing.T) {
 
 	dataLittleEndian := payload.PackLittleEndian()
 	fmt.Println(dataLittleEndian)
-	fmt.Println(fmt.Sprintf("%b", dataLittleEndian))
-
-	// if fmt.Sprintf("%08b", dataLittleEndian) != "10010000000010010001101000000" {
-	// 	t.Errorf("fmt.Sprintf('%08b', dataLittleEndian)  = %s); want 10010000000010010001101000000", fmt.Sprintf("%08b", dataLittleEndian))
-	// }
+	fmt.Printf("%b\n", dataLittleEndian)
 }
 
 func TestPackBigEndian(t *testing.T) {
@@ -35,11 +31,7 @@ func TestPackBigEndian(t *testing.T) {
 
 	dataBigEndian := payload.PackBigEndian()
 	fmt.Println(dataBigEndian)
-	fmt.Println(fmt.Sprintf("%b", dataBigEndian))
-
-	// if fmt.Sprintf("%08b", dataBigEndian) != "10000000010001100000001000100100" {
-	// 	t.Errorf("fmt.Sprintf('%08b', dataBigEndian)  = %s); want 10000000010001100000001000100100", fmt.Sprintf("%08b", dataBigEndian))
-	// }
+	fmt.Printf("%b\n", dataBigEndian)
 }
 
 func TestUnsignedLittleEndian(t *testing.T) {

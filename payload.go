@@ -104,11 +104,13 @@ type Payload struct {
 	PackedBigEndian *big.Int
 }
 
+// Hex returns the hexadecimal representation of the byte array in a Payload
 func (p *Payload) Hex() string {
 	h := hex.EncodeToString(p.Data)
 	return h
 }
 
+// PayloadFromHex generates a Payload from a hexadecimal string.
 func PayloadFromHex(hexString string) (Payload, error) {
 	b, err := hex.DecodeString(hexString)
 	var p Payload
@@ -122,14 +124,12 @@ func PayloadFromHex(hexString string) (Payload, error) {
 // UnsignedBitsLittleEndian returns the little-endian bit range [start, start+length) as an unsigned value.
 func (p *Payload) UnsignedBitsLittleEndian(start, length uint16) uint64 {
 	// pack bits into one continuous value
-
 	packed := p.PackLittleEndian()
 	// lsb index in the packed value is the start bit
 	lsbIndex := uint(start)
 	// shift away lower bits
 	shifted := packed.Rsh(packed, lsbIndex)
 	// mask away higher bits
-	//masked := shifted & ((1 << length) - 1)
 	masked := shifted.And(shifted, big.NewInt((1<<length)-1))
 	// done
 	return masked.Uint64()
@@ -163,7 +163,7 @@ func (p *Payload) SignedBitsBigEndian(start, length uint16) int64 {
 	return AsSigned(unsigned, length)
 }
 
-// TODO: Implement SetUnsignedBitsLittleEndian for Payload
+// TODO: Implement SetUnsignedBitsLittleEndian for Payload.
 // SetUnsignedBitsLittleEndian sets the little-endian bit range [start, start+length) to the provided unsigned value.
 // func (d *Data) SetUnsignedBitsLittleEndian(start, length uint8, value uint64) {
 // 	// pack bits into one continuous value
@@ -180,7 +180,7 @@ func (p *Payload) SignedBitsBigEndian(start, length uint16) int64 {
 // 	d.UnpackLittleEndian(newPacked)
 // }
 
-// TODO: Implement SetUnsignedBitsBigEndian for Payload
+// TODO: Implement SetUnsignedBitsBigEndian for Payload.
 // SetUnsignedBitsBigEndian sets the big-endian bit range [start, start+length) to the provided unsigned value.
 // func (d *Data) SetUnsignedBitsBigEndian(start, length uint8, value uint64) {
 // 	// pack bits into one continuous value
@@ -199,13 +199,13 @@ func (p *Payload) SignedBitsBigEndian(start, length uint16) int64 {
 // 	d.UnpackBigEndian(newPacked)
 // }
 
-// TODO: Implement SetSignedBitsLittleEndian for Payload
+// TODO: Implement SetSignedBitsLittleEndian for Payload.
 // SetSignedBitsLittleEndian sets the little-endian bit range [start, start+length) to the provided signed value.
 // func (d *Data) SetSignedBitsLittleEndian(start, length uint8, value int64) {
 // 	d.SetUnsignedBitsLittleEndian(start, length, reinterpret.AsUnsigned(value, length))
 // }
 
-// TODO: Implement SetSignedBitsBigEndian for Payload
+// TODO: Implement SetSignedBitsBigEndian for Payload.
 // SetSignedBitsBigEndian sets the big-endian bit range [start, start+length) to the provided signed value.
 // func (d *Data) SetSignedBitsBigEndian(start, length uint8, value int64) {
 // 	d.SetUnsignedBitsBigEndian(start, length, reinterpret.AsUnsigned(value, length))
@@ -240,7 +240,7 @@ func (p *Payload) SetBit(i uint16, value bool) {
 	}
 }
 
-// PackLittleEndian packs the byte array into a continuous little endian big.Int
+// PackLittleEndian packs the byte array into a continuous little endian big.Int.
 func (p *Payload) PackLittleEndian() *big.Int {
 	if p.PackedLittleEndian == nil {
 		packed := new(big.Int).SetBytes(reverse(p.Data))
@@ -249,7 +249,7 @@ func (p *Payload) PackLittleEndian() *big.Int {
 	return new(big.Int).Set(p.PackedLittleEndian)
 }
 
-// reverse byte array for little endian signals
+// Reverse byte array for little endian signals.
 func reverse(data []byte) []byte {
 	reversedArray := make([]byte, len(data))
 	for i, j := 0, len(data)-1; i < j; i, j = i+1, j-1 {
@@ -258,7 +258,7 @@ func reverse(data []byte) []byte {
 	return reversedArray
 }
 
-// PackBigEndian packs the byte array into a continuous big endian big.Int
+// PackBigEndian packs the byte array into a continuous big endian big.Int.
 func (p *Payload) PackBigEndian() *big.Int {
 	if p.PackedBigEndian == nil {
 		var packed = new(big.Int).SetBytes(p.Data)
@@ -267,7 +267,7 @@ func (p *Payload) PackBigEndian() *big.Int {
 	return new(big.Int).Set(p.PackedBigEndian)
 }
 
-// TODO: Implement UnpackLittleEndian for Payload
+// TODO: Implement UnpackLittleEndian for Payload.
 // UnpackLittleEndian sets the value of d.Bytes by unpacking the provided value as sequential little-endian bits.
 // func (d *Data) UnpackLittleEndian(packed uint64) {
 // 	d[0] = uint8(packed >> (0 * 8))
@@ -280,7 +280,7 @@ func (p *Payload) PackBigEndian() *big.Int {
 // 	d[7] = uint8(packed >> (7 * 8))
 // }
 
-// TODO: Implement UnpackBigEndian for Payload
+// TODO: Implement UnpackBigEndian for Payload.
 // UnpackBigEndian sets the value of d.Bytes by unpacking the provided value as sequential big-endian bits.
 // func (d *Data) UnpackBigEndian(packed uint64) {
 // 	d[0] = uint8(packed >> (7 * 8))

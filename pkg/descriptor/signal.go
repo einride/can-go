@@ -47,7 +47,7 @@ type Signal struct {
 type DecodedSignal struct {
 	// Value is the physical value of a decoded signal
 	Value float64
-	// Description physical descritpion of a decoded signal
+	// Description physical description of a decoded signal
 	Description string
 	// Signal is a pointer to the dbc signal
 	Signal *Signal
@@ -246,9 +246,9 @@ func (s *Signal) UnmarshalValueDescriptionPayload(p *can.Payload) (string, bool)
 // UnmarshalSigned returns the signed value of the signal in the provided CAN frame.
 func (s *Signal) UnmarshalSigned(d can.Data) int64 {
 	if s.IsBigEndian {
-		return d.SignedBitsBigEndian(uint8(s.Start), uint8(uint8(s.Length)))
+		return d.SignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
 	}
-	return d.SignedBitsLittleEndian(uint8(s.Start), uint8(uint8(s.Length)))
+	return d.SignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
 }
 
 // UnmarshalSignedPayload returns the signed value of the signal in the provided CAN frame.

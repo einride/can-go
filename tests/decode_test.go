@@ -125,7 +125,6 @@ func getDatabase() descriptor.Database {
 }
 
 func TestDecodeEvaporatorVariables(t *testing.T) {
-
 	c, err := generate.Compile("test.dbc", dbc)
 	if err != nil {
 		t.Errorf("err = %v; want nil", err)
@@ -137,7 +136,6 @@ func TestDecodeEvaporatorVariables(t *testing.T) {
 	canDataHexString := "008232204e027600ca4b0007d296"
 
 	payload, err := can.PayloadFromHex(canDataHexString)
-	// ci := packet.Metadata().CaptureInfo
 	if err != nil {
 		t.Errorf("err = %v; want nil", err)
 	}
@@ -195,7 +193,7 @@ func TestDecodeEvaporatorVariables(t *testing.T) {
 		},
 	}
 
-	var expectedMap = make(map[string]signal)
+	expectedMap := make(map[string]signal)
 	for _, s := range expected {
 		expectedMap[s.name] = s
 	}
@@ -203,6 +201,7 @@ func TestDecodeEvaporatorVariables(t *testing.T) {
 	for _, signal := range message.Signals {
 		value := signal.UnmarshalPhysicalPayload(&payload)
 		valueDesc, _ := signal.UnmarshalValueDescriptionPayload(&payload)
+		unit := signal.Unit
 		name := signal.Name
 
 		if value != expectedMap[name].value {
@@ -211,6 +210,10 @@ func TestDecodeEvaporatorVariables(t *testing.T) {
 
 		if valueDesc != expectedMap[name].description {
 			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, expectedMap[name].description)
+		}
+
+		if unit != expectedMap[name].unit {
+			t.Errorf("signal[%s] value = %s ; expected: %s", name, unit, expectedMap[name].unit)
 		}
 	}
 
@@ -311,7 +314,7 @@ func TestDecodeDisconnectState(t *testing.T) {
 		},
 	}
 
-	var expectedMap = make(map[string]signal)
+	expectedMap := make(map[string]signal)
 	for _, s := range expected {
 		expectedMap[s.name] = s
 	}
@@ -320,6 +323,7 @@ func TestDecodeDisconnectState(t *testing.T) {
 	for _, signal := range message.Signals {
 		value := signal.UnmarshalPhysicalPayload(&p)
 		valueDesc, _ := signal.UnmarshalValueDescriptionPayload(&p)
+		unit := signal.Unit
 		name := signal.Name
 
 		if value != expectedMap[name].value {
@@ -329,11 +333,14 @@ func TestDecodeDisconnectState(t *testing.T) {
 		if valueDesc != expectedMap[name].description {
 			t.Errorf("signal[%s] value = %s ; expected: %s", name, valueDesc, expectedMap[name].description)
 		}
+
+		if unit != expectedMap[name].unit {
+			t.Errorf("signal[%s] value = %s ; expected: %s", name, unit, expectedMap[name].unit)
+		}
 	}
 }
 
 func TestDecodeSensorSonarsData(t *testing.T) {
-
 	data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 	payload := can.Payload{Data: data[:]}
 
@@ -359,7 +366,6 @@ func TestDecodeSensorSonarsData(t *testing.T) {
 }
 
 func TestMessageDecodeSensorSonarsData(t *testing.T) {
-
 	data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 	payload := can.Payload{Data: data[:]}
 
@@ -386,7 +392,6 @@ func TestMessageDecodeSensorSonarsData(t *testing.T) {
 }
 
 func BenchmarkDecodeData(b *testing.B) {
-
 	message, _ := db.Message(uint32(500))
 	decodeSignal := func() {
 		data := can.Data{0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
@@ -401,7 +406,6 @@ func BenchmarkDecodeData(b *testing.B) {
 }
 
 func BenchmarkDecodePayload(b *testing.B) {
-
 	// {0x01, 0x01, 0x01, 0x02, 0x01, 0x00}
 
 	message, _ := db.Message(uint32(500))
