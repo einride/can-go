@@ -3,6 +3,7 @@ package dbc
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"text/scanner"
@@ -315,12 +316,18 @@ func (p *Parser) int() int64 {
 		isNegative = true
 	}
 	tok := p.nextToken()
-	if tok.typ != scanner.Int {
-		p.failf(tok.pos, "expected int")
+	if tok.typ != scanner.Int && tok.typ != scanner.Float {
+		p.failf(tok.pos, "expected int or float")
 	}
-	i, err := strconv.ParseInt(tok.txt, 10, 64)
+	f, err := strconv.ParseFloat(tok.txt, 64)
 	if err != nil {
 		p.failf(tok.pos, "invalid int")
+	}
+	i := int64(f)
+	if f > math.MaxInt64 {
+		i = math.MaxInt64
+	} else if f < math.MinInt64 {
+		i = math.MinInt64
 	}
 	if isNegative {
 		i *= -1
