@@ -53,6 +53,7 @@ BA_DEF_ BO_  "GenMsgSendType" ENUM  "None","Cyclic","OnEvent";
 BA_DEF_ BO_ "GenMsgCycleTime" INT 0 0;
 BA_DEF_ SG_  "FieldType" STRING ;
 BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
+BA_DEF_ SG_  "SPN" INT -3.4E+038 3.4E+038;
 BA_DEF_DEF_ "BusType" "CAN";
 BA_DEF_DEF_ "FieldType" "";
 BA_DEF_DEF_ "GenMsgCycleTime" 0;
