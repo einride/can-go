@@ -6,6 +6,7 @@ import (
 	"go/format"
 	"go/types"
 	"path"
+	"regexp"
 	"strings"
 
 	"github.com/shurcooL/go-goon"
@@ -121,6 +122,12 @@ func Imports(f *File) {
 	f.P("// Generated code. DO NOT EDIT.")
 }
 
+var nonAlphaNumericRegexp = regexp.MustCompile("[^a-zA-Z0-9]+")
+
+func slugifyString(s string) string {
+	return nonAlphaNumericRegexp.ReplaceAllString(s, "")
+}
+
 func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	f.P("// ", signalType(m, s), " models the ", s.Name, " signal of the ", m.Name, " message.")
 	f.P("type ", signalType(m, s), " ", signalPrimitiveType(s))
@@ -128,13 +135,14 @@ func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	f.P("// Value descriptions for the ", s.Name, " signal of the ", m.Name, " message.")
 	f.P("const (")
 	for _, vd := range s.ValueDescriptions {
+		desc := slugifyString(vd.Description)
 		switch {
 		case s.Length == 1 && vd.Value == 1:
-			f.P(signalType(m, s), "_", vd.Description, " ", signalType(m, s), " = true")
+			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = true")
 		case s.Length == 1 && vd.Value == 0:
-			f.P(signalType(m, s), "_", vd.Description, " ", signalType(m, s), " = false")
+			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = false")
 		default:
-			f.P(signalType(m, s), "_", vd.Description, " ", signalType(m, s), " = ", vd.Value)
+			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = ", vd.Value)
 		}
 	}
 	f.P(")")
