@@ -163,9 +163,10 @@ type DriverHeartbeat_Command uint8
 
 // Value descriptions for the Command signal of the DriverHeartbeat message.
 const (
-	DriverHeartbeat_Command_None   DriverHeartbeat_Command = 0
-	DriverHeartbeat_Command_Sync   DriverHeartbeat_Command = 1
-	DriverHeartbeat_Command_Reboot DriverHeartbeat_Command = 2
+	DriverHeartbeat_Command_None         DriverHeartbeat_Command = 0
+	DriverHeartbeat_Command_Sync         DriverHeartbeat_Command = 1
+	DriverHeartbeat_Command_Reboot       DriverHeartbeat_Command = 2
+	DriverHeartbeat_Command_HeadlightsOn DriverHeartbeat_Command = 3
 )
 
 func (v DriverHeartbeat_Command) String() string {
@@ -176,6 +177,8 @@ func (v DriverHeartbeat_Command) String() string {
 		return "Sync"
 	case 2:
 		return "Reboot"
+	case 3:
+		return "Headlights On"
 	default:
 		return fmt.Sprintf("DriverHeartbeat_Command(%d)", v)
 	}
@@ -2492,6 +2495,10 @@ var d = (*descriptor.Database)(&descriptor.Database{
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
 							Value:       (int)(2),
 							Description: (string)("Reboot"),
+						}),
+						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
+							Value:       (int)(3),
+							Description: (string)("Headlights On"),
 						}),
 					}),
 					ReceiverNodes: ([]string)([]string{

@@ -817,19 +817,24 @@
   MessageID: (dbc.MessageID) 100,
   SignalName: (dbc.Identifier) (len=7) "Command",
   EnvironmentVariableName: (dbc.Identifier) "",
-  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=3) {
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=4) {
    (dbc.ValueDescriptionDef) {
     Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:18,
+    Value: (float64) 3,
+    Description: (string) (len=13) "Headlights On"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:36,
     Value: (float64) 2,
     Description: (string) (len=6) "Reboot"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:29,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:47,
     Value: (float64) 1,
     Description: (string) (len=4) "Sync"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:38,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:56,
     Value: (float64) 0,
     Description: (string) (len=4) "None"
    }
