@@ -10,7 +10,7 @@ import (
 type jsonFrame struct {
 	ID       uint32  `json:"id"`
 	Data     *string `json:"data"`
-	Length   *uint8  `json:"length"`
+	Length   *uint16 `json:"length"`
 	Extended *bool   `json:"extended"`
 	Remote   *bool   `json:"remote"`
 }
@@ -69,7 +69,7 @@ func (f *Frame) UnmarshalJSON(jsonData []byte) error {
 		}
 		f.Data = Data{}
 		copy(f.Data[:], data)
-		f.Length = uint8(len(data))
+		f.Length = uint16(len(data))
 	} else {
 		f.Data = Data{}
 		f.Length = 0

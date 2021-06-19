@@ -20,6 +20,66 @@ can-go makes use of the Linux SocketCAN abstraction for CAN communication.
 
 ## Examples
 
+### Decoding CAN messages
+
+Decoding CAN messages from byte arrays can be done using `can.Payload`
+
+```go
+func main() {
+    // DBC file
+    var dbcFile = []byte(`
+    VERSION ""
+    NS_ :
+    BS_:
+    BU_: DBG DRIVER IO MOTOR SENSOR
+    
+    BO_ 1530 DisconnectState: 14 MOTOR
+     SG_ LockCountRearRight : 91|20@0+ (1,0) [0|1048575] ""  IO
+     SG_ DisconnectStateRearRight : 95|4@0+ (1,0) [0|5] ""  IO
+     SG_ CurrentRearRight : 79|16@0+ (1,0) [0|65535] ""  IO
+     SG_ DisconnectStateRearRightTarget : 64|1@0+ (1,0) [0|1] ""  IO
+     SG_ TargetSpeedRearRight : 63|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
+     SG_ LockCountRearLeft : 35|20@0+ (1,0) [0|1048575] ""  IO
+     SG_ DisconnectStateRearLeft : 39|4@0+ (1,0) [0|5] ""  IO
+     SG_ CurrentRearLeft : 23|16@0+ (1,0) [0|65535] ""  IO
+     SG_ DisconnectStateRearLeftTarget : 8|1@0+ (1,0) [0|1] ""  IO
+     SG_ TargetSpeedRearLeft : 7|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
+    
+    VAL_ 1530 DisconnectStateRearRight 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+    VAL_ 1530 DisconnectStateRearLeft 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+    `)
+
+    // Create payload from hex string
+    byteStringHex := "8000000420061880000005200600"
+    p, _ := can.PayloadFromHex(byteStringHex)
+
+    // Load example dbc file
+    c, _ := generate.Compile("test.dbc", dbcFile)
+    db := *c.Database
+
+    // Decode message frame ID 1530
+    message, _ := db.Message(uint32(1530))
+    decodedSignals := message.Decode(&p)
+    for _, signal := range decodedSignals {
+        fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+    }
+}
+```
+
+```
+Signal: TargetSpeedRearLeft, Value: 0.000000, Description: 
+Signal: DisconnectStateRearLeftTarget, Value: 0.000000, Description: 
+Signal: CurrentRearLeft, Value: 4.000000, Description: 
+Signal: LockCountRearLeft, Value: 1560.000000, Description: 
+Signal: DisconnectStateRearLeft, Value: 2.000000, Description: Unlocked
+Signal: TargetSpeedRearRight, Value: 0.000000, Description: 
+Signal: DisconnectStateRearRightTarget, Value: 0.000000, Description: 
+Signal: CurrentRearRight, Value: 5.000000, Description: 
+Signal: LockCountRearRight, Value: 1536.000000, Description: 
+Signal: DisconnectStateRearRight, Value: 2.000000, Description: Unlocked
+```
+
+
 ### Receiving CAN frames
 
 Receiving CAN frames from a socketcan interface.

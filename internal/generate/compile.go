@@ -62,7 +62,7 @@ func (c *compiler) collectDescriptors() {
 				Name:       string(def.Name),
 				ID:         def.MessageID.ToCAN(),
 				IsExtended: def.MessageID.IsExtended(),
-				Length:     uint8(def.Size),
+				Length:     uint16(def.Size),
 				SenderNode: string(def.Transmitter),
 			}
 			for _, signalDef := range def.Signals {
@@ -73,8 +73,8 @@ func (c *compiler) collectDescriptors() {
 					IsMultiplexer:    signalDef.IsMultiplexerSwitch,
 					IsMultiplexed:    signalDef.IsMultiplexed,
 					MultiplexerValue: uint(signalDef.MultiplexerSwitch),
-					Start:            uint8(signalDef.StartBit),
-					Length:           uint8(signalDef.Size),
+					Start:            uint16(signalDef.StartBit),
+					Length:           uint16(signalDef.Size),
 					Scale:            signalDef.Factor,
 					Offset:           signalDef.Offset,
 					Min:              signalDef.Minimum,
