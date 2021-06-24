@@ -272,6 +272,25 @@ func TestParser_Parse(t *testing.T) {
 		},
 
 		{
+			name: "CSS-Electronics-OBD2-v1.4.dbc",
+			text: `SG_MUL_VAL_ 2024 S1_PID_5B_HybrBatPackRemLife ParameterID_Service01 91-91;`,
+			defs: []Def{
+				&SignalMultiplexValueDef{
+					Pos: scanner.Position{
+						Filename: "CSS-Electronics-OBD2-v1.4.dbc",
+						Line:     1,
+						Column:   1,
+					},
+					MessageID:         2024,
+					Signal:            "S1_PID_5B_HybrBatPackRemLife",
+					MultiplexerSwitch: "ParameterID_Service01",
+					RangeStart:        91,
+					RangeEnd:          91,
+				},
+			},
+		},
+
+		{
 			name: "comment.dbc",
 			text: `CM_ "comment";`,
 			defs: []Def{

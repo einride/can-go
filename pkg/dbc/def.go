@@ -359,6 +359,45 @@ func (d *SignalDef) Position() scanner.Position {
 	return d.Pos
 }
 
+// SignalMultiplexValueDef defines a signal multiplex value within a message.
+type SignalMultiplexValueDef struct {
+	// Pos is the position of the definition.
+	Pos scanner.Position
+
+	// MessageID contains the message CAN ID associated with the signal multiplex value.
+	MessageID MessageID
+
+	// Signal in the message that is multiplexed.
+	Signal Identifier
+
+	// MultiplexerSwitch in the message.
+	MultiplexerSwitch Identifier
+
+	// RangeStart of the values of the MultiplexerSwitch that will trigger Signal.
+	RangeStart uint64
+
+	// RangeEnd of the values of the MultiplexerSwitch that will trigger Signal.
+	RangeEnd uint64
+}
+
+var _ Def = &SignalMultiplexValueDef{}
+
+func (d *SignalMultiplexValueDef) parseFrom(p *Parser) {
+	d.Pos = p.keyword(KeywordSignalMultiplexValue).pos
+	d.MessageID = p.messageID()
+	d.Signal = p.identifier()
+	d.MultiplexerSwitch = p.identifier()
+	d.RangeStart = p.uint()
+	p.token('-')
+	d.RangeEnd = p.uint()
+	p.token(';')
+}
+
+// Position returns the position of the definition.
+func (d *SignalMultiplexValueDef) Position() scanner.Position {
+	return d.Pos
+}
+
 // SignalValueTypeDef defines an extended type definition for a signal.
 type SignalValueTypeDef struct {
 	Pos             scanner.Position

@@ -16,6 +16,7 @@ const (
 	KeywordNewSymbols              Keyword = "NS_"
 	KeywordNodes                   Keyword = "BU_"
 	KeywordSignal                  Keyword = "SG_"
+	KeywordSignalMultiplexValue    Keyword = "SG_MUL_VAL_"
 	KeywordSignalGroup             Keyword = "SIG_GROUP_"
 	KeywordSignalType              Keyword = "SGTYPE_"
 	KeywordSignalValueType         Keyword = "SIG_VALTYPE_"
