@@ -245,6 +245,33 @@ func TestParser_Parse(t *testing.T) {
 		},
 
 		{
+			name: "CSS-Electronics-OBD2-v1.4.dbc",
+			text: `SG_ ParameterID_Service02 m2M : 23|8@0+ (1,0) [0|255] "" Vector__XXX`,
+			defs: []Def{
+				&SignalDef{
+					Pos: scanner.Position{
+						Filename: "CSS-Electronics-OBD2-v1.4.dbc",
+						Line:     1,
+						Column:   1,
+					},
+					Name:                "ParameterID_Service02",
+					IsBigEndian:         true,
+					StartBit:            23,
+					Size:                8,
+					Factor:              1,
+					Offset:              0,
+					Minimum:             0,
+					Maximum:             255,
+					Unit:                "",
+					Receivers:           []Identifier{"Vector__XXX"},
+					IsMultiplexerSwitch: true,
+					IsMultiplexed:       true,
+					MultiplexerSwitch:   2,
+				},
+			},
+		},
+
+		{
 			name: "comment.dbc",
 			text: `CM_ "comment";`,
 			defs: []Def{

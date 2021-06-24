@@ -1,6 +1,7 @@
 package dbc
 
 import (
+	"fmt"
 	"strconv"
 	"text/scanner"
 )
@@ -308,17 +309,22 @@ func (d *SignalDef) parseFrom(p *Parser) {
 		if tok.typ != scanner.Ident {
 			p.failf(tok.pos, "expected ident")
 		}
-		switch {
-		case tok.txt == "M":
-			d.IsMultiplexerSwitch = true
-		case tok.txt[0] == 'm' && len(tok.txt) > 1:
+		rem := tok.txt
+		if len(rem) > 1 && rem[0] == 'm' {
 			d.IsMultiplexed = true
-			i, err := strconv.Atoi(tok.txt[1:])
-			if err != nil || i < 0 {
+			var i uint64
+			n, err := fmt.Sscanf(rem[1:], "%d", &i)
+			if err != nil || n < 0 {
 				p.failf(tok.pos, "invalid multiplexer value")
 			}
 			d.MultiplexerSwitch = uint64(i)
-		default:
+			rem = rem[1+len(strconv.FormatUint(i, 10)):]
+		}
+		if len(rem) > 0 && rem[0] == 'M' {
+			d.IsMultiplexerSwitch = true
+			rem = rem[1:]
+		}
+		if rem != "" {
 			p.failf(tok.pos, "expected multiplexer")
 		}
 	}
