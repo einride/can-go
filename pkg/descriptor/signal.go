@@ -8,8 +8,10 @@ import (
 
 // Signal describes a CAN signal.
 type Signal struct {
-	// Description of the signal.
+	// Name of the signal.
 	Name string
+	// LongName of the signal.
+	LongName string
 	// Start bit.
 	Start uint16
 	// Length in bits.
