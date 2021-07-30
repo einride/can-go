@@ -173,6 +173,9 @@ func (c *compiler) addMetadata() {
 				if def.AttributeName == "GenSigStartValue" {
 					sig.DefaultValue = int(def.IntValue)
 				}
+				if def.AttributeName == "SystemSignalLongSymbol" {
+					sig.LongName = def.StringValue
+				}
 			}
 		}
 	}
