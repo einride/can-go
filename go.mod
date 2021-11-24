@@ -10,11 +10,11 @@ require (
 	github.com/golang/mock v1.4.4-0.20200519145626-92f53b0a566c
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
-	go.uber.org/goleak v0.10.0
-	golang.org/x/net v0.0.0-20200602114024-627f9648deb9
-	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+	go.uber.org/goleak v1.1.12
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c
-	golang.org/x/tools v0.0.0-20200609164405-eb789aa7ce50
+	golang.org/x/tools v0.1.5
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gotest.tools/v3 v3.0.3
 )
