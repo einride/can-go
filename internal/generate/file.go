@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go/format"
 	"go/types"
+	"log"
 	"path"
 	"regexp"
 	"strings"
@@ -128,6 +129,15 @@ func slugifyString(s string) string {
 	return nonAlphaNumericRegexp.ReplaceAllString(s, "")
 }
 
+func countBits(v int) int {
+	out := 0
+	for v != 0 {
+		out += 1
+		v = v >> 1
+	}
+	return out
+}
+
 func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	f.P("// ", signalType(m, s), " models the ", s.Name, " signal of the ", m.Name, " message.")
 	f.P("type ", signalType(m, s), " ", signalPrimitiveType(s))
@@ -136,6 +146,10 @@ func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	f.P("const (")
 	for _, vd := range s.ValueDescriptions {
 		desc := slugifyString(vd.Description)
+		if countBits(vd.Value) > int(s.Length) {
+			log.Printf("warning: %s = %d overflows len %d", desc, vd.Value, s.Length)
+			continue
+		}
 		switch {
 		case s.Length == 1 && vd.Value == 1:
 			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = true")
@@ -163,6 +177,10 @@ func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	} else {
 		f.P("switch v {")
 		for _, vd := range s.ValueDescriptions {
+			if countBits(vd.Value) > int(s.Length) {
+				log.Printf("warning: %s = %d overflows len %d", vd.Description, vd.Value, s.Length)
+				continue
+			}
 			f.P("case ", vd.Value, ":")
 			f.P(`return "`, vd.Description, `"`)
 		}
@@ -402,7 +420,15 @@ func MarshalFrame(f *File, m *descriptor.Message) {
 			if !s.IsMultiplexed {
 				continue
 			}
-			f.P("if m.", signalField(mux), " == ", s.MultiplexerValue, " {")
+			var v interface{} = s.MultiplexerValue
+			if mux.Length == 1 {
+				if s.MultiplexerValue == 0 {
+					v = "false"
+				} else {
+					v = "true"
+				}
+			}
+			f.P("if m.", signalField(mux), " == ", v, " {")
 			f.P(
 				"md.", s.Name, ".Marshal", signalSuperType(s), "(&f.Data, ", signalPrimitiveSuperType(s),
 				"(m.", signalField(s), "))",
@@ -467,7 +493,15 @@ func UnmarshalFrame(f *File, m *descriptor.Message) {
 			if !s.IsMultiplexed {
 				continue
 			}
-			f.P("if m.", signalField(mux), " == ", s.MultiplexerValue, " {")
+			var v interface{} = s.MultiplexerValue
+			if mux.Length == 1 {
+				if s.MultiplexerValue == 0 {
+					v = "false"
+				} else {
+					v = "true"
+				}
+			}
+			f.P("if m.", signalField(mux), " == ", v, " {")
 			f.P("m.", signalField(s), " = ", signalType(m, s), "(md.", s.Name, ".Unmarshal", signalSuperType(s), "(f.Data))")
 			f.P("}")
 		}
