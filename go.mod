@@ -16,5 +16,5 @@ require (
 	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654
 	golang.org/x/tools v0.1.10
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gotest.tools/v3 v3.1.0
+	gotest.tools/v3 v3.2.0
 )
