@@ -116,6 +116,8 @@ func main() {
 	}
 }
 ```  
+
+```
 Signal: SENSOR_SONARS_mux, Value: 1.000000, Description: 
 Signal: SENSOR_SONARS_err_count, Value: 2800.000000, Description: 
 Signal: SENSOR_SONARS_no_filt_left, Value: 114.500000, Description: 
@@ -123,7 +125,6 @@ Signal: SENSOR_SONARS_no_filt_middle, Value: 273.500000, Description:
 Signal: SENSOR_SONARS_no_filt_right, Value: 133.900000, Description: 
 Signal: SENSOR_SONARS_no_filt_rear, Value: 254.800000, Description: 
 ```
-
 
 ### Receiving CAN frames
 
