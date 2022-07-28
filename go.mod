@@ -11,10 +11,10 @@ require (
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	go.uber.org/goleak v1.1.12
-	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654
-	golang.org/x/tools v0.1.10
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f
+	golang.org/x/tools v0.1.12
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gotest.tools/v3 v3.1.0
 )
