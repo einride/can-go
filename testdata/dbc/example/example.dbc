@@ -53,6 +53,7 @@ BA_DEF_ BO_  "GenMsgSendType" ENUM  "None","Cyclic","OnEvent";
 BA_DEF_ BO_ "GenMsgCycleTime" INT 0 0;
 BA_DEF_ SG_  "FieldType" STRING ;
 BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
+BA_DEF_ SG_  "SPN" INT -3.4E+038 3.4E+038;
 BA_DEF_DEF_ "BusType" "CAN";
 BA_DEF_DEF_ "FieldType" "";
 BA_DEF_DEF_ "GenMsgCycleTime" 0;
@@ -72,7 +73,7 @@ BA_ "FieldType" SG_ 100 Command "Command";
 BA_ "FieldType" SG_ 500 TestEnum "TestEnum";
 BA_ "GenSigStartValue" SG_ 500 TestEnum 2;
 
-VAL_ 100 Command 2 "Reboot" 1 "Sync" 0 "None" ;
+VAL_ 100 Command 3 "Headlights On" 2 "Reboot" 1 "Sync" 0 "None" ;
 VAL_ 500 TestEnum 2 "Two" 1 "One" ;
 VAL_ 500 TestScaledEnum 3 "Six" 2 "Four" 1 "Two" 0 "Zero" ;
 VAL_ 500 TestBoolEnum 1 "One" 0 "Zero" ;

@@ -64,6 +64,7 @@ func TestCompile_ExampleDBC(t *testing.T) {
 							{Value: 0, Description: "None"},
 							{Value: 1, Description: "Sync"},
 							{Value: 2, Description: "Reboot"},
+							{Value: 3, Description: "Headlights On"},
 						},
 					},
 				},

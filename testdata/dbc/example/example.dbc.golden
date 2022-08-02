@@ -1,4 +1,4 @@
-([]dbc.Def) (len=43) {
+([]dbc.Def) (len=44) {
  (*dbc.VersionDef)({
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:1:1,
   Version: (string) ""
@@ -616,36 +616,47 @@
   MaximumFloat: (float64) 0,
   EnumValues: ([]string) <nil>
  }),
- (*dbc.AttributeDefaultValueDef)({
+ (*dbc.AttributeDef)({
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:56:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  Name: (dbc.Identifier) (len=3) "SPN",
+  Type: (dbc.AttributeValueType) (len=3) "INT",
+  MinimumInt: (int64) -9223372036854775807,
+  MaximumInt: (int64) 9223372036854775807,
+  MinimumFloat: (float64) 0,
+  MaximumFloat: (float64) 0,
+  EnumValues: ([]string) <nil>
+ }),
+ (*dbc.AttributeDefaultValueDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:57:1,
   AttributeName: (dbc.Identifier) (len=7) "BusType",
   DefaultIntValue: (int64) 0,
   DefaultFloatValue: (float64) 0,
   DefaultStringValue: (string) (len=3) "CAN"
  }),
  (*dbc.AttributeDefaultValueDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:57:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:58:1,
   AttributeName: (dbc.Identifier) (len=9) "FieldType",
   DefaultIntValue: (int64) 0,
   DefaultFloatValue: (float64) 0,
   DefaultStringValue: (string) ""
  }),
  (*dbc.AttributeDefaultValueDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:58:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:59:1,
   AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
   DefaultIntValue: (int64) 0,
   DefaultFloatValue: (float64) 0,
   DefaultStringValue: (string) ""
  }),
  (*dbc.AttributeDefaultValueDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:59:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:60:1,
   AttributeName: (dbc.Identifier) (len=16) "GenSigStartValue",
   DefaultIntValue: (int64) 0,
   DefaultFloatValue: (float64) 0,
   DefaultStringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:61:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:62:1,
   AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 1,
@@ -657,7 +668,7 @@
   StringValue: (string) (len=4) "None"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:62:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:63:1,
   AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 100,
@@ -669,7 +680,7 @@
   StringValue: (string) (len=6) "Cyclic"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:63:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:64:1,
   AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 100,
@@ -681,7 +692,7 @@
   StringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:64:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:65:1,
   AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 101,
@@ -691,33 +702,33 @@
   IntValue: (int64) 0,
   FloatValue: (float64) 0,
   StringValue: (string) (len=6) "Cyclic"
- }),
- (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:65:1,
-  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
-  ObjectType: (dbc.ObjectType) (len=3) "BO_",
-  MessageID: (dbc.MessageID) 101,
-  SignalName: (dbc.Identifier) "",
-  NodeName: (dbc.Identifier) "",
-  EnvironmentVariableName: (dbc.Identifier) "",
-  IntValue: (int64) 100,
-  FloatValue: (float64) 0,
-  StringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:66:1,
-  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
-  MessageID: (dbc.MessageID) 200,
+  MessageID: (dbc.MessageID) 101,
   SignalName: (dbc.Identifier) "",
   NodeName: (dbc.Identifier) "",
   EnvironmentVariableName: (dbc.Identifier) "",
-  IntValue: (int64) 0,
+  IntValue: (int64) 100,
   FloatValue: (float64) 0,
-  StringValue: (string) (len=6) "Cyclic"
+  StringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:67:1,
+  AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
+  ObjectType: (dbc.ObjectType) (len=3) "BO_",
+  MessageID: (dbc.MessageID) 200,
+  SignalName: (dbc.Identifier) "",
+  NodeName: (dbc.Identifier) "",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  IntValue: (int64) 0,
+  FloatValue: (float64) 0,
+  StringValue: (string) (len=6) "Cyclic"
+ }),
+ (*dbc.AttributeValueForObjectDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:68:1,
   AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 200,
@@ -729,7 +740,7 @@
   StringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:68:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:69:1,
   AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 400,
@@ -741,7 +752,7 @@
   StringValue: (string) (len=6) "Cyclic"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:69:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:70:1,
   AttributeName: (dbc.Identifier) (len=15) "GenMsgCycleTime",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 400,
@@ -753,7 +764,7 @@
   StringValue: (string) ""
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:70:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:71:1,
   AttributeName: (dbc.Identifier) (len=14) "GenMsgSendType",
   ObjectType: (dbc.ObjectType) (len=3) "BO_",
   MessageID: (dbc.MessageID) 500,
@@ -765,7 +776,7 @@
   StringValue: (string) (len=7) "OnEvent"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:71:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:72:1,
   AttributeName: (dbc.Identifier) (len=9) "FieldType",
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 100,
@@ -777,7 +788,7 @@
   StringValue: (string) (len=7) "Command"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:72:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:73:1,
   AttributeName: (dbc.Identifier) (len=9) "FieldType",
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 500,
@@ -789,7 +800,7 @@
   StringValue: (string) (len=8) "TestEnum"
  }),
  (*dbc.AttributeValueForObjectDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:73:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:74:1,
   AttributeName: (dbc.Identifier) (len=16) "GenSigStartValue",
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 500,
@@ -801,45 +812,31 @@
   StringValue: (string) ""
  }),
  (*dbc.ValueDescriptionsDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:1,
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:1,
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 100,
   SignalName: (dbc.Identifier) (len=7) "Command",
   EnvironmentVariableName: (dbc.Identifier) "",
-  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=3) {
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=4) {
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:18,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:18,
+    Value: (float64) 3,
+    Description: (string) (len=13) "Headlights On"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:36,
     Value: (float64) 2,
     Description: (string) (len=6) "Reboot"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:29,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:47,
     Value: (float64) 1,
     Description: (string) (len=4) "Sync"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:75:38,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:56,
     Value: (float64) 0,
     Description: (string) (len=4) "None"
-   }
-  }
- }),
- (*dbc.ValueDescriptionsDef)({
-  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:1,
-  ObjectType: (dbc.ObjectType) (len=3) "SG_",
-  MessageID: (dbc.MessageID) 500,
-  SignalName: (dbc.Identifier) (len=8) "TestEnum",
-  EnvironmentVariableName: (dbc.Identifier) "",
-  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=2) {
-   (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:19,
-    Value: (float64) 2,
-    Description: (string) (len=3) "Two"
-   },
-   (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:76:27,
-    Value: (float64) 1,
-    Description: (string) (len=3) "One"
    }
   }
  }),
@@ -847,28 +844,18 @@
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:1,
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 500,
-  SignalName: (dbc.Identifier) (len=14) "TestScaledEnum",
+  SignalName: (dbc.Identifier) (len=8) "TestEnum",
   EnvironmentVariableName: (dbc.Identifier) "",
-  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=4) {
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=2) {
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:25,
-    Value: (float64) 3,
-    Description: (string) (len=3) "Six"
-   },
-   (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:33,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:19,
     Value: (float64) 2,
-    Description: (string) (len=4) "Four"
-   },
-   (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:42,
-    Value: (float64) 1,
     Description: (string) (len=3) "Two"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:50,
-    Value: (float64) 0,
-    Description: (string) (len=4) "Zero"
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:77:27,
+    Value: (float64) 1,
+    Description: (string) (len=3) "One"
    }
   }
  }),
@@ -876,16 +863,45 @@
   Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:1,
   ObjectType: (dbc.ObjectType) (len=3) "SG_",
   MessageID: (dbc.MessageID) 500,
+  SignalName: (dbc.Identifier) (len=14) "TestScaledEnum",
+  EnvironmentVariableName: (dbc.Identifier) "",
+  ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=4) {
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:25,
+    Value: (float64) 3,
+    Description: (string) (len=3) "Six"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:33,
+    Value: (float64) 2,
+    Description: (string) (len=4) "Four"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:42,
+    Value: (float64) 1,
+    Description: (string) (len=3) "Two"
+   },
+   (dbc.ValueDescriptionDef) {
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:50,
+    Value: (float64) 0,
+    Description: (string) (len=4) "Zero"
+   }
+  }
+ }),
+ (*dbc.ValueDescriptionsDef)({
+  Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:79:1,
+  ObjectType: (dbc.ObjectType) (len=3) "SG_",
+  MessageID: (dbc.MessageID) 500,
   SignalName: (dbc.Identifier) (len=12) "TestBoolEnum",
   EnvironmentVariableName: (dbc.Identifier) "",
   ValueDescriptions: ([]dbc.ValueDescriptionDef) (len=2) {
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:23,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:79:23,
     Value: (float64) 1,
     Description: (string) (len=3) "One"
    },
    (dbc.ValueDescriptionDef) {
-    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:78:31,
+    Pos: (scanner.Position) ../../testdata/dbc/example/example.dbc:79:31,
     Value: (float64) 0,
     Description: (string) (len=4) "Zero"
    }
