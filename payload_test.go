@@ -2,6 +2,7 @@ package can
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -64,6 +65,24 @@ func TestSignedBigEndian(t *testing.T) {
 	payload := Payload{Data: data}
 	signal := signals{start: 3, length: 12, unsigned: 0xff7, signed: -9}
 	fmt.Println(payload.SignedBitsBigEndian(signal.start, signal.length))
+}
+
+func TestReverse(t *testing.T) {
+	// Even length message
+	byteHexEven := "17399b6c89d22805003f"
+	p, _ := PayloadFromHex(byteHexEven)
+
+	if !reflect.DeepEqual(p.Data, reverse(reverse(p.Data))) {
+		t.Errorf("Reversed slices are not equal")
+	}
+
+	// Odd length message
+	byteHexOdd := "17399b6c89d2280500"
+	p, _ = PayloadFromHex(byteHexOdd)
+
+	if !reflect.DeepEqual(p.Data, reverse(reverse(p.Data))) {
+		t.Errorf("Reversed slices are not equal")
+	}
 }
 
 func Benchmark4BytesPayload_PackLittleEndian(b *testing.B) {
