@@ -68,20 +68,20 @@ func TestSignedBigEndian(t *testing.T) {
 }
 
 func TestReverse(t *testing.T) {
-	// Even length message
-	byteHexEven := "17399b6c89d22805003f"
-	p, _ := PayloadFromHex(byteHexEven)
-
-	if !reflect.DeepEqual(p.Data, reverse(reverse(p.Data))) {
-		t.Errorf("Reversed slices are not equal")
+	payloadHexes := []string{
+		"17399b6c89d22805003f", // Even Length
+		"17399b6c89d22805003f17399b6c89d22805003f17399b6c89d22805003f", // Long Even
+		"17399b6c89d2280500", // Odd Length
+		"17399b6c89d228050017399b6c89d228050017399b6c89d2280500", // Long Odd
 	}
 
-	// Odd length message
-	byteHexOdd := "17399b6c89d2280500"
-	p, _ = PayloadFromHex(byteHexOdd)
+	for _, hex := range payloadHexes {
+		p, _ := PayloadFromHex(hex)
 
-	if !reflect.DeepEqual(p.Data, reverse(reverse(p.Data))) {
-		t.Errorf("Reversed slices are not equal")
+		twiceReversed := reverse(reverse(p.Data))
+		if !reflect.DeepEqual(p.Data, twiceReversed) {
+			t.Errorf("Reversed slices are not equal, input: %v, output: %v", p.Data, twiceReversed)
+		}
 	}
 }
 
