@@ -251,10 +251,9 @@ func (p *Payload) PackLittleEndian() *big.Int {
 
 // Reverse byte array for little endian signals.
 func reverse(data []byte) []byte {
-	reversedArray := make([]byte, len(data))
-	copy(reversedArray, data)
-	for i, j := 0, len(reversedArray)-1; i < j; i, j = i+1, j-1 {
-		reversedArray[i], reversedArray[j] = reversedArray[j], reversedArray[i]
+	reversedArray := make([]byte, 0, len(data))
+	for i := len(data) - 1; i >= 0; i-- {
+		reversedArray = append(reversedArray, data[i])
 	}
 	return reversedArray
 }
