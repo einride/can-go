@@ -47,12 +47,28 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 		copy(data[:], p.Data)
 	}
 
-	numSignals := len(m.Signals)
+	// Check for multiplexing
+	var multiplexerValue uint
+	multiplexerSignal, isMultiplexed := m.MultiplexerSignal()
+	if isMultiplexed {
+		if m.Length > 8 {
+			multiplexerValue = uint(multiplexerSignal.DecodePayload(p))
+		} else {
+			multiplexerValue = uint(multiplexerSignal.Decode(data))
+		}
+	}
 
-	signals := make([]DecodedSignal, numSignals)
-	for i, signal := range m.Signals {
+	var signals []DecodedSignal
+	for _, signal := range m.Signals {
 		var valueDesc string
 		var value float64
+
+		if signal.IsMultiplexed {
+			if signal.MultiplexerValue != multiplexerValue {
+				continue
+			}
+		}
+
 		if m.Length > 8 {
 			valueDesc, _ = signal.UnmarshalValueDescriptionPayload(p)
 			value = signal.DecodePayload(p)
@@ -67,7 +83,7 @@ func (m *Message) Decode(p *can.Payload) []DecodedSignal {
 			Signal:      signal,
 		}
 
-		signals[i] = s
+		signals = append(signals, s)
 	}
 	return signals
 }

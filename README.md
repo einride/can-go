@@ -22,63 +22,109 @@ can-go makes use of the Linux SocketCAN abstraction for CAN communication.
 
 ### Decoding CAN messages
 
-Decoding CAN messages from byte arrays can be done using `can.Payload`
+Decoding CAN messages from byte arrays can be done using `can.Payload`  
 
 ```go
 func main() {
-    // DBC file
-    var dbcFile = []byte(`
-    VERSION ""
+	// DBC file
+	var dbcFile = []byte(`
+	VERSION ""
     NS_ :
     BS_:
     BU_: DBG DRIVER IO MOTOR SENSOR
     
-    BO_ 1530 DisconnectState: 14 MOTOR
-     SG_ LockCountRearRight : 91|20@0+ (1,0) [0|1048575] ""  IO
-     SG_ DisconnectStateRearRight : 95|4@0+ (1,0) [0|5] ""  IO
-     SG_ CurrentRearRight : 79|16@0+ (1,0) [0|65535] ""  IO
-     SG_ DisconnectStateRearRightTarget : 64|1@0+ (1,0) [0|1] ""  IO
-     SG_ TargetSpeedRearRight : 63|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
-     SG_ LockCountRearLeft : 35|20@0+ (1,0) [0|1048575] ""  IO
-     SG_ DisconnectStateRearLeft : 39|4@0+ (1,0) [0|5] ""  IO
-     SG_ CurrentRearLeft : 23|16@0+ (1,0) [0|65535] ""  IO
-     SG_ DisconnectStateRearLeftTarget : 8|1@0+ (1,0) [0|1] ""  IO
-     SG_ TargetSpeedRearLeft : 7|15@0+ (0.125,-2048) [-2048|2047.875] "rad/s"  IO
-    
-    VAL_ 1530 DisconnectStateRearRight 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
-    VAL_ 1530 DisconnectStateRearLeft 0 "Undefined" 1 "Locked" 2 "Unlocked" 3 "Locking" 4 "Unlocking" 5 "Faulted" ;
+    BO_ 400 MOTOR_STATUS: 3 MOTOR
+	  SG_ MOTOR_STATUS_wheel_error : 0|1@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ MOTOR_STATUS_speed_kph : 8|16@1+ (0.001,0) [0|0] "kph" DRIVER,IO
+
+	BO_ 200 SENSOR_SONARS: 8 SENSOR
+	  SG_ SENSOR_SONARS_mux M : 0|4@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_err_count : 4|12@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_left m0 : 16|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_middle m0 : 28|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_right m0 : 40|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_rear m0 : 52|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_no_filt_left m1 : 16|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_middle m1 : 28|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_right m1 : 40|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_rear m1 : 52|12@1+ (0.1,0) [0|0] "" DBG
     `)
 
-    // Create payload from hex string
-    byteStringHex := "8000000420061880000005200600"
-    p, _ := can.PayloadFromHex(byteStringHex)
+	// Create payload from hex string
+	byteStringHex := "004faf"
+	p, _ := can.PayloadFromHex(byteStringHex)
 
-    // Load example dbc file
-    c, _ := generate.Compile("test.dbc", dbcFile)
-    db := *c.Database
+	// Load example dbc file
+	c, _ := generate.Compile("test.dbc", dbcFile)
+	db := *c.Database
 
-    // Decode message frame ID 1530
-    message, _ := db.Message(uint32(1530))
-    decodedSignals := message.Decode(&p)
-    for _, signal := range decodedSignals {
-        fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
-    }
+	// Decode message frame ID 400
+	message, _ := db.Message(uint32(400))
+	decodedSignals := message.Decode(&p)
+	for _, signal := range decodedSignals {
+		fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+	}
 }
 ```
 
 ```
-Signal: TargetSpeedRearLeft, Value: 0.000000, Description: 
-Signal: DisconnectStateRearLeftTarget, Value: 0.000000, Description: 
-Signal: CurrentRearLeft, Value: 4.000000, Description: 
-Signal: LockCountRearLeft, Value: 1560.000000, Description: 
-Signal: DisconnectStateRearLeft, Value: 2.000000, Description: Unlocked
-Signal: TargetSpeedRearRight, Value: 0.000000, Description: 
-Signal: DisconnectStateRearRightTarget, Value: 0.000000, Description: 
-Signal: CurrentRearRight, Value: 5.000000, Description: 
-Signal: LockCountRearRight, Value: 1536.000000, Description: 
-Signal: DisconnectStateRearRight, Value: 2.000000, Description: Unlocked
-```
+Signal: MOTOR_STATUS_wheel_error, Value: 0.000000, Description: 
+Signal: MOTOR_STATUS_speed_kph, Value: 44.879000, Description: 
+```  
 
+#### Multiplexed Signals  
+
+```go
+func main() {
+	// DBC file
+	var dbcFile = []byte(`
+	VERSION ""
+    NS_ :
+    BS_:
+    BU_: DBG DRIVER IO MOTOR SENSOR
+    
+    BO_ 400 MOTOR_STATUS: 3 MOTOR
+	  SG_ MOTOR_STATUS_wheel_error : 0|1@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ MOTOR_STATUS_speed_kph : 8|16@1+ (0.001,0) [0|0] "kph" DRIVER,IO
+
+	BO_ 200 SENSOR_SONARS: 8 SENSOR
+	  SG_ SENSOR_SONARS_mux M : 0|4@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_err_count : 4|12@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_left m0 : 16|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_middle m0 : 28|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_right m0 : 40|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_rear m0 : 52|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_no_filt_left m1 : 16|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_middle m1 : 28|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_right m1 : 40|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_rear m1 : 52|12@1+ (0.1,0) [0|0] "" DBG
+    `)
+
+	// Create payload from hex string
+	byteStringHex := "01af79f4aa3b459f"
+	p, _ := can.PayloadFromHex(byteStringHex)
+
+	// Load example dbc file
+	c, _ := generate.Compile("test.dbc", dbcFile)
+	db := *c.Database
+
+	// Decode message frame ID 200
+	message, _ := db.Message(uint32(200))
+	decodedSignals := message.Decode(&p)
+	for _, signal := range decodedSignals {
+		fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+	}
+}
+```  
+
+```
+Signal: SENSOR_SONARS_mux, Value: 1.000000, Description: 
+Signal: SENSOR_SONARS_err_count, Value: 2800.000000, Description: 
+Signal: SENSOR_SONARS_no_filt_left, Value: 114.500000, Description: 
+Signal: SENSOR_SONARS_no_filt_middle, Value: 273.500000, Description: 
+Signal: SENSOR_SONARS_no_filt_right, Value: 133.900000, Description: 
+Signal: SENSOR_SONARS_no_filt_rear, Value: 254.800000, Description: 
+```
 
 ### Receiving CAN frames
 
