@@ -7,6 +7,26 @@ import (
 
 const udp = "udp"
 
+// dialOptions are the configuration options for Dial.
+type dialOptions struct {
+	interfaceName string
+}
+
+// defaultDialOptions returns dial options with sensible default values.
+func defaultDialOptions() *dialOptions {
+	return &dialOptions{}
+}
+
+// DialOption configures an LCM transmitter.
+type DialOption func(*dialOptions)
+
+// WithUDPDialInterface configures the interface to dial on.
+func WithUDPDialInterface(interfaceName string) DialOption {
+	return func(opts *dialOptions) {
+		opts.interfaceName = interfaceName
+	}
+}
+
 // Dial connects to the address on the named net.
 //
 // Linux only: If net is "can" it creates a SocketCAN connection to the device
@@ -15,10 +35,14 @@ const udp = "udp"
 // If net is "udp" it assumes UDP multicast and sets up 2 connections, one for
 // receiving and one for transmitting.
 // See: https://golang.org/pkg/net/#Dial
-func Dial(network, address string) (net.Conn, error) {
+func Dial(network, address string, dialOpts ...DialOption) (net.Conn, error) {
+	opts := defaultDialOptions()
+	for _, dialOpt := range dialOpts {
+		dialOpt(opts)
+	}
 	switch network {
 	case udp:
-		return udpTransceiver(network, address)
+		return udpTransceiver(network, address, opts.interfaceName)
 	case canRawNetwork:
 		return dialRaw(address) // platform-specific
 	default:

@@ -58,13 +58,22 @@ func (utr *udpTxRx) RemoteAddr() net.Addr {
 	return utr.groupAddr
 }
 
-func udpTransceiver(network, address string) (*udpTxRx, error) {
+func udpTransceiver(network, address, interfaceName string) (*udpTxRx, error) {
 	if network != udp {
 		return nil, fmt.Errorf("[%v] is not a udp network", network)
 	}
-	ifi, err := getMulticastInterface()
-	if err != nil {
-		return nil, fmt.Errorf("new UDP transceiver: %w", err)
+	var ifi *net.Interface
+	var err error
+	if interfaceName != "" {
+		ifi, err = net.InterfaceByName(interfaceName)
+		if err != nil {
+			return nil, fmt.Errorf("new UDP transceiver: failed to lookup provided if: %w", err)
+		}
+	} else {
+		ifi, err = getMulticastInterface()
+		if err != nil {
+			return nil, fmt.Errorf("new UDP transceiver: failed to lookup multicast if: %w", err)
+		}
 	}
 	rx, groupAddr, err := udpReceiver(address, ifi)
 	if err != nil {
