@@ -60,7 +60,7 @@ func (s *signal) setUnsignedValue(value uint64, desc *descriptor.Signal) {
 	s.Raw = uintToJSON(value)
 	s.Physical = floatToJSON(desc.ToPhysical(float64(value)))
 	s.Unit = desc.Unit
-	if value, ok := desc.ValueDescription(int(value)); ok {
+	if value, ok := desc.ValueDescription(int64(value)); ok {
 		s.Description = value
 	}
 }
@@ -69,7 +69,7 @@ func (s *signal) setSignedValue(value int64, desc *descriptor.Signal) {
 	s.Raw = intToJSON(value)
 	s.Physical = floatToJSON(desc.ToPhysical(float64(value)))
 	s.Unit = desc.Unit
-	if value, ok := desc.ValueDescription(int(value)); ok {
+	if value, ok := desc.ValueDescription(value); ok {
 		s.Description = value
 	}
 }
@@ -83,7 +83,7 @@ func (s *signal) setBoolValue(value bool, desc *descriptor.Signal) {
 		s.Physical = floatToJSON(desc.ToPhysical(0))
 	}
 	s.Unit = desc.Unit
-	intValue := 0
+	var intValue int64
 	if value {
 		intValue = 1
 	}
