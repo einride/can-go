@@ -26,7 +26,10 @@ BO_ 400 MOTOR_STATUS: 3 MOTOR
 `,
 			Diagnostics: []*analysis.Diagnostic{
 				{
-					Pos:     scanner.Position{Line: 2, Column: 2},
+					Pos: scanner.Position{
+						Line:   2,
+						Column: 2,
+					},
 					Message: "signal names must be CamelCase",
 				},
 			},

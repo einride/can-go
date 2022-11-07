@@ -2,7 +2,7 @@ package socketcan
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"testing"
 
 	"go.einride.tech/can"
@@ -16,7 +16,7 @@ func TestReceiver_ReceiveFrames_Options(t *testing.T) {
 			0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		}
 		expected := can.Frame{ID: 0x01, Length: 2, Data: can.Data{0x12, 0x34}}
-		receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(input)), opt)
+		receiver := NewReceiver(io.NopCloser(bytes.NewReader(input)), opt)
 		assert.Assert(t, receiver.Receive(), "expecting 1 CAN frames")
 		assert.NilError(t, receiver.Err())
 		assert.Assert(t, !receiver.HasErrorFrame())
@@ -92,7 +92,7 @@ func TestReceiver_ReceiveFrames(t *testing.T) {
 	} {
 		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
-			receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(tt.input)))
+			receiver := NewReceiver(io.NopCloser(bytes.NewReader(tt.input)))
 			for i, expected := range tt.expectedFrames {
 				assert.Assert(t, receiver.Receive(), "expecting %d CAN frames", i+1)
 				assert.NilError(t, receiver.Err())
@@ -117,7 +117,7 @@ func TestReceiver_ReceiveErrorFrame(t *testing.T) {
 		// id---------------> | dlc | padding-------> | data----------------------------------------> |
 		0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	}
-	receiver := NewReceiver(ioutil.NopCloser(bytes.NewReader(input)))
+	receiver := NewReceiver(io.NopCloser(bytes.NewReader(input)))
 	// expect frame
 	assert.Assert(t, receiver.Receive())
 	assert.Assert(t, !receiver.HasErrorFrame())

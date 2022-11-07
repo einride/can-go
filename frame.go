@@ -62,7 +62,7 @@ func (f *Frame) Validate() error {
 //
 // Format:
 //
-//   ([0-9A-F]{3}|[0-9A-F]{3})#(R[0-8]?|[0-9A-F]{0,16})
+//	([0-9A-F]{3}|[0-9A-F]{3})#(R[0-8]?|[0-9A-F]{0,16})
 //
 // The format is compatible with the candump(1) log file format.
 func (f Frame) String() string {

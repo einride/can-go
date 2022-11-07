@@ -245,13 +245,13 @@ func TestEmulate_SendReceive(t *testing.T) {
 func TestEmulator_Isolation(t *testing.T) {
 	// Given 5 separate emulators
 	const nEmulators = 5
-	var emulators []*Emulator
+	emulators := make([]*Emulator, nEmulators)
 	ctx, cancel := context.WithCancel(context.Background())
 	eg, eCtx := errgroup.WithContext(ctx)
 	for i := 0; i < nEmulators; i++ {
 		e, err := NewEmulator()
 		assert.NilError(t, err)
-		emulators = append(emulators, e)
+		emulators[i] = e
 		eg.Go(func() error {
 			return e.Run(eCtx)
 		})

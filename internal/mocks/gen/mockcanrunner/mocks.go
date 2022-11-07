@@ -6,13 +6,14 @@ package mockcanrunner
 
 import (
 	context "context"
+	net "net"
+	reflect "reflect"
+	time "time"
+
 	gomock "github.com/golang/mock/gomock"
 	can "go.einride.tech/can"
 	canrunner "go.einride.tech/can/pkg/canrunner"
 	descriptor "go.einride.tech/can/pkg/descriptor"
-	net "net"
-	reflect "reflect"
-	time "time"
 )
 
 // MockNode is a mock of Node interface.
