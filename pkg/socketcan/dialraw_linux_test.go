@@ -1,5 +1,4 @@
-// +build linux
-// +build go1.12
+//go:build linux && go1.12
 
 package socketcan
 

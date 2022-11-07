@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -87,7 +87,7 @@ func lintCommand(app *kingpin.Application) {
 			if err != nil {
 				return err
 			}
-			source, err := ioutil.ReadAll(f)
+			source, err := io.ReadAll(f)
 			if err != nil {
 				return err
 			}
@@ -145,7 +145,7 @@ func genGo(inputFile, outputFile string) error {
 	if err := os.MkdirAll(filepath.Dir(outputFile), 0o755); err != nil {
 		return err
 	}
-	input, err := ioutil.ReadFile(inputFile)
+	input, err := os.ReadFile(inputFile)
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func genGo(inputFile, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(outputFile, output, 0o600); err != nil {
+	if err := os.WriteFile(outputFile, output, 0o600); err != nil {
 		return err
 	}
 	fmt.Println("wrote:", outputFile)

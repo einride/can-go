@@ -1,7 +1,6 @@
 package dbc
 
 import (
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -18,14 +17,14 @@ func shouldUpdateGoldenFiles() bool {
 func TestParse_ExampleDBC(t *testing.T) {
 	const inputFile = "../../testdata/dbc/example/example.dbc"
 	const goldenFile = "../../testdata/dbc/example/example.dbc.golden"
-	data, err := ioutil.ReadFile(inputFile)
+	data, err := os.ReadFile(inputFile)
 	assert.NilError(t, err)
 	p := NewParser(inputFile, data)
 	assert.NilError(t, p.Parse())
 	if shouldUpdateGoldenFiles() {
-		assert.NilError(t, ioutil.WriteFile(goldenFile, []byte(dump(p.Defs())), 0600))
+		assert.NilError(t, os.WriteFile(goldenFile, []byte(dump(p.Defs())), 0o600))
 	}
-	goldenFileData, err := ioutil.ReadFile(goldenFile)
+	goldenFileData, err := os.ReadFile(goldenFile)
 	assert.NilError(t, err)
 	assert.Equal(t, string(goldenFileData), dump(p.Defs()))
 }

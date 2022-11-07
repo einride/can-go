@@ -32,7 +32,7 @@ type EmulatorOption func(*emulatorCfg)
 
 // WithMulticastAddress sets the address for the multicast group that the Emulator should listen on.
 // A multicast address starts with 239.x.x.x, and using an address that does not conform to this
-// will lead to undefined behaviour.
+// will lead to undefined behavior.
 func WithMulticastAddress(address string) EmulatorOption {
 	return func(cfg *emulatorCfg) {
 		cfg.address = address

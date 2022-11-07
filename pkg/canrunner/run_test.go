@@ -9,8 +9,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"go.einride.tech/can"
-	"go.einride.tech/can/internal/gen/mock/mockcanrunner"
-	"go.einride.tech/can/internal/gen/mock/mockclock"
+	"go.einride.tech/can/internal/mocks/gen/mockcanrunner"
+	"go.einride.tech/can/internal/mocks/gen/mockclock"
 	"go.einride.tech/can/pkg/canrunner"
 	"go.einride.tech/can/pkg/descriptor"
 	"golang.org/x/sync/errgroup"
@@ -82,7 +82,6 @@ func TestRunMessageTransmitter_TransmitEventMessage(t *testing.T) {
 	}
 	transmitEventChan := make(chan struct{})
 	wakeUpChan := make(chan struct{})
-	ctx := context.Background()
 	msg.EXPECT().Descriptor().AnyTimes().Return(desc)
 	msg.EXPECT().TransmitEventChan().Return(transmitEventChan)
 	msg.EXPECT().WakeUpChan().Return(wakeUpChan)
