@@ -126,3 +126,21 @@ func GenerateTestdata(ctx context.Context) error {
 	cmd.Dir = sg.FromGitRoot()
 	return cmd.Run()
 }
+
+func BuildIntegrationTests(ctx context.Context) error {
+	sg.Logger(ctx).Println("building integration test...")
+	testDir := sg.FromGitRoot("build", "tests")
+	if err := os.MkdirAll(testDir, 0o775); err != nil {
+		return err
+	}
+	return sg.Command(
+		ctx,
+		"go",
+		"test",
+		"-tags=integration",
+		"-c",
+		sg.FromGitRoot("pkg", "candevice"),
+		"-o",
+		filepath.Join(testDir, "candevice.test"),
+	).Run()
+}

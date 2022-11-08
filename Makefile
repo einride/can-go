@@ -43,6 +43,10 @@ update-sage: $(go)
 clean-sage:
 	@git clean -fdx .sage/tools .sage/bin .sage/build
 
+.PHONY: build-integration-tests
+build-integration-tests: $(sagefile)
+	@$(sagefile) BuildIntegrationTests
+
 .PHONY: convco-check
 convco-check: $(sagefile)
 	@$(sagefile) ConvcoCheck

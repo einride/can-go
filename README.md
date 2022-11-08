@@ -75,3 +75,21 @@ var auxMsg *etruckcan.Auxiliary
 _ = auxMsg.UnmarshalFrame(frame)
 
 ```
+
+Running integration tests
+-------------------------
+
+Building the tests:
+
+```
+$ make build-integration-tests
+```
+
+Built tests are placed in build/tests.
+
+The candevice test requires access to physical HW, so run it using sudo. Example:
+
+```
+$ ./build/tests/candevice.test
+> PASS
+```
