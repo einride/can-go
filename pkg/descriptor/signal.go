@@ -236,11 +236,11 @@ func (s *Signal) UnmarshalValueDescriptionPayload(p *can.Payload) (string, bool)
 	if len(s.ValueDescriptions) == 0 {
 		return "", false
 	}
-	var intValue int
+	var intValue int64
 	if s.IsSigned {
-		intValue = int(s.UnmarshalSignedPayload(p))
+		intValue = s.UnmarshalSignedPayload(p)
 	} else {
-		intValue = int(s.UnmarshalUnsignedPayload(p))
+		intValue = int64(s.UnmarshalUnsignedPayload(p))
 	}
 	return s.ValueDescription(intValue)
 }
