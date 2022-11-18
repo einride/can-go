@@ -1,6 +1,6 @@
 package descriptor
 
 type ValueDescription struct {
-	Value       int
+	Value       int64
 	Description string
 }

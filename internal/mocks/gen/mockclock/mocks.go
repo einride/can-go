@@ -5,10 +5,11 @@
 package mockclock
 
 import (
-	gomock "github.com/golang/mock/gomock"
-	clock "go.einride.tech/can/internal/clock"
 	reflect "reflect"
 	time "time"
+
+	gomock "github.com/golang/mock/gomock"
+	clock "go.einride.tech/can/internal/clock"
 )
 
 // MockClock is a mock of Clock interface.

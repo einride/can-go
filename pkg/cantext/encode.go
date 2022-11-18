@@ -119,7 +119,7 @@ func AppendFrame(buf []byte, f can.Frame) []byte {
 	return appendAttributeString(buf, "Frame", f.String())
 }
 
-func appendAttributeString(buf []byte, name string, s string) []byte {
+func appendAttributeString(buf []byte, name, s string) []byte {
 	buf = append(buf, name...)
 	buf = append(buf, ": "...)
 	buf = append(buf, s...)

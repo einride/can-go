@@ -12,24 +12,16 @@ jobs:
   make:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Go
-        uses: actions/setup-go@v3
+      - name: Setup Sage
+        uses: einride/sage/actions/setup@master
         with:
-          go-version: ^1.16
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+          go-version: 1.19
 
       - name: Make
         run: make
 
       - name: Report Code Coverage
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3.1.1
         with:
           file: ./build/coverage/go-test.txt
           fail_ci_if_error: true
@@ -39,26 +31,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Go
-        uses: actions/setup-go@v3
+      - name: Setup Sage
+        uses: einride/sage/actions/setup@master
         with:
-          go-version: ^1.16
+          go-version: 1.19
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Create Release
+        uses: go-semantic-release/action@v1.19
         with:
-          node-version: 16
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-initial-development-versions: true
 
-      - name: Run semantic-release
-        run: make semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Update tags for goreleaser to choose latest version
+      - name: Fetch tags
+        run: git fetch --force --tags
 
       - name: Run goreleaser
-        uses: goreleaser/goreleaser-action@v2.9.1
+        uses: goreleaser/goreleaser-action@v3.2.0
         with:
           version: latest
           args: release --rm-dist

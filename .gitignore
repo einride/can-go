@@ -1,3 +1,7 @@
 .idea
 tools/*/*/
 build/
+
+# files generated during release
+.generated-go-semantic-release-changelog.md
+.semrel/

@@ -2485,19 +2485,19 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Description:      (string)(""),
 					ValueDescriptions: ([]*descriptor.ValueDescription)([]*descriptor.ValueDescription{
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(0),
+							Value:       (int64)(0),
 							Description: (string)("None"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(1),
+							Value:       (int64)(1),
 							Description: (string)("Sync"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(2),
+							Value:       (int64)(2),
 							Description: (string)("Reboot"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(3),
+							Value:       (int64)(3),
 							Description: (string)("Headlights On"),
 						}),
 					}),
@@ -2899,11 +2899,11 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Description:      (string)(""),
 					ValueDescriptions: ([]*descriptor.ValueDescription)([]*descriptor.ValueDescription{
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(1),
+							Value:       (int64)(1),
 							Description: (string)("One"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(2),
+							Value:       (int64)(2),
 							Description: (string)("Two"),
 						}),
 					}),
@@ -2971,11 +2971,11 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Description:      (string)(""),
 					ValueDescriptions: ([]*descriptor.ValueDescription)([]*descriptor.ValueDescription{
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(0),
+							Value:       (int64)(0),
 							Description: (string)("Zero"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(1),
+							Value:       (int64)(1),
 							Description: (string)("One"),
 						}),
 					}),
@@ -3001,19 +3001,19 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Description:      (string)(""),
 					ValueDescriptions: ([]*descriptor.ValueDescription)([]*descriptor.ValueDescription{
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(0),
+							Value:       (int64)(0),
 							Description: (string)("Zero"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(1),
+							Value:       (int64)(1),
 							Description: (string)("Two"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(2),
+							Value:       (int64)(2),
 							Description: (string)("Four"),
 						}),
 						(*descriptor.ValueDescription)(&descriptor.ValueDescription{
-							Value:       (int)(3),
+							Value:       (int64)(3),
 							Description: (string)("Six"),
 						}),
 					}),

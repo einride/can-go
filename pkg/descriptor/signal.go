@@ -56,7 +56,7 @@ type DecodedSignal struct {
 }
 
 // ValueDescription returns the value description for the provided value.
-func (s *Signal) ValueDescription(value int) (string, bool) {
+func (s *Signal) ValueDescription(value int64) (string, bool) {
 	for _, vd := range s.ValueDescriptions {
 		if vd.Value == value {
 			return vd.Description, true
@@ -222,11 +222,11 @@ func (s *Signal) UnmarshalValueDescription(d can.Data) (string, bool) {
 	if len(s.ValueDescriptions) == 0 {
 		return "", false
 	}
-	var intValue int
+	var intValue int64
 	if s.IsSigned {
-		intValue = int(s.UnmarshalSigned(d))
+		intValue = s.UnmarshalSigned(d)
 	} else {
-		intValue = int(s.UnmarshalUnsigned(d))
+		intValue = int64(s.UnmarshalUnsigned(d))
 	}
 	return s.ValueDescription(intValue)
 }

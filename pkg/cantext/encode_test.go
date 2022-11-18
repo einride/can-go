@@ -122,15 +122,15 @@ func newDriverHeartbeatDescriptor() *descriptor.Message {
 				Description:      (string)(""),
 				ValueDescriptions: []*descriptor.ValueDescription{
 					{
-						Value:       (int)(0),
+						Value:       (int64)(0),
 						Description: (string)("None"),
 					},
 					{
-						Value:       (int)(1),
+						Value:       (int64)(1),
 						Description: (string)("Sync"),
 					},
 					{
-						Value:       (int)(2),
+						Value:       (int64)(2),
 						Description: (string)("Reboot"),
 					},
 				},

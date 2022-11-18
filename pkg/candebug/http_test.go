@@ -1,7 +1,8 @@
 package candebug
 
 import (
-	"io/ioutil"
+	"context"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -23,9 +24,13 @@ func TestServeMessagesHTTP_Single(t *testing.T) {
 			},
 		})
 	}))
-	res, err := http.Get(ts.URL)
+	c := http.DefaultClient
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ts.URL, nil)
 	assert.NilError(t, err)
-	response, err := ioutil.ReadAll(res.Body)
+	res, err := c.Do(req)
+	assert.NilError(t, err)
+	response, err := io.ReadAll(res.Body)
 	assert.NilError(t, err)
 	assert.NilError(t, res.Body.Close())
 	const expected = `
@@ -55,9 +60,13 @@ func TestServeMessagesHTTP_Multi(t *testing.T) {
 			},
 		})
 	}))
-	res, err := http.Get(ts.URL)
+	c := http.DefaultClient
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ts.URL, nil)
 	assert.NilError(t, err)
-	response, err := ioutil.ReadAll(res.Body)
+	res, err := c.Do(req)
+	assert.NilError(t, err)
+	response, err := io.ReadAll(res.Body)
 	assert.NilError(t, err)
 	assert.NilError(t, res.Body.Close())
 	const expected = `

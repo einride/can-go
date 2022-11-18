@@ -143,7 +143,7 @@ func (c *compiler) addMetadata() {
 			for _, valueDescription := range def.ValueDescriptions {
 				signal.ValueDescriptions = append(signal.ValueDescriptions, &descriptor.ValueDescription{
 					Description: valueDescription.Description,
-					Value:       int(valueDescription.Value),
+					Value:       int64(valueDescription.Value),
 				})
 			}
 		case *dbc.AttributeValueForObjectDef:

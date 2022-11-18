@@ -1,7 +1,7 @@
 package generate
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -295,7 +295,7 @@ func TestCompile_ExampleDBC(t *testing.T) {
 			},
 		},
 	}
-	input, err := ioutil.ReadFile(exampleDBCFile)
+	input, err := os.ReadFile(exampleDBCFile)
 	assert.NilError(t, err)
 	result, err := Compile(exampleDBCFile, input)
 	if err != nil {
