@@ -63,7 +63,7 @@ func (d *Device) IsUp() (bool, error) {
 	return false, nil
 }
 
-// corresponds to "ip link set up".
+// Corresponds to "ip link set up".
 func (d *Device) SetUp() error {
 	c, err := netlink.Dial(unix.NETLINK_ROUTE, &netlink.Config{})
 	if err != nil {
@@ -93,7 +93,7 @@ func (d *Device) SetUp() error {
 	return nil
 }
 
-// corresponds to "ip link set down".
+// Corresponds to "ip link set down".
 func (d *Device) SetDown() error {
 	c, err := netlink.Dial(unix.NETLINK_ROUTE, &netlink.Config{})
 	if err != nil {
