@@ -10,6 +10,18 @@ can-go makes use of the Linux SocketCAN abstraction for CAN communication. (See 
 Examples
 --------
 
+### Setting up a CAN interface
+
+```go
+func main() {
+	// Error handling omitted to keep example simple
+	d, _ := candevice.New("can0")
+	_ := d.SetBitrate(250000)
+	_ := d.SetUp()
+	defer d.SetDown()
+}
+```
+
 ### Receiving CAN frames
 
 Receiving CAN frames from a socketcan interface.
@@ -81,7 +93,7 @@ Running integration tests
 
 Building the tests:
 
-```
+```shell
 $ make build-integration-tests
 ```
 
@@ -89,7 +101,7 @@ Built tests are placed in build/tests.
 
 The candevice test requires access to physical HW, so run it using sudo. Example:
 
-```
-$ ./build/tests/candevice.test
+```shell
+$ sudo ./build/tests/candevice.test
 > PASS
 ```
