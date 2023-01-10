@@ -19,6 +19,7 @@ jobs:
         run: make
 
       - name: Create Release
+        id: release
         uses: go-semantic-release/action@v1.19
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -26,9 +27,11 @@ jobs:
 
       # Update tags for goreleaser to choose latest version
       - name: Fetch tags
+        if: steps.release.outputs.version != ''
         run: git fetch --force --tags
 
       - name: Run goreleaser
+        if: steps.release.outputs.version != ''
         uses: goreleaser/goreleaser-action@v4.1.0
         with:
           version: latest
