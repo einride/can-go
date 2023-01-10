@@ -12,7 +12,7 @@ require (
 	golang.org/x/net v0.5.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.4.0
-	golang.org/x/tools v0.4.0
+	golang.org/x/tools v0.5.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gotest.tools/v3 v3.4.0
 )
