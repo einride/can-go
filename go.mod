@@ -12,7 +12,7 @@ require (
 	golang.org/x/net v0.6.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.5.0
-	golang.org/x/tools v0.5.0
+	golang.org/x/tools v0.6.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gotest.tools/v3 v3.4.0
 )
@@ -26,5 +26,5 @@ require (
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mdlayher/socket v0.4.0 // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
-	golang.org/x/mod v0.7.0 // indirect
+	golang.org/x/mod v0.8.0 // indirect
 )
