@@ -4,8 +4,8 @@ import (
 	"testing"
 	"text/scanner"
 
-	"go.einride.tech/can/pkg/dbc/analysis"
-	"go.einride.tech/can/pkg/dbc/analysis/analysistest"
+	"github.com/blueinnovationsgroup/can-go/pkg/dbc/analysis"
+	"github.com/blueinnovationsgroup/can-go/pkg/dbc/analysis/analysistest"
 )
 
 func TestAnalyzer(t *testing.T) {

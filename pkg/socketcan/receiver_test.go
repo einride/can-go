@@ -5,7 +5,7 @@ import (
 	"io"
 	"testing"
 
-	"go.einride.tech/can"
+	"github.com/blueinnovationsgroup/can-go"
 	"gotest.tools/v3/assert"
 )
 

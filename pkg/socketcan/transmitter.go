@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"go.einride.tech/can"
+	"github.com/blueinnovationsgroup/can-go"
 )
 
 type TransmitterOption func(*transmitterOpts)

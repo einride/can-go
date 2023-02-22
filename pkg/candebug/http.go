@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"go.einride.tech/can/pkg/cantext"
-	"go.einride.tech/can/pkg/descriptor"
-	"go.einride.tech/can/pkg/generated"
+	"github.com/blueinnovationsgroup/can-go/pkg/cantext"
+	"github.com/blueinnovationsgroup/can-go/pkg/descriptor"
+	"github.com/blueinnovationsgroup/can-go/pkg/generated"
 )
 
 func ServeMessagesHTTP(w http.ResponseWriter, r *http.Request, msgs []generated.Message) {

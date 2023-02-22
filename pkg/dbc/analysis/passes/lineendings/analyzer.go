@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"text/scanner"
 
-	"go.einride.tech/can/pkg/dbc/analysis"
+	"github.com/blueinnovationsgroup/can-go/pkg/dbc/analysis"
 )
 
 func Analyzer() *analysis.Analyzer {

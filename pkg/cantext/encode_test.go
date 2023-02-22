@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"go.einride.tech/can"
-	"go.einride.tech/can/pkg/descriptor"
-	"go.einride.tech/can/pkg/generated"
+	"github.com/blueinnovationsgroup/can-go"
+	"github.com/blueinnovationsgroup/can-go/pkg/descriptor"
+	"github.com/blueinnovationsgroup/can-go/pkg/generated"
 	"gotest.tools/v3/assert"
 )
 

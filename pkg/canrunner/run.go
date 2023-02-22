@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"go.einride.tech/can"
-	"go.einride.tech/can/internal/clock"
-	"go.einride.tech/can/pkg/descriptor"
-	"go.einride.tech/can/pkg/generated"
-	"go.einride.tech/can/pkg/socketcan"
+	"github.com/blueinnovationsgroup/can-go"
+	"github.com/blueinnovationsgroup/can-go/internal/clock"
+	"github.com/blueinnovationsgroup/can-go/pkg/descriptor"
+	"github.com/blueinnovationsgroup/can-go/pkg/generated"
+	"github.com/blueinnovationsgroup/can-go/pkg/socketcan"
 	"golang.org/x/sync/errgroup"
 )
 

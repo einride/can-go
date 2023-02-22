@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"unicode"
 
-	"go.einride.tech/can/internal/identifiers"
+	"github.com/blueinnovationsgroup/can-go/internal/identifiers"
 )
 
 // Identifier represents a DBC identifier.

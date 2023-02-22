@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"go.einride.tech/can"
+	"github.com/blueinnovationsgroup/can-go"
 	"golang.org/x/sync/errgroup"
 	"gotest.tools/v3/assert"
 )

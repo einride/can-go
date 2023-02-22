@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	examplecan "go.einride.tech/can/testdata/gen/go/example"
+	examplecan "github.com/blueinnovationsgroup/can-go/testdata/gen/go/example"
 	"gotest.tools/v3/assert"
 )
 

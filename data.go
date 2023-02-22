@@ -3,7 +3,7 @@ package can
 import (
 	"fmt"
 
-	"go.einride.tech/can/internal/reinterpret"
+	"github.com/blueinnovationsgroup/can-go/internal/reinterpret"
 )
 
 const MaxDataLength = 8

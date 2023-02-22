@@ -3,9 +3,9 @@ package valuedescriptions
 import (
 	"fmt"
 
-	"go.einride.tech/can/internal/identifiers"
-	"go.einride.tech/can/pkg/dbc"
-	"go.einride.tech/can/pkg/dbc/analysis"
+	"github.com/blueinnovationsgroup/can-go/internal/identifiers"
+	"github.com/blueinnovationsgroup/can-go/pkg/dbc"
+	"github.com/blueinnovationsgroup/can-go/pkg/dbc/analysis"
 )
 
 func Analyzer() *analysis.Analyzer {
