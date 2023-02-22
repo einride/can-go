@@ -2,6 +2,7 @@ package dbc
 
 import (
 	"fmt"
+	"unicode"
 
 	"go.einride.tech/can/internal/identifiers"
 )
@@ -33,4 +34,15 @@ func (id Identifier) Validate() (err error) {
 		}
 	}
 	return nil
+}
+
+func (id Identifier) FirstCharUpper() (Identifier, bool) {
+	firstChar := rune(id[0])
+	if identifiers.IsAlphaChar(firstChar) && !identifiers.IsUpperAlphaChar(firstChar) {
+		conv := []byte(id)
+		conv[0] = byte(unicode.ToUpper(firstChar))
+		return Identifier(conv), true
+	} else {
+		return id, false
+	}
 }

@@ -231,12 +231,17 @@ func (p *Parser) identifier() Identifier {
 	if err := id.Validate(); err != nil {
 		p.failf(tok.pos, err.Error())
 	}
+	id, converted := id.FirstCharUpper()
+	if (converted) {
+		fmt.Printf("Converting identifier '%s' to '%s'\n", tok.txt, id)
+	}
 	return id
 }
 
 func (p *Parser) stringIdentifier() Identifier {
 	tok := p.peekToken()
 	id := Identifier(p.string())
+
 	if err := id.Validate(); err != nil {
 		p.failf(tok.pos, err.Error())
 	}
