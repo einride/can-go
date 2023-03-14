@@ -7,7 +7,7 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/golang/mock v1.6.0
 	github.com/mdlayher/netlink v1.7.1
-	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
+	github.com/shurcooL/go-goon v1.0.0
 	go.uber.org/goleak v1.2.1
 	golang.org/x/net v0.8.0
 	golang.org/x/sync v0.1.0
@@ -25,6 +25,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mdlayher/socket v0.4.0 // indirect
-	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
+	github.com/shurcooL/go v0.0.0-20200502201357-93f07166e636 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 )
