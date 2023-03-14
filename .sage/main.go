@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -10,6 +9,7 @@ import (
 	"go.einride.tech/sage/sgtool"
 	"go.einride.tech/sage/tools/sgconvco"
 	"go.einride.tech/sage/tools/sggit"
+	"go.einride.tech/sage/tools/sggo"
 	"go.einride.tech/sage/tools/sggolangcilint"
 	"go.einride.tech/sage/tools/sggolicenses"
 	"go.einride.tech/sage/tools/sggoreview"
@@ -42,20 +42,7 @@ func GoModTidy(ctx context.Context) error {
 
 func GoTest(ctx context.Context) error {
 	sg.Logger(ctx).Println("running Go tests...")
-	coverageDir := sg.FromGitRoot("build", "coverage")
-	if err := os.MkdirAll(coverageDir, 0o775); err != nil {
-		return err
-	}
-	return sg.Command(
-		ctx,
-		"go",
-		"test",
-		"-short",
-		"-race",
-		fmt.Sprintf("-coverprofile=%s", filepath.Join(coverageDir, "go-test.txt")),
-		"-covermode=atomic",
-		"./...",
-	).Run()
+	return sggo.TestCommand(ctx).Run()
 }
 
 func GoReview(ctx context.Context) error {
