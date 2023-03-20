@@ -154,8 +154,9 @@ func (p *Parser) peekRune() rune {
 func (p *Parser) discardLine() {
 	p.useWhitespace(significantNewline)
 	defer p.useWhitespace(defaultWhitespace)
+	// skip all non-newline tokens
 	for p.nextToken().typ != '\n' && p.nextToken().typ != scanner.EOF {
-		// skip all non-newline tokens
+		_ = p.curr // fool the linter about the empty loop
 	}
 }
 
