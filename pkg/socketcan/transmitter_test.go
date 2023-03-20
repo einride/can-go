@@ -112,15 +112,15 @@ type errCon struct {
 	writeErr    error
 }
 
-func (e *errCon) Write(b []byte) (n int, err error) {
+func (e *errCon) Write([]byte) (n int, err error) {
 	return 0, e.writeErr
 }
 
-func (e *errCon) SetWriteDeadline(t time.Time) error {
+func (e *errCon) SetWriteDeadline(time.Time) error {
 	return e.deadlineErr
 }
 
-func (e *errCon) Read(b []byte) (n int, err error) {
+func (e *errCon) Read([]byte) (n int, err error) {
 	panic("should not be called")
 }
 
@@ -136,10 +136,10 @@ func (e *errCon) RemoteAddr() net.Addr {
 	panic("should not be called")
 }
 
-func (e *errCon) SetDeadline(t time.Time) error {
+func (e *errCon) SetDeadline(time.Time) error {
 	panic("should not be called")
 }
 
-func (e *errCon) SetReadDeadline(t time.Time) error {
+func (e *errCon) SetReadDeadline(time.Time) error {
 	panic("should not be called")
 }

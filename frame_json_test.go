@@ -92,7 +92,7 @@ func TestFrame_UnmarshalJSON_Invalid(t *testing.T) {
 	})
 }
 
-func (Frame) Generate(rand *rand.Rand, size int) reflect.Value {
+func (Frame) Generate(rand *rand.Rand, _ int) reflect.Value {
 	f := Frame{
 		IsExtended: rand.Intn(2) == 0,
 		IsRemote:   rand.Intn(2) == 0,
