@@ -2,4 +2,4 @@ module go.einride.tech/can/.sage
 
 go 1.19
 
-require go.einride.tech/sage v0.212.1
+require go.einride.tech/sage v0.213.2
