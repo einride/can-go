@@ -9,6 +9,7 @@ import (
 	"strings"
 	"text/scanner"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/fatih/color"
 	"go.einride.tech/can/internal/generate"
 	"go.einride.tech/can/pkg/dbc"
@@ -31,7 +32,6 @@ import (
 	"go.einride.tech/can/pkg/dbc/analysis/passes/unitsuffixes"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/valuedescriptions"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/version"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func main() {
