@@ -7,6 +7,8 @@ import (
 
 const udp = "udp"
 
+type DialOption func(*dialOpts)
+
 // Dial connects to the address on the named net.
 //
 // Linux only: If net is "can" it creates a SocketCAN connection to the device
@@ -15,12 +17,12 @@ const udp = "udp"
 // If net is "udp" it assumes UDP multicast and sets up 2 connections, one for
 // receiving and one for transmitting.
 // See: https://golang.org/pkg/net/#Dial
-func Dial(network, address string) (net.Conn, error) {
+func Dial(network, address string, opt ...DialOption) (net.Conn, error) {
 	switch network {
 	case udp:
 		return udpTransceiver(network, address)
 	case canRawNetwork:
-		return dialRaw(address) // platform-specific
+		return dialRaw(address, opt...) // platform-specific
 	default:
 		return net.Dial(network, address)
 	}
@@ -33,11 +35,11 @@ func Dial(network, address string) (net.Conn, error) {
 // (address is interpreted as a device name).
 //
 // See: https://golang.org/pkg/net/#Dialer.DialContext
-func DialContext(ctx context.Context, network, address string) (net.Conn, error) {
+func DialContext(ctx context.Context, network, address string, opt ...DialOption) (net.Conn, error) {
 	switch network {
 	case canRawNetwork:
 		return dialCtx(ctx, func() (net.Conn, error) {
-			return dialRaw(address)
+			return dialRaw(address, opt...)
 		})
 	case udp:
 		return dialCtx(ctx, func() (net.Conn, error) {
