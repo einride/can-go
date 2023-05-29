@@ -12,6 +12,7 @@ import (
 
 	"go.einride.tech/can"
 	"golang.org/x/sync/errgroup"
+	"golang.org/x/sys/unix"
 	"gotest.tools/v3/assert"
 	is "gotest.tools/v3/assert/cmp"
 )
@@ -160,6 +161,40 @@ func TestConn_ReadOnClose(t *testing.T) {
 		assert.NilError(t, g.Wait())
 		assert.Assert(t, is.ErrorContains(receiveErr, ""))
 	})
+}
+
+func TestConn_ReadErrorFrame(t *testing.T) {
+	requireVCAN0(t)
+	// given a reader and writer
+	reader, err := Dial("can", "vcan0", WithReceiveErrorFrames())
+	assert.NilError(t, err)
+	writer, err := Dial("can", "vcan0")
+	assert.NilError(t, err)
+	// when the reader reads
+	var g errgroup.Group
+	var hasErrorFrame bool
+	var errorFrame ErrorFrame
+	g.Go(func() error {
+		rec := NewReceiver(reader)
+		if !rec.Receive() {
+			return fmt.Errorf("receive")
+		}
+		hasErrorFrame = rec.HasErrorFrame()
+		errorFrame = rec.ErrorFrame()
+		return reader.Close()
+	})
+	// and the writer writes bus error
+	buserror := uint32(unix.CAN_ERR_FLAG | unix.CAN_ERR_BUSERROR)
+	writeFrame := can.Frame{ID: buserror}
+	tr := NewTransmitter(writer)
+	ctx, done := context.WithTimeout(context.Background(), time.Second)
+	defer done()
+	assert.NilError(t, tr.TransmitFrame(ctx, writeFrame))
+	assert.NilError(t, writer.Close())
+	// then the received frame must be error frame
+	assert.NilError(t, g.Wait())
+	assert.Assert(t, hasErrorFrame)
+	assert.Equal(t, errorFrame.ErrorClass, ErrorClassBusError)
 }
 
 func requireVCAN0(t *testing.T) {
