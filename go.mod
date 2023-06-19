@@ -11,9 +11,9 @@ require (
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	go.uber.org/goleak v1.2.1
 	golang.org/x/net v0.11.0
-	golang.org/x/sync v0.2.0
+	golang.org/x/sync v0.3.0
 	golang.org/x/sys v0.9.0
-	golang.org/x/tools v0.9.3
+	golang.org/x/tools v0.10.0
 	gotest.tools/v3 v3.4.0
 )
 
@@ -26,5 +26,5 @@ require (
 	github.com/mdlayher/socket v0.4.1 // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
-	golang.org/x/mod v0.10.0 // indirect
+	golang.org/x/mod v0.11.0 // indirect
 )
