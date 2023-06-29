@@ -69,6 +69,33 @@ func TestSetUpDown(t *testing.T) {
 	}
 }
 
+func TestSetListenOnlyMode(t *testing.T) {
+	d, err := New("can0")
+	if err != nil {
+		t.Fatal("couldn't set up device:", err)
+	}
+	defer d.SetDown()
+
+	if err := d.SetListenOnlyMode(true); err != nil {
+		t.Fatal(err)
+	}
+
+	// Set ListenOnly mode on device which is up
+	if err := d.SetUp(); err != nil {
+		t.Fatal(err)
+	}
+	if err := d.SetListenOnlyMode(false); err == nil {
+		t.Fatal("setting ListenOnly mode on device which is up succeeded")
+	}
+	if err := d.SetDown(); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := d.SetListenOnlyMode(false); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func setBitrate(d *Device, bitrate uint32) error {
 	if err := d.SetBitrate(bitrate); err != nil {
 		return err
