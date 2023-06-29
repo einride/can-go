@@ -39,6 +39,10 @@ func (d *Device) SetBitrate(_ uint32) error {
 	return NotSupportedError{}
 }
 
+func (d *Device) SetListenOnlyMode(mode bool) error {
+	return NotSupportedError{}
+}
+
 type Info struct{}
 
 func (d *Device) Info() (Info, error) {
