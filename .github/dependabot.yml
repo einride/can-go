@@ -5,13 +5,22 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: "monday"
+      time: "05:06"
+      timezone: "Europe/Stockholm"
 
   - package-ecosystem: gomod
     directory: /
     schedule:
       interval: weekly
+      day: "monday"
+      time: "05:06"
+      timezone: "Europe/Stockholm"
 
   - package-ecosystem: gomod
     directory: .sage
     schedule:
       interval: weekly
+      day: "monday"
+      time: "05:06"
+      timezone: "Europe/Stockholm"
