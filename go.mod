@@ -10,9 +10,9 @@ require (
 	github.com/mdlayher/netlink v1.7.2
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	go.uber.org/goleak v1.2.1
-	golang.org/x/net v0.11.0
+	golang.org/x/net v0.12.0
 	golang.org/x/sync v0.3.0
-	golang.org/x/sys v0.9.0
+	golang.org/x/sys v0.10.0
 	golang.org/x/tools v0.10.0
 	gotest.tools/v3 v3.5.0
 )
