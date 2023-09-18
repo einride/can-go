@@ -31,6 +31,10 @@ func TestRunMessageReceiver_NoMessages(t *testing.T) {
 	assert.Assert(t, errors.Is(canrunner.RunMessageReceiver(ctx, rx, node, clock), os.ErrClosed))
 }
 
+type contextCompareKeyType string
+
+const contextCompareKey contextCompareKeyType = "sentinel-key"
+
 func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -38,7 +42,8 @@ func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
 	node := mockcanrunner.NewMockNode(ctrl)
 	clock := mockclock.NewMockClock(ctrl)
 	msg := mockcanrunner.NewMockReceivedMessage(ctrl)
-	ctx := context.Background()
+	const sentinel = "sentinel-value"
+	ctx := context.WithValue(context.Background(), contextCompareKey, sentinel)
 	// when the first receive succeeds
 	frame := can.Frame{ID: 42}
 	rx.EXPECT().Receive().Return(true)
@@ -48,8 +53,10 @@ func TestRunMessageReceiver_ReceiveMessage(t *testing.T) {
 	// and the node should be locked
 	node.EXPECT().Lock()
 	// and the message should be queried for a hook with the same context
+	// Comparing context is not well-defined, so we check for a sentinel value instead.
 	afterReceiveHook := func(c context.Context) error {
-		assert.DeepEqual(t, ctx, c)
+		value := c.Value(contextCompareKey)
+		assert.DeepEqual(t, value, sentinel)
 		return nil
 	}
 	msg.EXPECT().AfterReceiveHook().Return(afterReceiveHook)
