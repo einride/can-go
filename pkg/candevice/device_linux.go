@@ -12,7 +12,10 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-const canLinkType = "can"
+const (
+	CanLinkType  = "can"
+	VcanLinkType = "vcan"
+)
 
 const (
 	StateErrorActive  = unix.CAN_STATE_ERROR_ACTIVE
@@ -197,7 +200,7 @@ func (d *Device) SetBitrate(bitrate uint32) error {
 	}
 
 	li := &linkInfoMsg{
-		linkType: canLinkType,
+		linkType: CanLinkType,
 	}
 
 	li.info, err = d.getCurrentParametersForSet()
@@ -230,6 +233,7 @@ type Info struct {
 	Clock            Clock
 	CtrlMode         CtrlMode
 	BusErrorCounters BusErrorCounters
+	Type             string
 
 	State     uint32
 	RestartMs uint32
@@ -310,6 +314,7 @@ func (d *Device) unmarshalBinary(data []byte) error {
 			d.ifname = ad.String()
 		case unix.IFLA_LINKINFO:
 			ad.Nested(d.li.decode)
+			d.li.info.Type = d.li.linkType
 		default:
 		}
 	}
@@ -530,7 +535,7 @@ func (li *linkInfoMsg) decode(nad *netlink.AttributeDecoder) error {
 		switch nad.Type() {
 		case unix.IFLA_INFO_KIND:
 			li.linkType = nad.String()
-			if li.linkType != canLinkType {
+			if (li.linkType != CanLinkType) && (li.linkType != VcanLinkType) {
 				return fmt.Errorf("not a CAN interface")
 			}
 		case unix.IFLA_INFO_DATA:
