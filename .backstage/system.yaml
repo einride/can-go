@@ -1,0 +1,9 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: can
+  description: CAN related software
+spec:
+  owner: team-ads-platform
+  domain: internal-developer-platform
