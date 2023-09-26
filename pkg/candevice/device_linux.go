@@ -149,7 +149,7 @@ func (d *Device) SetListenOnlyMode(mode bool) error {
 	}
 
 	li := &linkInfoMsg{
-		linkType: canLinkType,
+		linkType: CanLinkType,
 	}
 
 	li.info, err = d.getCurrentParametersForSet()
