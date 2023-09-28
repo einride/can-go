@@ -52,7 +52,7 @@ type CanDevice interface {
 }
 
 // Creates a handle to a CAN device specified by name, e.g. can0.
-func New(deviceName string) (CanDevice, error) {
+func New(deviceName string) (*Device, error) {
 	iface, err := net.InterfaceByName(deviceName)
 	if err != nil {
 		return nil, err
