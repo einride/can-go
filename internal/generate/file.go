@@ -216,6 +216,9 @@ func MessageType(f *File, m *descriptor.Message) {
 	}
 	f.P("}")
 	f.P()
+	if m.Description != "" {
+		f.P("// ", m.Description, ".")
+	}
 	f.P("type ", messageStruct(m), " struct {")
 	for _, s := range m.Signals {
 		f.P(signalField(s), " ", signalType(m, s))
