@@ -9,7 +9,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/mdlayher/netlink v1.7.2
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
-	go.uber.org/goleak v1.2.1
+	go.uber.org/goleak v1.3.0
 	golang.org/x/net v0.17.0
 	golang.org/x/sync v0.4.0
 	golang.org/x/sys v0.13.0
