@@ -1,14 +1,16 @@
-:electric_plug: CAN Go
-======================
+# :electric_plug: CAN Go
 
-[![PkgGoDev](https://pkg.go.dev/badge/go.einride.tech/can)](https://pkg.go.dev/go.einride.tech/can) [![GoReportCard](https://goreportcard.com/badge/go.einride.tech/can)](https://goreportcard.com/report/go.einride.tech/can) [![Codecov](https://codecov.io/gh/einride/can-go/branch/master/graph/badge.svg)](https://codecov.io/gh/einride/can-go)
+[![PkgGoDev](https://pkg.go.dev/badge/go.einride.tech/can)](https://pkg.go.dev/go.einride.tech/can)
+[![GoReportCard](https://goreportcard.com/badge/go.einride.tech/can)](https://goreportcard.com/report/go.einride.tech/can)
+[![Codecov](https://codecov.io/gh/einride/can-go/branch/master/graph/badge.svg)](https://codecov.io/gh/einride/can-go)
 
 CAN toolkit for Go programmers.
 
-can-go makes use of the Linux SocketCAN abstraction for CAN communication. (See the [SocketCAN](https://www.kernel.org/doc/Documentation/networking/can.txt) documentation for more details).
+can-go makes use of the Linux SocketCAN abstraction for CAN communication. (See
+the [SocketCAN](https://www.kernel.org/doc/Documentation/networking/can.txt)
+documentation for more details).
 
-Examples
---------
+## Examples
 
 ### Setting up a CAN interface
 
@@ -63,7 +65,9 @@ It is possible to generate Go code from a `.dbc` file.
 $ go run go.einride.tech/can/cmd/cantool generate <dbc file root folder> <output folder>
 ```
 
-In order to generate Go code that makes sense, we currently perform some validations when parsing the DBC file so there may need to be some changes on the DBC file to make it work
+In order to generate Go code that makes sense, we currently perform some
+validations when parsing the DBC file so there may need to be some changes on
+the DBC file to make it work
 
 After generating Go code we can marshal a message to a frame:
 
@@ -88,8 +92,7 @@ _ = auxMsg.UnmarshalFrame(frame)
 
 ```
 
-Running integration tests
--------------------------
+## Running integration tests
 
 Building the tests:
 
@@ -99,7 +102,8 @@ $ make build-integration-tests
 
 Built tests are placed in build/tests.
 
-The candevice test requires access to physical HW, so run it using sudo. Example:
+The candevice test requires access to physical HW, so run it using sudo.
+Example:
 
 ```shell
 $ sudo ./build/tests/candevice.test
