@@ -12,7 +12,7 @@ require (
 	go.uber.org/goleak v1.3.0
 	golang.org/x/net v0.18.0
 	golang.org/x/sync v0.5.0
-	golang.org/x/sys v0.14.0
+	golang.org/x/sys v0.15.0
 	golang.org/x/tools v0.15.0
 	gotest.tools/v3 v3.5.1
 )
