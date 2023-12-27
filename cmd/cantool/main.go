@@ -12,6 +12,7 @@ import (
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/fatih/color"
 	"go.einride.tech/can/internal/generate"
+	"go.einride.tech/can/pkg/compile"
 	"go.einride.tech/can/pkg/dbc"
 	"go.einride.tech/can/pkg/dbc/analysis"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/definitiontypeorder"
@@ -149,7 +150,7 @@ func genGo(inputFile, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	result, err := generate.Compile(inputFile, input)
+	result, err := compile.Compile(inputFile, input)
 	if err != nil {
 		return err
 	}
