@@ -51,6 +51,9 @@ func generateCommand(app *kingpin.Application) {
 		Arg("output-dir", "output directory").
 		Required().
 		String()
+	whiteList := command.
+		Arg("message-ids", "optional message-id whitelist").
+		Uint32List()
 	command.Action(func(_ *kingpin.ParseContext) error {
 		return filepath.Walk(*inputDir, func(p string, i os.FileInfo, err error) error {
 			if err != nil {
@@ -65,7 +68,7 @@ func generateCommand(app *kingpin.Application) {
 			}
 			outputFile := relPath + ".go"
 			outputPath := filepath.Join(*outputDir, outputFile)
-			return genGo(p, outputPath)
+			return genGo(p, outputPath, *whiteList)
 		})
 	})
 }
@@ -141,7 +144,7 @@ func analyzers() []*analysis.Analyzer {
 	}
 }
 
-func genGo(inputFile, outputFile string) error {
+func genGo(inputFile, outputFile string, messageIds []uint32) error {
 	if err := os.MkdirAll(filepath.Dir(outputFile), 0o755); err != nil {
 		return err
 	}
@@ -149,7 +152,7 @@ func genGo(inputFile, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	result, err := generate.Compile(inputFile, input)
+	result, err := generate.Compile(inputFile, input, generate.WithMessageIdWhiteList(messageIds))
 	if err != nil {
 		return err
 	}
