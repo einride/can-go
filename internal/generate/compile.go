@@ -14,7 +14,9 @@ type CompileResult struct {
 	Warnings []error
 }
 
-func Compile(sourceFile string, data []byte) (result *CompileResult, err error) {
+type CompileOption func(*compiler)
+
+func Compile(sourceFile string, data []byte, options ...CompileOption) (result *CompileResult, err error) {
 	p := dbc.NewParser(sourceFile, data)
 	if err := p.Parse(); err != nil {
 		return nil, fmt.Errorf("failed to parse DBC source file: %w", err)
@@ -24,10 +26,28 @@ func Compile(sourceFile string, data []byte) (result *CompileResult, err error) 
 		db:   &descriptor.Database{SourceFile: sourceFile},
 		defs: defs,
 	}
+
+	for _, opt := range options {
+		opt(c)
+	}
+
 	c.collectDescriptors()
 	c.addMetadata()
 	c.sortDescriptors()
 	return &CompileResult{Database: c.db, Warnings: c.warnings}, nil
+}
+
+func WithMessageIdWhiteList(ids []uint32) CompileOption {
+	return func(c *compiler) {
+		if ids == nil {
+			return
+		}
+
+		c.onlyCompile = make([]dbc.MessageID, 0)
+		for _, id := range ids {
+			c.onlyCompile = append(c.onlyCompile, dbc.MessageID(id))
+		}
+	}
 }
 
 type compileError struct {
@@ -40,9 +60,10 @@ func (e *compileError) Error() string {
 }
 
 type compiler struct {
-	db       *descriptor.Database
-	defs     []dbc.Def
-	warnings []error
+	onlyCompile []dbc.MessageID
+	db          *descriptor.Database
+	defs        []dbc.Def
+	warnings    []error
 }
 
 func (c *compiler) addWarning(warning error) {
@@ -55,7 +76,7 @@ func (c *compiler) collectDescriptors() {
 		case *dbc.VersionDef:
 			c.db.Version = def.Version
 		case *dbc.MessageDef:
-			if def.MessageID == dbc.IndependentSignalsMessageID {
+			if c.skipCompile(def.MessageID) {
 				continue // don't compile
 			}
 			message := &descriptor.Message{
@@ -101,7 +122,7 @@ func (c *compiler) addMetadata() {
 		case *dbc.CommentDef:
 			switch def.ObjectType {
 			case dbc.ObjectTypeMessage:
-				if def.MessageID == dbc.IndependentSignalsMessageID {
+				if c.skipCompile(def.MessageID) {
 					continue // don't compile
 				}
 				message, ok := c.db.Message(def.MessageID.ToCAN())
@@ -111,7 +132,7 @@ func (c *compiler) addMetadata() {
 				}
 				message.Description = def.Comment
 			case dbc.ObjectTypeSignal:
-				if def.MessageID == dbc.IndependentSignalsMessageID {
+				if c.skipCompile(def.MessageID) {
 					continue // don't compile
 				}
 				signal, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
@@ -129,7 +150,7 @@ func (c *compiler) addMetadata() {
 				node.Description = def.Comment
 			}
 		case *dbc.ValueDescriptionsDef:
-			if def.MessageID == dbc.IndependentSignalsMessageID {
+			if c.skipCompile(def.MessageID) {
 				continue // don't compile
 			}
 			if def.ObjectType != dbc.ObjectTypeSignal {
@@ -147,6 +168,9 @@ func (c *compiler) addMetadata() {
 				})
 			}
 		case *dbc.AttributeValueForObjectDef:
+			if c.skipCompile(def.MessageID) {
+				continue // don't compile
+			}
 			switch def.ObjectType {
 			case dbc.ObjectTypeMessage:
 				msg, ok := c.db.Message(def.MessageID.ToCAN())
@@ -204,4 +228,22 @@ func (c *compiler) sortDescriptors() {
 			})
 		}
 	}
+}
+
+func (c *compiler) skipCompile(id dbc.MessageID) bool {
+	if id == dbc.IndependentSignalsMessageID {
+		return true
+	}
+
+	if c.onlyCompile != nil {
+		for _, whiteListId := range c.onlyCompile {
+			if whiteListId == id {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	return false
 }
