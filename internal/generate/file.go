@@ -749,6 +749,7 @@ func txGroupInterface(n *descriptor.Node) string {
 	return n.Name + "_Tx"
 }
 
+//nolint:goconst
 func txGroupStruct(n *descriptor.Node) string {
 	return "xxx_" + n.Name + "_Tx"
 }

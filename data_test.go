@@ -150,7 +150,7 @@ func TestData_LittleEndian(t *testing.T) {
 			var data Data
 			for j, signal := range tt.signals {
 				j, signal := j, signal
-				t.Run(fmt.Sprintf("data:%v", j), func(t *testing.T) {
+				t.Run(fmt.Sprintf("data:%v", j), func(_ *testing.T) {
 					data.SetUnsignedBitsLittleEndian(signal.start, signal.length, signal.unsigned)
 				})
 			}
@@ -160,7 +160,7 @@ func TestData_LittleEndian(t *testing.T) {
 			var data Data
 			for j, signal := range tt.signals {
 				j, signal := j, signal
-				t.Run(fmt.Sprintf("data:%v", j), func(t *testing.T) {
+				t.Run(fmt.Sprintf("data:%v", j), func(_ *testing.T) {
 					data.SetSignedBitsLittleEndian(signal.start, signal.length, signal.signed)
 				})
 			}
@@ -251,7 +251,7 @@ func TestData_BigEndian(t *testing.T) {
 			var data Data
 			for j, signal := range tt.signals {
 				j, signal := j, signal
-				t.Run(fmt.Sprintf("data:%v", j), func(t *testing.T) {
+				t.Run(fmt.Sprintf("data:%v", j), func(_ *testing.T) {
 					data.SetUnsignedBitsBigEndian(signal.start, signal.length, signal.unsigned)
 				})
 			}
@@ -261,7 +261,7 @@ func TestData_BigEndian(t *testing.T) {
 			var data Data
 			for j, signal := range tt.signals {
 				j, signal := j, signal
-				t.Run(fmt.Sprintf("data:%v", j), func(t *testing.T) {
+				t.Run(fmt.Sprintf("data:%v", j), func(_ *testing.T) {
 					data.SetSignedBitsBigEndian(signal.start, signal.length, signal.signed)
 				})
 			}

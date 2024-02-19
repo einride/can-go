@@ -53,7 +53,7 @@ func TestTransmitter_TransmitMessage(t *testing.T) {
 
 	// Frame Interceptor
 	run := false
-	intFunc := func(fr can.Frame) {
+	intFunc := func(_ can.Frame) {
 		run = true
 	}
 	testTransmit(TransmitterFrameInterceptor(intFunc))
