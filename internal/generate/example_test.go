@@ -309,7 +309,7 @@ func TestExample_Node_NoEmptyMessages(t *testing.T) {
 	motor := examplecan.NewMOTOR("can", "vcan0")
 	// when starting them
 	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
-	handler := func(ctx context.Context) error {
+	handler := func(_ context.Context) error {
 		motor.Lock()
 		motor.Tx().MotorStatus().SetSpeedKph(100).SetWheelError(true)
 		motor.Unlock()

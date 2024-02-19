@@ -21,6 +21,8 @@ type jsonFrame struct {
 //
 //	{"id":32,"data":"0102030405060708"}
 //	{"id":32,"extended":true,"remote":true,"length":4}
+//
+//nolint:goconst
 func (f Frame) JSON() string {
 	switch {
 	case f.IsRemote && f.IsExtended:
