@@ -1,4 +1,4 @@
-# :electric_plug: CAN Go
+# :electric_plug: go.einride.tech/can
 
 [![PkgGoDev](https://pkg.go.dev/badge/go.einride.tech/can)](https://pkg.go.dev/go.einride.tech/can)
 [![GoReportCard](https://goreportcard.com/badge/go.einride.tech/can)](https://goreportcard.com/report/go.einride.tech/can)
@@ -10,11 +10,20 @@ can-go makes use of the Linux SocketCAN abstraction for CAN communication. (See
 the [SocketCAN](https://www.kernel.org/doc/Documentation/networking/can.txt)
 documentation for more details).
 
+## Installation
+
+```
+go get -u go.einride.tech/can
+```
+
 ## Examples
 
 ### Setting up a CAN interface
 
 ```go
+
+import "go.einride.tech/can/pkg/candevice"
+
 func main() {
 	// Error handling omitted to keep example simple
 	d, _ := candevice.New("can0")
@@ -29,6 +38,8 @@ func main() {
 Receiving CAN frames from a socketcan interface.
 
 ```go
+import "go.einride.tech/can/pkg/socketcan"
+
 func main() {
 	// Error handling omitted to keep example simple
 	conn, _ := socketcan.DialContext(context.Background(), "can", "can0")
@@ -46,6 +57,8 @@ func main() {
 Sending CAN frames to a socketcan interface.
 
 ```go
+import "go.einride.tech/can/pkg/socketcan"
+
 func main() {
 	// Error handling omitted to keep example simple
 
