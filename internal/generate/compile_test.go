@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+	"go.einride.tech/can"
 	"go.einride.tech/can/pkg/descriptor"
 	examplecan "go.einride.tech/can/testdata/gen/go/example"
 	"gotest.tools/v3/assert"
@@ -305,4 +307,23 @@ func TestCompile_ExampleDBC(t *testing.T) {
 		t.Fatal(result.Warnings)
 	}
 	assert.DeepEqual(t, exampleDatabase, result.Database)
+}
+
+func Test_CopyFrom_PreservesOutOfRangeValues(t *testing.T) {
+	descriptor := examplecan.Messages().MotorCommand
+	frame := can.Frame{
+		ID:         descriptor.ID,
+		Length:     descriptor.Length,
+		IsExtended: descriptor.IsExtended,
+	}
+	// 0xF is 15, but max is set to 9
+	descriptor.Drive.MarshalUnsigned(&frame.Data, 0xF)
+	// Unmarshal out of bounds value
+	original := examplecan.NewMotorCommand()
+	assert.NilError(t, original.UnmarshalFrame(frame))
+	// When we CopyFrom original message to m2
+	m2 := examplecan.NewMotorCommand().CopyFrom(original)
+	// Then we expect the messages and the frames to be identical
+	assert.DeepEqual(t, m2, original, cmp.AllowUnexported(*original))
+	assert.DeepEqual(t, m2.Frame(), original.Frame())
 }
