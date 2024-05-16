@@ -40,8 +40,8 @@ type EmptyMessageReader interface {
 
 // EmptyMessageWriter provides write access to a EmptyMessage message.
 type EmptyMessageWriter interface {
-	// CopyFrom copies all values from EmptyMessageReader.
-	CopyFrom(EmptyMessageReader) *EmptyMessage
+	// CopyFrom copies all values from EmptyMessage.
+	CopyFrom(*EmptyMessage) *EmptyMessage
 }
 
 type EmptyMessage struct {
@@ -56,7 +56,8 @@ func NewEmptyMessage() *EmptyMessage {
 func (m *EmptyMessage) Reset() {
 }
 
-func (m *EmptyMessage) CopyFrom(o EmptyMessageReader) *EmptyMessage {
+func (m *EmptyMessage) CopyFrom(o *EmptyMessage) *EmptyMessage {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -114,8 +115,8 @@ type DriverHeartbeatReader interface {
 
 // DriverHeartbeatWriter provides write access to a DriverHeartbeat message.
 type DriverHeartbeatWriter interface {
-	// CopyFrom copies all values from DriverHeartbeatReader.
-	CopyFrom(DriverHeartbeatReader) *DriverHeartbeat
+	// CopyFrom copies all values from DriverHeartbeat.
+	CopyFrom(*DriverHeartbeat) *DriverHeartbeat
 	// SetCommand sets the value of the Command signal.
 	SetCommand(DriverHeartbeat_Command) *DriverHeartbeat
 }
@@ -134,8 +135,8 @@ func (m *DriverHeartbeat) Reset() {
 	m.xxx_Command = 0
 }
 
-func (m *DriverHeartbeat) CopyFrom(o DriverHeartbeatReader) *DriverHeartbeat {
-	m.xxx_Command = o.Command()
+func (m *DriverHeartbeat) CopyFrom(o *DriverHeartbeat) *DriverHeartbeat {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -232,8 +233,8 @@ type MotorCommandReader interface {
 
 // MotorCommandWriter provides write access to a MotorCommand message.
 type MotorCommandWriter interface {
-	// CopyFrom copies all values from MotorCommandReader.
-	CopyFrom(MotorCommandReader) *MotorCommand
+	// CopyFrom copies all values from MotorCommand.
+	CopyFrom(*MotorCommand) *MotorCommand
 	// SetSteer sets the physical value of the Steer signal.
 	SetSteer(float64) *MotorCommand
 	// SetDrive sets the physical value of the Drive signal.
@@ -256,9 +257,8 @@ func (m *MotorCommand) Reset() {
 	m.xxx_Drive = 0
 }
 
-func (m *MotorCommand) CopyFrom(o MotorCommandReader) *MotorCommand {
-	m.SetSteer(o.Steer())
-	m.SetDrive(o.Drive())
+func (m *MotorCommand) CopyFrom(o *MotorCommand) *MotorCommand {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -356,8 +356,8 @@ type SensorSonarsReader interface {
 
 // SensorSonarsWriter provides write access to a SensorSonars message.
 type SensorSonarsWriter interface {
-	// CopyFrom copies all values from SensorSonarsReader.
-	CopyFrom(SensorSonarsReader) *SensorSonars
+	// CopyFrom copies all values from SensorSonars.
+	CopyFrom(*SensorSonars) *SensorSonars
 	// SetMux sets the value of the Mux signal.
 	SetMux(uint8) *SensorSonars
 	// SetErrCount sets the value of the ErrCount signal.
@@ -412,17 +412,8 @@ func (m *SensorSonars) Reset() {
 	m.xxx_NoFiltRear = 0
 }
 
-func (m *SensorSonars) CopyFrom(o SensorSonarsReader) *SensorSonars {
-	m.xxx_Mux = o.Mux()
-	m.xxx_ErrCount = o.ErrCount()
-	m.SetLeft(o.Left())
-	m.SetNoFiltLeft(o.NoFiltLeft())
-	m.SetMiddle(o.Middle())
-	m.SetNoFiltMiddle(o.NoFiltMiddle())
-	m.SetRight(o.Right())
-	m.SetNoFiltRight(o.NoFiltRight())
-	m.SetRear(o.Rear())
-	m.SetNoFiltRear(o.NoFiltRear())
+func (m *SensorSonars) CopyFrom(o *SensorSonars) *SensorSonars {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -624,8 +615,8 @@ type MotorStatusReader interface {
 
 // MotorStatusWriter provides write access to a MotorStatus message.
 type MotorStatusWriter interface {
-	// CopyFrom copies all values from MotorStatusReader.
-	CopyFrom(MotorStatusReader) *MotorStatus
+	// CopyFrom copies all values from MotorStatus.
+	CopyFrom(*MotorStatus) *MotorStatus
 	// SetWheelError sets the value of the WheelError signal.
 	SetWheelError(bool) *MotorStatus
 	// SetSpeedKph sets the physical value of the SpeedKph signal.
@@ -648,9 +639,8 @@ func (m *MotorStatus) Reset() {
 	m.xxx_SpeedKph = 0
 }
 
-func (m *MotorStatus) CopyFrom(o MotorStatusReader) *MotorStatus {
-	m.xxx_WheelError = o.WheelError()
-	m.SetSpeedKph(o.SpeedKph())
+func (m *MotorStatus) CopyFrom(o *MotorStatus) *MotorStatus {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -743,8 +733,8 @@ type IODebugReader interface {
 
 // IODebugWriter provides write access to a IODebug message.
 type IODebugWriter interface {
-	// CopyFrom copies all values from IODebugReader.
-	CopyFrom(IODebugReader) *IODebug
+	// CopyFrom copies all values from IODebug.
+	CopyFrom(*IODebug) *IODebug
 	// SetTestUnsigned sets the value of the TestUnsigned signal.
 	SetTestUnsigned(uint8) *IODebug
 	// SetTestEnum sets the value of the TestEnum signal.
@@ -786,13 +776,8 @@ func (m *IODebug) Reset() {
 	m.xxx_TestScaledEnum = 0
 }
 
-func (m *IODebug) CopyFrom(o IODebugReader) *IODebug {
-	m.xxx_TestUnsigned = o.TestUnsigned()
-	m.xxx_TestEnum = o.TestEnum()
-	m.xxx_TestSigned = o.TestSigned()
-	m.SetTestFloat(o.TestFloat())
-	m.xxx_TestBoolEnum = o.TestBoolEnum()
-	m.SetTestScaledEnum(o.TestScaledEnum())
+func (m *IODebug) CopyFrom(o *IODebug) *IODebug {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 
@@ -992,8 +977,8 @@ type IOFloat32Reader interface {
 
 // IOFloat32Writer provides write access to a IOFloat32 message.
 type IOFloat32Writer interface {
-	// CopyFrom copies all values from IOFloat32Reader.
-	CopyFrom(IOFloat32Reader) *IOFloat32
+	// CopyFrom copies all values from IOFloat32.
+	CopyFrom(*IOFloat32) *IOFloat32
 	// SetFloat32ValueNoRange sets the value of the Float32ValueNoRange signal.
 	SetFloat32ValueNoRange(float32) *IOFloat32
 	// SetFloat32WithRange sets the physical value of the Float32WithRange signal.
@@ -1016,9 +1001,8 @@ func (m *IOFloat32) Reset() {
 	m.xxx_Float32WithRange = 0
 }
 
-func (m *IOFloat32) CopyFrom(o IOFloat32Reader) *IOFloat32 {
-	m.xxx_Float32ValueNoRange = o.Float32ValueNoRange()
-	m.SetFloat32WithRange(o.Float32WithRange())
+func (m *IOFloat32) CopyFrom(o *IOFloat32) *IOFloat32 {
+	_ = m.UnmarshalFrame(o.Frame())
 	return m
 }
 

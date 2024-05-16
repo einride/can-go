@@ -2,9 +2,11 @@ package generate
 
 import (
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
+	"go.einride.tech/can"
 	"go.einride.tech/can/pkg/descriptor"
 	examplecan "go.einride.tech/can/testdata/gen/go/example"
 	"gotest.tools/v3/assert"
@@ -375,4 +377,29 @@ func TestCompile_Float32InvalidSignalLengthWarningExpected(t *testing.T) {
 	}
 	// We expect one warning for incorrect signal length in declaration of float32 signal
 	assert.Equal(t, len(result.Warnings), 1)
+}
+
+func Test_CopyFrom_PreservesOutOfRangeValues(t *testing.T) {
+	descriptor := examplecan.Messages().MotorCommand
+	frame := can.Frame{
+		ID:         descriptor.ID,
+		Length:     descriptor.Length,
+		IsExtended: descriptor.IsExtended,
+	}
+	// 0xF is 15, but max is set to 9
+	descriptor.Drive.MarshalUnsigned(&frame.Data, 0xF)
+	// Unmarshal out of bounds value
+	original := examplecan.NewMotorCommand()
+	if err := original.UnmarshalFrame(frame); err != nil {
+		t.Errorf("Failed to unmarshal frame: %v", err)
+	}
+	// When we CopyFrom original message to m2
+	m2 := examplecan.NewMotorCommand().CopyFrom(original)
+	// Then we expect the messages and the frames to be identical
+	if !reflect.DeepEqual(m2, original) {
+		t.Errorf("Expected new message (%v) and original (%v) to be identical", m2, original)
+	}
+	if m2.Frame() != original.Frame() {
+		t.Errorf("Expected frames of messages to be identical (%v != %v)", m2.Frame(), original.Frame())
+	}
 }
