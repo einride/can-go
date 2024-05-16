@@ -198,8 +198,8 @@ func MessageType(f *File, m *descriptor.Message) {
 	f.P()
 	f.P("// ", messageWriterInterface(m), " provides write access to a ", m.Name, " message.")
 	f.P("type ", messageWriterInterface(m), " interface {")
-	f.P("// CopyFrom copies all values from ", messageReaderInterface(m), ".")
-	f.P("CopyFrom(", messageReaderInterface(m), ") *", messageStruct(m))
+	f.P("// CopyFrom copies all values from ", messageStruct(m), ".")
+	f.P("CopyFrom(*", messageStruct(m), ") *", messageStruct(m))
 	for _, s := range m.Signals {
 		if hasPhysicalRepresentation(s) {
 			f.P("// Set", s.Name, " sets the physical value of the ", s.Name, " signal.")
@@ -241,14 +241,8 @@ func MessageType(f *File, m *descriptor.Message) {
 	}
 	f.P("}")
 	f.P()
-	f.P("func (m *", messageStruct(m), ") CopyFrom(o ", messageReaderInterface(m), ") *", messageStruct(m), "{")
-	for _, s := range m.Signals {
-		if hasPhysicalRepresentation(s) {
-			f.P("m.Set", s.Name, "(o.", s.Name, "())")
-		} else {
-			f.P("m.", signalField(s), " = o.", s.Name, "()")
-		}
-	}
+	f.P("func (m *", messageStruct(m), ") CopyFrom(o *", messageStruct(m), ") *", messageStruct(m), "{")
+	f.P("_ = m.UnmarshalFrame(o.Frame())")
 	f.P("return m")
 	f.P("}")
 	f.P()
