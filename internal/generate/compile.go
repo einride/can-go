@@ -37,7 +37,7 @@ func Compile(sourceFile string, data []byte, options ...CompileOption) (result *
 	return &CompileResult{Database: c.db, Warnings: c.warnings}, nil
 }
 
-func WithMessageIdWhiteList(ids []uint32) CompileOption {
+func WithAllowedMessageIds(ids []uint32) CompileOption {
 	return func(c *compiler) {
 		if ids == nil {
 			return
@@ -236,8 +236,8 @@ func (c *compiler) skipCompile(id dbc.MessageID) bool {
 	}
 
 	if c.onlyCompile != nil {
-		for _, whiteListId := range c.onlyCompile {
-			if whiteListId == id {
+		for _, allowedMessageId := range c.onlyCompile {
+			if allowedMessageId == id {
 				return false
 			}
 		}
