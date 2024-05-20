@@ -982,6 +982,114 @@ func (m *IODebug) UnmarshalFrame(f can.Frame) error {
 	return nil
 }
 
+// IOFloat32Reader provides read access to a IOFloat32 message.
+type IOFloat32Reader interface {
+	// Float32ValueNoRange returns the value of the Float32ValueNoRange signal.
+	Float32ValueNoRange() float32
+	// Float32WithRange returns the physical value of the Float32WithRange signal.
+	Float32WithRange() float64
+}
+
+// IOFloat32Writer provides write access to a IOFloat32 message.
+type IOFloat32Writer interface {
+	// CopyFrom copies all values from IOFloat32Reader.
+	CopyFrom(IOFloat32Reader) *IOFloat32
+	// SetFloat32ValueNoRange sets the value of the Float32ValueNoRange signal.
+	SetFloat32ValueNoRange(float32) *IOFloat32
+	// SetFloat32WithRange sets the physical value of the Float32WithRange signal.
+	SetFloat32WithRange(float64) *IOFloat32
+}
+
+type IOFloat32 struct {
+	xxx_Float32ValueNoRange float32
+	xxx_Float32WithRange    float32
+}
+
+func NewIOFloat32() *IOFloat32 {
+	m := &IOFloat32{}
+	m.Reset()
+	return m
+}
+
+func (m *IOFloat32) Reset() {
+	m.xxx_Float32ValueNoRange = 0
+	m.xxx_Float32WithRange = 0
+}
+
+func (m *IOFloat32) CopyFrom(o IOFloat32Reader) *IOFloat32 {
+	m.xxx_Float32ValueNoRange = o.Float32ValueNoRange()
+	m.SetFloat32WithRange(o.Float32WithRange())
+	return m
+}
+
+// Descriptor returns the IOFloat32 descriptor.
+func (m *IOFloat32) Descriptor() *descriptor.Message {
+	return Messages().IOFloat32.Message
+}
+
+// String returns a compact string representation of the message.
+func (m *IOFloat32) String() string {
+	return cantext.MessageString(m)
+}
+
+func (m *IOFloat32) Float32ValueNoRange() float32 {
+	return m.xxx_Float32ValueNoRange
+}
+
+func (m *IOFloat32) SetFloat32ValueNoRange(v float32) *IOFloat32 {
+	m.xxx_Float32ValueNoRange = float32(Messages().IOFloat32.Float32ValueNoRange.SaturatedCastFloat(float64(v)))
+	return m
+}
+
+func (m *IOFloat32) Float32WithRange() float64 {
+	return Messages().IOFloat32.Float32WithRange.ToPhysical(float64(m.xxx_Float32WithRange))
+}
+
+func (m *IOFloat32) SetFloat32WithRange(v float64) *IOFloat32 {
+	m.xxx_Float32WithRange = float32(Messages().IOFloat32.Float32WithRange.FromPhysical(v))
+	return m
+}
+
+// Frame returns a CAN frame representing the message.
+func (m *IOFloat32) Frame() can.Frame {
+	md := Messages().IOFloat32
+	f := can.Frame{ID: md.ID, IsExtended: md.IsExtended, Length: md.Length}
+	md.Float32ValueNoRange.MarshalFloat(&f.Data, float64(m.xxx_Float32ValueNoRange))
+	md.Float32WithRange.MarshalFloat(&f.Data, float64(m.xxx_Float32WithRange))
+	return f
+}
+
+// MarshalFrame encodes the message as a CAN frame.
+func (m *IOFloat32) MarshalFrame() (can.Frame, error) {
+	return m.Frame(), nil
+}
+
+// UnmarshalFrame decodes the message from a CAN frame.
+func (m *IOFloat32) UnmarshalFrame(f can.Frame) error {
+	md := Messages().IOFloat32
+	switch {
+	case f.ID != md.ID:
+		return fmt.Errorf(
+			"unmarshal IOFloat32: expects ID 600 (got %s with ID %d)", f.String(), f.ID,
+		)
+	case f.Length != md.Length:
+		return fmt.Errorf(
+			"unmarshal IOFloat32: expects length 8 (got %s with length %d)", f.String(), f.Length,
+		)
+	case f.IsRemote:
+		return fmt.Errorf(
+			"unmarshal IOFloat32: expects non-remote frame (got remote frame %s)", f.String(),
+		)
+	case f.IsExtended != md.IsExtended:
+		return fmt.Errorf(
+			"unmarshal IOFloat32: expects standard ID (got %s with extended ID)", f.String(),
+		)
+	}
+	m.xxx_Float32ValueNoRange = float32(md.Float32ValueNoRange.UnmarshalFloat(f.Data))
+	m.xxx_Float32WithRange = float32(md.Float32WithRange.UnmarshalFloat(f.Data))
+	return nil
+}
+
 type DBG interface {
 	sync.Locker
 	Tx() DBG_Tx
@@ -993,6 +1101,7 @@ type DBG_Rx interface {
 	http.Handler // for debugging
 	SensorSonars() DBG_Rx_SensorSonars
 	IODebug() DBG_Rx_IODebug
+	IOFloat32() DBG_Rx_IOFloat32
 }
 
 type DBG_Tx interface {
@@ -1007,6 +1116,12 @@ type DBG_Rx_SensorSonars interface {
 
 type DBG_Rx_IODebug interface {
 	IODebugReader
+	ReceiveTime() time.Time
+	SetAfterReceiveHook(h func(context.Context) error)
+}
+
+type DBG_Rx_IOFloat32 interface {
+	IOFloat32Reader
 	ReceiveTime() time.Time
 	SetAfterReceiveHook(h func(context.Context) error)
 }
@@ -1030,6 +1145,8 @@ func NewDBG(network, address string) DBG {
 	n.rx.xxx_SensorSonars.Reset()
 	n.rx.xxx_IODebug.init()
 	n.rx.xxx_IODebug.Reset()
+	n.rx.xxx_IOFloat32.init()
+	n.rx.xxx_IOFloat32.Reset()
 	return n
 }
 
@@ -1049,6 +1166,7 @@ type xxx_DBG_Rx struct {
 	parentMutex      *sync.Mutex
 	xxx_SensorSonars xxx_DBG_Rx_SensorSonars
 	xxx_IODebug      xxx_DBG_Rx_IODebug
+	xxx_IOFloat32    xxx_DBG_Rx_IOFloat32
 }
 
 var _ DBG_Rx = &xxx_DBG_Rx{}
@@ -1059,6 +1177,7 @@ func (rx *xxx_DBG_Rx) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	candebug.ServeMessagesHTTP(w, r, []generated.Message{
 		&rx.xxx_SensorSonars,
 		&rx.xxx_IODebug,
+		&rx.xxx_IOFloat32,
 	})
 }
 
@@ -1068,6 +1187,10 @@ func (rx *xxx_DBG_Rx) SensorSonars() DBG_Rx_SensorSonars {
 
 func (rx *xxx_DBG_Rx) IODebug() DBG_Rx_IODebug {
 	return &rx.xxx_IODebug
+}
+
+func (rx *xxx_DBG_Rx) IOFloat32() DBG_Rx_IOFloat32 {
+	return &rx.xxx_IOFloat32
 }
 
 type xxx_DBG_Tx struct {
@@ -1096,6 +1219,8 @@ func (n *xxx_DBG) ReceivedMessage(id uint32) (canrunner.ReceivedMessage, bool) {
 		return &n.rx.xxx_SensorSonars, true
 	case 500:
 		return &n.rx.xxx_IODebug, true
+	case 600:
+		return &n.rx.xxx_IOFloat32, true
 	default:
 		return nil, false
 	}
@@ -1160,6 +1285,34 @@ func (m *xxx_DBG_Rx_IODebug) SetReceiveTime(t time.Time) {
 }
 
 var _ canrunner.ReceivedMessage = &xxx_DBG_Rx_IODebug{}
+
+type xxx_DBG_Rx_IOFloat32 struct {
+	IOFloat32
+	receiveTime      time.Time
+	afterReceiveHook func(context.Context) error
+}
+
+func (m *xxx_DBG_Rx_IOFloat32) init() {
+	m.afterReceiveHook = func(context.Context) error { return nil }
+}
+
+func (m *xxx_DBG_Rx_IOFloat32) SetAfterReceiveHook(h func(context.Context) error) {
+	m.afterReceiveHook = h
+}
+
+func (m *xxx_DBG_Rx_IOFloat32) AfterReceiveHook() func(context.Context) error {
+	return m.afterReceiveHook
+}
+
+func (m *xxx_DBG_Rx_IOFloat32) ReceiveTime() time.Time {
+	return m.receiveTime
+}
+
+func (m *xxx_DBG_Rx_IOFloat32) SetReceiveTime(t time.Time) {
+	m.receiveTime = t
+}
+
+var _ canrunner.ReceivedMessage = &xxx_DBG_Rx_IOFloat32{}
 
 type DRIVER interface {
 	sync.Locker
@@ -2298,6 +2451,7 @@ type MessagesDescriptor struct {
 	SensorSonars    *SensorSonarsDescriptor
 	MotorStatus     *MotorStatusDescriptor
 	IODebug         *IODebugDescriptor
+	IOFloat32       *IOFloat32Descriptor
 }
 
 // UnmarshalFrame unmarshals the provided example CAN frame.
@@ -2335,6 +2489,12 @@ func (md *MessagesDescriptor) UnmarshalFrame(f can.Frame) (generated.Message, er
 		return &msg, nil
 	case md.IODebug.ID:
 		var msg IODebug
+		if err := msg.UnmarshalFrame(f); err != nil {
+			return nil, fmt.Errorf("unmarshal example frame: %w", err)
+		}
+		return &msg, nil
+	case md.IOFloat32.ID:
+		var msg IOFloat32
 		if err := msg.UnmarshalFrame(f); err != nil {
 			return nil, fmt.Errorf("unmarshal example frame: %w", err)
 		}
@@ -2387,6 +2547,12 @@ type IODebugDescriptor struct {
 	TestFloat      *descriptor.Signal
 	TestBoolEnum   *descriptor.Signal
 	TestScaledEnum *descriptor.Signal
+}
+
+type IOFloat32Descriptor struct {
+	*descriptor.Message
+	Float32ValueNoRange *descriptor.Signal
+	Float32WithRange    *descriptor.Signal
 }
 
 // Database returns the example database descriptor.
@@ -2442,6 +2608,11 @@ var md = &MessagesDescriptor{
 		TestBoolEnum:   d.Messages[5].Signals[4],
 		TestScaledEnum: d.Messages[5].Signals[5],
 	},
+	IOFloat32: &IOFloat32Descriptor{
+		Message:             d.Messages[6],
+		Float32ValueNoRange: d.Messages[6].Signals[0],
+		Float32WithRange:    d.Messages[6].Signals[1],
+	},
 }
 
 var d = (*descriptor.Database)(&descriptor.Database{
@@ -2474,6 +2645,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:           (uint8)(8),
 					IsBigEndian:      (bool)(false),
 					IsSigned:         (bool)(false),
+					IsFloat:          (bool)(false),
 					IsMultiplexer:    (bool)(false),
 					IsMultiplexed:    (bool)(false),
 					MultiplexerValue: (uint)(0),
@@ -2526,6 +2698,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(4),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(true),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2547,6 +2720,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(4),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2581,6 +2755,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(4),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(true),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2603,6 +2778,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2625,6 +2801,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(0),
@@ -2647,6 +2824,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(1),
@@ -2668,6 +2846,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(0),
@@ -2690,6 +2869,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(1),
@@ -2711,6 +2891,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(0),
@@ -2733,6 +2914,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(1),
@@ -2754,6 +2936,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(0),
@@ -2776,6 +2959,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(12),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(true),
 					MultiplexerValue:  (uint)(1),
@@ -2810,6 +2994,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(1),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2832,6 +3017,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(16),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2867,6 +3053,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(8),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2888,6 +3075,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:           (uint8)(6),
 					IsBigEndian:      (bool)(false),
 					IsSigned:         (bool)(false),
+					IsFloat:          (bool)(false),
 					IsMultiplexer:    (bool)(false),
 					IsMultiplexed:    (bool)(false),
 					MultiplexerValue: (uint)(0),
@@ -2918,6 +3106,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(8),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(true),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2939,6 +3128,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:            (uint8)(8),
 					IsBigEndian:       (bool)(false),
 					IsSigned:          (bool)(false),
+					IsFloat:           (bool)(false),
 					IsMultiplexer:     (bool)(false),
 					IsMultiplexed:     (bool)(false),
 					MultiplexerValue:  (uint)(0),
@@ -2960,6 +3150,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:           (uint8)(1),
 					IsBigEndian:      (bool)(false),
 					IsSigned:         (bool)(false),
+					IsFloat:          (bool)(false),
 					IsMultiplexer:    (bool)(false),
 					IsMultiplexed:    (bool)(false),
 					MultiplexerValue: (uint)(0),
@@ -2990,6 +3181,7 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Length:           (uint8)(2),
 					IsBigEndian:      (bool)(false),
 					IsSigned:         (bool)(false),
+					IsFloat:          (bool)(false),
 					IsMultiplexer:    (bool)(false),
 					IsMultiplexed:    (bool)(false),
 					MultiplexerValue: (uint)(0),
@@ -3017,6 +3209,63 @@ var d = (*descriptor.Database)(&descriptor.Database{
 							Description: (string)("Six"),
 						}),
 					}),
+					ReceiverNodes: ([]string)([]string{
+						(string)("DBG"),
+					}),
+					DefaultValue: (int)(0),
+				}),
+			}),
+			SenderNode: (string)("IO"),
+			CycleTime:  (time.Duration)(0),
+			DelayTime:  (time.Duration)(0),
+		}),
+		(*descriptor.Message)(&descriptor.Message{
+			Name:        (string)("IOFloat32"),
+			ID:          (uint32)(600),
+			IsExtended:  (bool)(false),
+			Length:      (uint8)(8),
+			SendType:    (descriptor.SendType)(0),
+			Description: (string)(""),
+			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
+				(*descriptor.Signal)(&descriptor.Signal{
+					Name:              (string)("Float32ValueNoRange"),
+					Start:             (uint8)(0),
+					Length:            (uint8)(32),
+					IsBigEndian:       (bool)(false),
+					IsSigned:          (bool)(true),
+					IsFloat:           (bool)(true),
+					IsMultiplexer:     (bool)(false),
+					IsMultiplexed:     (bool)(false),
+					MultiplexerValue:  (uint)(0),
+					Offset:            (float64)(0),
+					Scale:             (float64)(1),
+					Min:               (float64)(0),
+					Max:               (float64)(0),
+					Unit:              (string)(""),
+					Description:       (string)(""),
+					ValueDescriptions: ([]*descriptor.ValueDescription)(nil),
+					ReceiverNodes: ([]string)([]string{
+						(string)("DBG"),
+					}),
+					DefaultValue: (int)(0),
+				}),
+				(*descriptor.Signal)(&descriptor.Signal{
+					Name:              (string)("Float32WithRange"),
+					Start:             (uint8)(32),
+					Length:            (uint8)(32),
+					IsBigEndian:       (bool)(false),
+					IsSigned:          (bool)(true),
+					IsFloat:           (bool)(true),
+					IsMultiplexer:     (bool)(false),
+					IsMultiplexed:     (bool)(false),
+					MultiplexerValue:  (uint)(0),
+					Offset:            (float64)(0),
+					Scale:             (float64)(1),
+					Min:               (float64)(-100),
+					Max:               (float64)(100),
+					Unit:              (string)(""),
+					Description:       (string)(""),
+					ValueDescriptions: ([]*descriptor.ValueDescription)(nil),
 					ReceiverNodes: ([]string)([]string{
 						(string)("DBG"),
 					}),

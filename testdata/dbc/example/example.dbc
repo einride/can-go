@@ -39,6 +39,10 @@ BO_ 500 IODebug: 6 IO
  SG_ TestBoolEnum : 32|1@1+ (1,0) [0|0] "" DBG
  SG_ TestScaledEnum : 40|2@1+ (2,0) [0|6] "" DBG
 
+BO_ 600 IOFloat32: 8 IO
+ SG_ Float32ValueNoRange : 0|32@1- (1,0) [0|0] "" DBG
+ SG_ Float32WithRange : 32|32@1- (1,0) [-100|100] "" DBG
+
 EV_ BrakeEngaged: 0 [0|1] "" 0 10 DUMMY_NODE_VECTOR0 Vector__XXX;
 EV_ Torque: 1 [0|30000] "mNm" 500 16 DUMMY_NODE_VECTOR0 Vector__XXX;
 
@@ -77,3 +81,6 @@ VAL_ 100 Command 3 "Headlights On" 2 "Reboot" 1 "Sync" 0 "None" ;
 VAL_ 500 TestEnum 2 "Two" 1 "One" ;
 VAL_ 500 TestScaledEnum 3 "Six" 2 "Four" 1 "Two" 0 "Zero" ;
 VAL_ 500 TestBoolEnum 1 "One" 0 "Zero" ;
+
+SIG_VALTYPE_ 600 Float32ValueNoRange: 1;
+SIG_VALTYPE_ 600 Float32WithRange: 1;

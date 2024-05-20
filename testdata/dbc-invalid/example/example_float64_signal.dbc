@@ -1,0 +1,12 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DBG IO
+
+BO_ 42 IOFloat64: 8 IO
+ SG_ Float64Signal : 0|64@1- (1,0) [0|0] "" DBG
+
+SIG_VALTYPE_ 42 Float64Signal: 2;

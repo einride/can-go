@@ -2,6 +2,7 @@ package descriptor
 
 import (
 	"math"
+	"unsafe"
 
 	"go.einride.tech/can"
 )
@@ -18,6 +19,8 @@ type Signal struct {
 	IsBigEndian bool
 	// IsSigned is true if the signal uses raw signed values.
 	IsSigned bool
+	// IsFloat is true if the signal uses 32-bit floating point values
+	IsFloat bool
 	// IsMultiplexer is true if the signal is the multiplexor of a multiplexed message.
 	IsMultiplexer bool
 	// IsMultiplexed is true if the signal is multiplexed.
@@ -144,6 +147,17 @@ func (s *Signal) UnmarshalBool(d can.Data) bool {
 	return d.Bit(s.Start)
 }
 
+// UnmarshalFloat returns the float64 value of the signam in the provided CAN frame.
+func (s *Signal) UnmarshalFloat(d can.Data) float64 {
+	var i uint64
+	if s.IsBigEndian {
+		i = d.UnsignedBitsBigEndian(s.Start, s.Length)
+	} else {
+		i = d.UnsignedBitsLittleEndian(s.Start, s.Length)
+	}
+	return float64(*((*float32)(unsafe.Pointer(&i))))
+}
+
 // MarshalUnsigned sets the unsigned value of the signal in the provided CAN frame.
 func (s *Signal) MarshalUnsigned(d *can.Data, value uint64) {
 	if s.IsBigEndian {
@@ -167,6 +181,13 @@ func (s *Signal) MarshalBool(d *can.Data, value bool) {
 	d.SetBit(s.Start, value)
 }
 
+// Marshalfloat sets the float64 value of the signal in the provided CAN frame.
+func (s *Signal) MarshalFloat(d *can.Data, value float64) {
+	f := float32(value)
+	i := uint64(*((*uint32)(unsafe.Pointer(&f))))
+	s.MarshalUnsigned(d, i)
+}
+
 // MaxUnsigned returns the maximum unsigned value representable by the signal.
 func (s *Signal) MaxUnsigned() uint64 {
 	return (2 << (s.Length - 1)) - 1
@@ -180,6 +201,16 @@ func (s *Signal) MinSigned() int64 {
 // MaxSigned returns the maximum signed value representable by the signal.
 func (s *Signal) MaxSigned() int64 {
 	return (2 << (s.Length - 1) / 2) - 1
+}
+
+// MinSigned returns the minimum signed value representable by the signal.
+func (s *Signal) MinFloat() float64 {
+	return -math.MaxFloat32
+}
+
+// MaxSigned returns the maximum signed value representable by the signal.
+func (s *Signal) MaxFloat() float64 {
+	return math.MaxFloat32
 }
 
 // SaturatedCastSigned performs a saturated cast of an int64 to the value domain of the signal.
@@ -203,4 +234,18 @@ func (s *Signal) SaturatedCastUnsigned(value uint64) uint64 {
 		return max
 	}
 	return value
+}
+
+// SaturatedCastUnsigned performs a saturated cast of a uint64 to the value domain of the signal.
+func (s *Signal) SaturatedCastFloat(value float64) float64 {
+	min := s.MinFloat()
+	max := s.MaxFloat()
+	switch {
+	case value < min:
+		return min
+	case value > max:
+		return max
+	default:
+		return value
+	}
 }

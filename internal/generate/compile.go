@@ -98,6 +98,26 @@ func (c *compiler) collectDescriptors() {
 func (c *compiler) addMetadata() {
 	for _, def := range c.defs {
 		switch def := def.(type) {
+		case *dbc.SignalValueTypeDef:
+			signal, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
+			if !ok {
+				c.addWarning(&compileError{def: def, reason: "no declared signal"})
+				continue
+			}
+			switch def.SignalValueType {
+			case dbc.SignalValueTypeInt:
+				signal.IsFloat = false
+			case dbc.SignalValueTypeFloat32:
+				if signal.Length == 32 {
+					signal.IsFloat = true
+				} else {
+					reason := fmt.Sprintf("incorrect float signal length: %d", signal.Length)
+					c.addWarning(&compileError{def: def, reason: reason})
+				}
+			default:
+				reason := fmt.Sprintf("unsupported signal value type: %v", def.SignalValueType)
+				c.addWarning(&compileError{def: def, reason: reason})
+			}
 		case *dbc.CommentDef:
 			switch def.ObjectType {
 			case dbc.ObjectTypeMessage:
