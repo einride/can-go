@@ -810,9 +810,12 @@ func hasPhysicalRepresentation(s *descriptor.Signal) bool {
 	hasOffset := s.Offset != 0
 	hasRange := s.Min != 0 || s.Max != 0
 	var hasConstrainedRange bool
-	if s.IsSigned {
+	switch {
+	case s.IsFloat:
+		hasConstrainedRange = s.Min > s.MinFloat() || s.Max < s.MaxFloat()
+	case s.IsSigned:
 		hasConstrainedRange = s.Min > float64(s.MinSigned()) || s.Max < float64(s.MaxSigned())
-	} else {
+	default:
 		hasConstrainedRange = s.Min > 0 || s.Max < float64(s.MaxUnsigned())
 	}
 	return hasScale || hasOffset || hasRange && hasConstrainedRange
@@ -841,6 +844,8 @@ func signalType(m *descriptor.Message, s *descriptor.Signal) string {
 func signalPrimitiveType(s *descriptor.Signal) types.Type {
 	var t types.BasicKind
 	switch {
+	case s.Length == 32 && s.IsFloat:
+		t = types.Float32
 	case s.Length == 1:
 		t = types.Bool
 	case s.Length <= 8 && s.IsSigned:
@@ -866,6 +871,8 @@ func signalPrimitiveType(s *descriptor.Signal) types.Type {
 func signalPrimitiveSuperType(s *descriptor.Signal) types.Type {
 	var t types.BasicKind
 	switch {
+	case s.IsFloat:
+		t = types.Float64
 	case s.Length == 1:
 		t = types.Bool
 	case s.IsSigned:
@@ -878,6 +885,8 @@ func signalPrimitiveSuperType(s *descriptor.Signal) types.Type {
 
 func signalSuperType(s *descriptor.Signal) string {
 	switch {
+	case s.Length <= 32 && s.IsFloat:
+		return "Float"
 	case s.Length == 1:
 		return "Bool"
 	case s.IsSigned:

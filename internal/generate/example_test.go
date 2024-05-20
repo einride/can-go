@@ -60,6 +60,32 @@ func TestExampleDatabase_MarshalUnmarshal(t *testing.T) {
 				Data:   can.Data{0x00, 0xe0, 0x2e},
 			},
 		},
+
+		{
+			name: "IOFloat32_1",
+			m: examplecan.NewIOFloat32().
+				SetFloat32ValueNoRange(3.14).
+				SetFloat32WithRange(42),
+			f: can.Frame{
+				ID:     600,
+				Length: 8,
+				Data:   can.Data{0xc3, 0xf5, 0x48, 0x40, 0x00, 0x00, 0x28, 0x42},
+			},
+		},
+
+		{
+			name: "IOFloat32_2",
+			m: examplecan.NewIOFloat32().
+				SetFloat32ValueNoRange(42.42).
+				// This value is out of range, so we expect SaturatedCast for
+				// rightmost range border: 100
+				SetFloat32WithRange(142),
+			f: can.Frame{
+				ID:     600,
+				Length: 8,
+				Data:   can.Data{0x14, 0xae, 0x29, 0x42, 0x00, 0x00, 0xc8, 0x42},
+			},
+		},
 	} {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
