@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/fatih/color v1.16.0
+	github.com/fatih/color v1.17.0
 	github.com/golang/mock v1.6.0
 	github.com/mdlayher/netlink v1.7.2
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
