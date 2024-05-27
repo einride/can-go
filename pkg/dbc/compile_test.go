@@ -1,4 +1,4 @@
-package generate
+package dbc
 
 import (
 	"os"
@@ -401,5 +401,15 @@ func Test_CopyFrom_PreservesOutOfRangeValues(t *testing.T) {
 	}
 	if m2.Frame() != original.Frame() {
 		t.Errorf("Expected frames of messages to be identical (%v != %v)", m2.Frame(), original.Frame())
+	}
+}
+
+func runTestInDir(t *testing.T, dir string) func() {
+	// change working directory to project root
+	wd, err := os.Getwd()
+	assert.NilError(t, err)
+	assert.NilError(t, os.Chdir(dir))
+	return func() {
+		assert.NilError(t, os.Chdir(wd))
 	}
 }
