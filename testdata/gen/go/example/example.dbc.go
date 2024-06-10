@@ -227,8 +227,12 @@ func (m *DriverHeartbeat) UnmarshalFrame(f can.Frame) error {
 type MotorCommandReader interface {
 	// Steer returns the physical value of the Steer signal.
 	Steer() float64
+	// RawSteer returns the raw (encoded) value of the Steer signal.
+	RawSteer() int8
 	// Drive returns the physical value of the Drive signal.
 	Drive() float64
+	// RawDrive returns the raw (encoded) value of the Drive signal.
+	RawDrive() uint8
 }
 
 // MotorCommandWriter provides write access to a MotorCommand message.
@@ -237,8 +241,12 @@ type MotorCommandWriter interface {
 	CopyFrom(*MotorCommand) *MotorCommand
 	// SetSteer sets the physical value of the Steer signal.
 	SetSteer(float64) *MotorCommand
+	// SetRawSteer sets the raw (encoded) value of the Steer signal.
+	SetRawSteer(int8) *MotorCommand
 	// SetDrive sets the physical value of the Drive signal.
 	SetDrive(float64) *MotorCommand
+	// SetRawDrive sets the raw (encoded) value of the Drive signal.
+	SetRawDrive(uint8) *MotorCommand
 }
 
 type MotorCommand struct {
@@ -281,12 +289,30 @@ func (m *MotorCommand) SetSteer(v float64) *MotorCommand {
 	return m
 }
 
+func (m *MotorCommand) RawSteer() int8 {
+	return m.xxx_Steer
+}
+
+func (m *MotorCommand) SetRawSteer(v int8) *MotorCommand {
+	m.xxx_Steer = int8(Messages().MotorCommand.Steer.SaturatedCastSigned(int64(v)))
+	return m
+}
+
 func (m *MotorCommand) Drive() float64 {
 	return Messages().MotorCommand.Drive.ToPhysical(float64(m.xxx_Drive))
 }
 
 func (m *MotorCommand) SetDrive(v float64) *MotorCommand {
 	m.xxx_Drive = uint8(Messages().MotorCommand.Drive.FromPhysical(v))
+	return m
+}
+
+func (m *MotorCommand) RawDrive() uint8 {
+	return m.xxx_Drive
+}
+
+func (m *MotorCommand) SetRawDrive(v uint8) *MotorCommand {
+	m.xxx_Drive = uint8(Messages().MotorCommand.Drive.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -338,20 +364,36 @@ type SensorSonarsReader interface {
 	ErrCount() uint16
 	// Left returns the physical value of the Left signal.
 	Left() float64
+	// RawLeft returns the raw (encoded) value of the Left signal.
+	RawLeft() uint16
 	// NoFiltLeft returns the physical value of the NoFiltLeft signal.
 	NoFiltLeft() float64
+	// RawNoFiltLeft returns the raw (encoded) value of the NoFiltLeft signal.
+	RawNoFiltLeft() uint16
 	// Middle returns the physical value of the Middle signal.
 	Middle() float64
+	// RawMiddle returns the raw (encoded) value of the Middle signal.
+	RawMiddle() uint16
 	// NoFiltMiddle returns the physical value of the NoFiltMiddle signal.
 	NoFiltMiddle() float64
+	// RawNoFiltMiddle returns the raw (encoded) value of the NoFiltMiddle signal.
+	RawNoFiltMiddle() uint16
 	// Right returns the physical value of the Right signal.
 	Right() float64
+	// RawRight returns the raw (encoded) value of the Right signal.
+	RawRight() uint16
 	// NoFiltRight returns the physical value of the NoFiltRight signal.
 	NoFiltRight() float64
+	// RawNoFiltRight returns the raw (encoded) value of the NoFiltRight signal.
+	RawNoFiltRight() uint16
 	// Rear returns the physical value of the Rear signal.
 	Rear() float64
+	// RawRear returns the raw (encoded) value of the Rear signal.
+	RawRear() uint16
 	// NoFiltRear returns the physical value of the NoFiltRear signal.
 	NoFiltRear() float64
+	// RawNoFiltRear returns the raw (encoded) value of the NoFiltRear signal.
+	RawNoFiltRear() uint16
 }
 
 // SensorSonarsWriter provides write access to a SensorSonars message.
@@ -364,20 +406,36 @@ type SensorSonarsWriter interface {
 	SetErrCount(uint16) *SensorSonars
 	// SetLeft sets the physical value of the Left signal.
 	SetLeft(float64) *SensorSonars
+	// SetRawLeft sets the raw (encoded) value of the Left signal.
+	SetRawLeft(uint16) *SensorSonars
 	// SetNoFiltLeft sets the physical value of the NoFiltLeft signal.
 	SetNoFiltLeft(float64) *SensorSonars
+	// SetRawNoFiltLeft sets the raw (encoded) value of the NoFiltLeft signal.
+	SetRawNoFiltLeft(uint16) *SensorSonars
 	// SetMiddle sets the physical value of the Middle signal.
 	SetMiddle(float64) *SensorSonars
+	// SetRawMiddle sets the raw (encoded) value of the Middle signal.
+	SetRawMiddle(uint16) *SensorSonars
 	// SetNoFiltMiddle sets the physical value of the NoFiltMiddle signal.
 	SetNoFiltMiddle(float64) *SensorSonars
+	// SetRawNoFiltMiddle sets the raw (encoded) value of the NoFiltMiddle signal.
+	SetRawNoFiltMiddle(uint16) *SensorSonars
 	// SetRight sets the physical value of the Right signal.
 	SetRight(float64) *SensorSonars
+	// SetRawRight sets the raw (encoded) value of the Right signal.
+	SetRawRight(uint16) *SensorSonars
 	// SetNoFiltRight sets the physical value of the NoFiltRight signal.
 	SetNoFiltRight(float64) *SensorSonars
+	// SetRawNoFiltRight sets the raw (encoded) value of the NoFiltRight signal.
+	SetRawNoFiltRight(uint16) *SensorSonars
 	// SetRear sets the physical value of the Rear signal.
 	SetRear(float64) *SensorSonars
+	// SetRawRear sets the raw (encoded) value of the Rear signal.
+	SetRawRear(uint16) *SensorSonars
 	// SetNoFiltRear sets the physical value of the NoFiltRear signal.
 	SetNoFiltRear(float64) *SensorSonars
+	// SetRawNoFiltRear sets the raw (encoded) value of the NoFiltRear signal.
+	SetRawNoFiltRear(uint16) *SensorSonars
 }
 
 type SensorSonars struct {
@@ -454,12 +512,30 @@ func (m *SensorSonars) SetLeft(v float64) *SensorSonars {
 	return m
 }
 
+func (m *SensorSonars) RawLeft() uint16 {
+	return m.xxx_Left
+}
+
+func (m *SensorSonars) SetRawLeft(v uint16) *SensorSonars {
+	m.xxx_Left = uint16(Messages().SensorSonars.Left.SaturatedCastUnsigned(uint64(v)))
+	return m
+}
+
 func (m *SensorSonars) NoFiltLeft() float64 {
 	return Messages().SensorSonars.NoFiltLeft.ToPhysical(float64(m.xxx_NoFiltLeft))
 }
 
 func (m *SensorSonars) SetNoFiltLeft(v float64) *SensorSonars {
 	m.xxx_NoFiltLeft = uint16(Messages().SensorSonars.NoFiltLeft.FromPhysical(v))
+	return m
+}
+
+func (m *SensorSonars) RawNoFiltLeft() uint16 {
+	return m.xxx_NoFiltLeft
+}
+
+func (m *SensorSonars) SetRawNoFiltLeft(v uint16) *SensorSonars {
+	m.xxx_NoFiltLeft = uint16(Messages().SensorSonars.NoFiltLeft.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -472,12 +548,30 @@ func (m *SensorSonars) SetMiddle(v float64) *SensorSonars {
 	return m
 }
 
+func (m *SensorSonars) RawMiddle() uint16 {
+	return m.xxx_Middle
+}
+
+func (m *SensorSonars) SetRawMiddle(v uint16) *SensorSonars {
+	m.xxx_Middle = uint16(Messages().SensorSonars.Middle.SaturatedCastUnsigned(uint64(v)))
+	return m
+}
+
 func (m *SensorSonars) NoFiltMiddle() float64 {
 	return Messages().SensorSonars.NoFiltMiddle.ToPhysical(float64(m.xxx_NoFiltMiddle))
 }
 
 func (m *SensorSonars) SetNoFiltMiddle(v float64) *SensorSonars {
 	m.xxx_NoFiltMiddle = uint16(Messages().SensorSonars.NoFiltMiddle.FromPhysical(v))
+	return m
+}
+
+func (m *SensorSonars) RawNoFiltMiddle() uint16 {
+	return m.xxx_NoFiltMiddle
+}
+
+func (m *SensorSonars) SetRawNoFiltMiddle(v uint16) *SensorSonars {
+	m.xxx_NoFiltMiddle = uint16(Messages().SensorSonars.NoFiltMiddle.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -490,12 +584,30 @@ func (m *SensorSonars) SetRight(v float64) *SensorSonars {
 	return m
 }
 
+func (m *SensorSonars) RawRight() uint16 {
+	return m.xxx_Right
+}
+
+func (m *SensorSonars) SetRawRight(v uint16) *SensorSonars {
+	m.xxx_Right = uint16(Messages().SensorSonars.Right.SaturatedCastUnsigned(uint64(v)))
+	return m
+}
+
 func (m *SensorSonars) NoFiltRight() float64 {
 	return Messages().SensorSonars.NoFiltRight.ToPhysical(float64(m.xxx_NoFiltRight))
 }
 
 func (m *SensorSonars) SetNoFiltRight(v float64) *SensorSonars {
 	m.xxx_NoFiltRight = uint16(Messages().SensorSonars.NoFiltRight.FromPhysical(v))
+	return m
+}
+
+func (m *SensorSonars) RawNoFiltRight() uint16 {
+	return m.xxx_NoFiltRight
+}
+
+func (m *SensorSonars) SetRawNoFiltRight(v uint16) *SensorSonars {
+	m.xxx_NoFiltRight = uint16(Messages().SensorSonars.NoFiltRight.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -508,12 +620,30 @@ func (m *SensorSonars) SetRear(v float64) *SensorSonars {
 	return m
 }
 
+func (m *SensorSonars) RawRear() uint16 {
+	return m.xxx_Rear
+}
+
+func (m *SensorSonars) SetRawRear(v uint16) *SensorSonars {
+	m.xxx_Rear = uint16(Messages().SensorSonars.Rear.SaturatedCastUnsigned(uint64(v)))
+	return m
+}
+
 func (m *SensorSonars) NoFiltRear() float64 {
 	return Messages().SensorSonars.NoFiltRear.ToPhysical(float64(m.xxx_NoFiltRear))
 }
 
 func (m *SensorSonars) SetNoFiltRear(v float64) *SensorSonars {
 	m.xxx_NoFiltRear = uint16(Messages().SensorSonars.NoFiltRear.FromPhysical(v))
+	return m
+}
+
+func (m *SensorSonars) RawNoFiltRear() uint16 {
+	return m.xxx_NoFiltRear
+}
+
+func (m *SensorSonars) SetRawNoFiltRear(v uint16) *SensorSonars {
+	m.xxx_NoFiltRear = uint16(Messages().SensorSonars.NoFiltRear.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -611,6 +741,8 @@ type MotorStatusReader interface {
 	WheelError() bool
 	// SpeedKph returns the physical value of the SpeedKph signal.
 	SpeedKph() float64
+	// RawSpeedKph returns the raw (encoded) value of the SpeedKph signal.
+	RawSpeedKph() uint16
 }
 
 // MotorStatusWriter provides write access to a MotorStatus message.
@@ -621,6 +753,8 @@ type MotorStatusWriter interface {
 	SetWheelError(bool) *MotorStatus
 	// SetSpeedKph sets the physical value of the SpeedKph signal.
 	SetSpeedKph(float64) *MotorStatus
+	// SetRawSpeedKph sets the raw (encoded) value of the SpeedKph signal.
+	SetRawSpeedKph(uint16) *MotorStatus
 }
 
 type MotorStatus struct {
@@ -669,6 +803,15 @@ func (m *MotorStatus) SpeedKph() float64 {
 
 func (m *MotorStatus) SetSpeedKph(v float64) *MotorStatus {
 	m.xxx_SpeedKph = uint16(Messages().MotorStatus.SpeedKph.FromPhysical(v))
+	return m
+}
+
+func (m *MotorStatus) RawSpeedKph() uint16 {
+	return m.xxx_SpeedKph
+}
+
+func (m *MotorStatus) SetRawSpeedKph(v uint16) *MotorStatus {
+	m.xxx_SpeedKph = uint16(Messages().MotorStatus.SpeedKph.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -722,12 +865,13 @@ type IODebugReader interface {
 	TestSigned() int8
 	// TestFloat returns the physical value of the TestFloat signal.
 	TestFloat() float64
+	// RawTestFloat returns the raw (encoded) value of the TestFloat signal.
+	RawTestFloat() uint8
 	// TestBoolEnum returns the value of the TestBoolEnum signal.
 	TestBoolEnum() IODebug_TestBoolEnum
 	// TestScaledEnum returns the physical value of the TestScaledEnum signal.
 	TestScaledEnum() float64
-
-	// TestScaledEnum returns the raw (encoded) value of the TestScaledEnum signal.
+	// RawTestScaledEnum returns the raw (encoded) value of the TestScaledEnum signal.
 	RawTestScaledEnum() IODebug_TestScaledEnum
 }
 
@@ -743,11 +887,12 @@ type IODebugWriter interface {
 	SetTestSigned(int8) *IODebug
 	// SetTestFloat sets the physical value of the TestFloat signal.
 	SetTestFloat(float64) *IODebug
+	// SetRawTestFloat sets the raw (encoded) value of the TestFloat signal.
+	SetRawTestFloat(uint8) *IODebug
 	// SetTestBoolEnum sets the value of the TestBoolEnum signal.
 	SetTestBoolEnum(IODebug_TestBoolEnum) *IODebug
 	// SetTestScaledEnum sets the physical value of the TestScaledEnum signal.
 	SetTestScaledEnum(float64) *IODebug
-
 	// SetRawTestScaledEnum sets the raw (encoded) value of the TestScaledEnum signal.
 	SetRawTestScaledEnum(IODebug_TestScaledEnum) *IODebug
 }
@@ -824,6 +969,15 @@ func (m *IODebug) TestFloat() float64 {
 
 func (m *IODebug) SetTestFloat(v float64) *IODebug {
 	m.xxx_TestFloat = uint8(Messages().IODebug.TestFloat.FromPhysical(v))
+	return m
+}
+
+func (m *IODebug) RawTestFloat() uint8 {
+	return m.xxx_TestFloat
+}
+
+func (m *IODebug) SetRawTestFloat(v uint8) *IODebug {
+	m.xxx_TestFloat = uint8(Messages().IODebug.TestFloat.SaturatedCastUnsigned(uint64(v)))
 	return m
 }
 
@@ -973,6 +1127,8 @@ type IOFloat32Reader interface {
 	Float32ValueNoRange() float32
 	// Float32WithRange returns the physical value of the Float32WithRange signal.
 	Float32WithRange() float64
+	// RawFloat32WithRange returns the raw (encoded) value of the Float32WithRange signal.
+	RawFloat32WithRange() float32
 }
 
 // IOFloat32Writer provides write access to a IOFloat32 message.
@@ -983,6 +1139,8 @@ type IOFloat32Writer interface {
 	SetFloat32ValueNoRange(float32) *IOFloat32
 	// SetFloat32WithRange sets the physical value of the Float32WithRange signal.
 	SetFloat32WithRange(float64) *IOFloat32
+	// SetRawFloat32WithRange sets the raw (encoded) value of the Float32WithRange signal.
+	SetRawFloat32WithRange(float32) *IOFloat32
 }
 
 type IOFloat32 struct {
@@ -1031,6 +1189,15 @@ func (m *IOFloat32) Float32WithRange() float64 {
 
 func (m *IOFloat32) SetFloat32WithRange(v float64) *IOFloat32 {
 	m.xxx_Float32WithRange = float32(Messages().IOFloat32.Float32WithRange.FromPhysical(v))
+	return m
+}
+
+func (m *IOFloat32) RawFloat32WithRange() float32 {
+	return m.xxx_Float32WithRange
+}
+
+func (m *IOFloat32) SetRawFloat32WithRange(v float32) *IOFloat32 {
+	m.xxx_Float32WithRange = float32(Messages().IOFloat32.Float32WithRange.SaturatedCastFloat(float64(v)))
 	return m
 }
 
