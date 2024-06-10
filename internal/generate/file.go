@@ -184,11 +184,8 @@ func MessageType(f *File, m *descriptor.Message) {
 		if hasPhysicalRepresentation(s) {
 			f.P("// ", s.Name, " returns the physical value of the ", s.Name, " signal.")
 			f.P(s.Name, "() float64")
-			if len(s.ValueDescriptions) > 0 {
-				f.P()
-				f.P("// ", s.Name, " returns the raw (encoded) value of the ", s.Name, " signal.")
-				f.P("Raw", s.Name, "() ", signalType(m, s))
-			}
+			f.P("// Raw", s.Name, " returns the raw (encoded) value of the ", s.Name, " signal.")
+			f.P("Raw", s.Name, "() ", signalType(m, s))
 		} else {
 			f.P("// ", s.Name, " returns the value of the ", s.Name, " signal.")
 			f.P(s.Name, "()", signalType(m, s))
@@ -204,11 +201,8 @@ func MessageType(f *File, m *descriptor.Message) {
 		if hasPhysicalRepresentation(s) {
 			f.P("// Set", s.Name, " sets the physical value of the ", s.Name, " signal.")
 			f.P("Set", s.Name, "(float64) *", messageStruct(m))
-			if len(s.ValueDescriptions) > 0 {
-				f.P()
-				f.P("// SetRaw", s.Name, " sets the raw (encoded) value of the ", s.Name, " signal.")
-				f.P("SetRaw", s.Name, "(", signalType(m, s), ") *", messageStruct(m))
-			}
+			f.P("// SetRaw", s.Name, " sets the raw (encoded) value of the ", s.Name, " signal.")
+			f.P("SetRaw", s.Name, "(", signalType(m, s), ") *", messageStruct(m))
 		} else {
 			f.P("// Set", s.Name, " sets the value of the ", s.Name, " signal.")
 			f.P("Set", s.Name, "(", signalType(m, s), ") *", messageStruct(m))
@@ -286,21 +280,19 @@ func MessageType(f *File, m *descriptor.Message) {
 		f.P("return m")
 		f.P("}")
 		f.P()
-		if len(s.ValueDescriptions) > 0 {
-			f.P("func (m *", messageStruct(m), ") Raw", s.Name, "() ", signalType(m, s), " {")
-			f.P("return m.", signalField(s))
-			f.P("}")
-			f.P()
-			f.P("func (m *", messageStruct(m), ") SetRaw", s.Name, "(v ", signalType(m, s), ") *", messageStruct(m), "{")
-			f.P(
-				"m.", signalField(s), " = ", signalType(m, s), "(",
-				signalDescriptor(m, s), ".SaturatedCast", signalSuperType(s), "(",
-				signalPrimitiveSuperType(s), "(v)))",
-			)
-			f.P("return m")
-			f.P("}")
-			f.P()
-		}
+		f.P("func (m *", messageStruct(m), ") Raw", s.Name, "() ", signalType(m, s), " {")
+		f.P("return m.", signalField(s))
+		f.P("}")
+		f.P()
+		f.P("func (m *", messageStruct(m), ") SetRaw", s.Name, "(v ", signalType(m, s), ") *", messageStruct(m), "{")
+		f.P(
+			"m.", signalField(s), " = ", signalType(m, s), "(",
+			signalDescriptor(m, s), ".SaturatedCast", signalSuperType(s), "(",
+			signalPrimitiveSuperType(s), "(v)))",
+		)
+		f.P("return m")
+		f.P("}")
+		f.P()
 	}
 }
 
