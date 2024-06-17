@@ -27,6 +27,7 @@ import (
 	"go.einride.tech/can/pkg/dbc/analysis/passes/signalnames"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/singletondefinitions"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/siunits"
+	"go.einride.tech/can/pkg/dbc/analysis/passes/uniquemessageids"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/uniquenodenames"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/uniquesignalnames"
 	"go.einride.tech/can/pkg/dbc/analysis/passes/unitsuffixes"
@@ -133,6 +134,7 @@ func analyzers() []*analysis.Analyzer {
 		signalnames.Analyzer(),
 		singletondefinitions.Analyzer(),
 		siunits.Analyzer(),
+		uniquemessageids.Analyzer(),
 		uniquenodenames.Analyzer(),
 		uniquesignalnames.Analyzer(),
 		unitsuffixes.Analyzer(),
