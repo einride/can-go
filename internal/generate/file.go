@@ -180,6 +180,7 @@ func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 func MessageType(f *File, m *descriptor.Message) {
 	f.P("// ", messageReaderInterface(m), " provides read access to a ", m.Name, " message.")
 	f.P("type ", messageReaderInterface(m), " interface {")
+	f.P("can.FrameMarshaler")
 	for _, s := range m.Signals {
 		if hasPhysicalRepresentation(s) {
 			f.P("// ", s.Name, " returns the physical value of the ", s.Name, " signal.")
@@ -196,7 +197,7 @@ func MessageType(f *File, m *descriptor.Message) {
 	f.P("// ", messageWriterInterface(m), " provides write access to a ", m.Name, " message.")
 	f.P("type ", messageWriterInterface(m), " interface {")
 	f.P("// CopyFrom copies all values from ", messageStruct(m), ".")
-	f.P("CopyFrom(*", messageStruct(m), ") *", messageStruct(m))
+	f.P("CopyFrom(", messageReaderInterface(m), ") *", messageStruct(m))
 	for _, s := range m.Signals {
 		if hasPhysicalRepresentation(s) {
 			f.P("// Set", s.Name, " sets the physical value of the ", s.Name, " signal.")
@@ -235,8 +236,9 @@ func MessageType(f *File, m *descriptor.Message) {
 	}
 	f.P("}")
 	f.P()
-	f.P("func (m *", messageStruct(m), ") CopyFrom(o *", messageStruct(m), ") *", messageStruct(m), "{")
-	f.P("_ = m.UnmarshalFrame(o.Frame())")
+	f.P("func (m *", messageStruct(m), ") CopyFrom(o ", messageReaderInterface(m), ") *", messageStruct(m), "{")
+	f.P("f, _ := o.MarshalFrame()")
+	f.P("_ = m.UnmarshalFrame(f)")
 	f.P("return m")
 	f.P("}")
 	f.P()
