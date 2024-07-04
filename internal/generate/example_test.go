@@ -356,6 +356,13 @@ func TestExample_Node_NoEmptyMessages(t *testing.T) {
 	assert.NilError(t, g.Wait())
 }
 
+func TestExample_Node_CopyFromRx(_ *testing.T) {
+	motor := examplecan.NewMOTOR("udp", "239.255.1.1")
+
+	// Verify that motor.Rx().MotorCommand() is a valid argument to CopyFrom.
+	_ = examplecan.NewMotorCommand().CopyFrom(motor.Rx().MotorCommand())
+}
+
 func requireVCAN0(t *testing.T) {
 	t.Helper()
 	if _, err := net.InterfaceByName("vcan0"); err != nil {
