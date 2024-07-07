@@ -39,260 +39,32 @@ func TestCompile_ExampleDBC(t *testing.T) {
 				Description: "The sensor controller of the car",
 			},
 		},
-
-		Messages: []*descriptor.Message{
+	}
+	message1 := &descriptor.Message{
+		ID:         1,
+		Name:       "EmptyMessage",
+		SenderNode: "DBG",
+	}
+	message100 := &descriptor.Message{
+		ID:          100,
+		Name:        "DriverHeartbeat",
+		Length:      1,
+		SenderNode:  "DRIVER",
+		Description: "Sync message used to synchronize the controllers",
+		SendType:    descriptor.SendTypeCyclic,
+		CycleTime:   time.Second,
+		Signals: []*descriptor.Signal{
 			{
-				ID:         1,
-				Name:       "EmptyMessage",
-				SenderNode: "DBG",
-			},
-
-			{
-				ID:          100,
-				Name:        "DriverHeartbeat",
-				Length:      1,
-				SenderNode:  "DRIVER",
-				Description: "Sync message used to synchronize the controllers",
-				SendType:    descriptor.SendTypeCyclic,
-				CycleTime:   time.Second,
-				Signals: []*descriptor.Signal{
-					{
-						Name:          "Command",
-						Start:         0,
-						Length:        8,
-						Scale:         1,
-						ReceiverNodes: []string{"SENSOR", "MOTOR"},
-						ValueDescriptions: []*descriptor.ValueDescription{
-							{Value: 0, Description: "None"},
-							{Value: 1, Description: "Sync"},
-							{Value: 2, Description: "Reboot"},
-							{Value: 3, Description: "Headlights On"},
-						},
-					},
-				},
-			},
-
-			{
-				ID:         101,
-				Name:       "MotorCommand",
-				Length:     1,
-				SenderNode: "DRIVER",
-				SendType:   descriptor.SendTypeCyclic,
-				CycleTime:  100 * time.Millisecond,
-				Signals: []*descriptor.Signal{
-					{
-						Name:          "Steer",
-						Start:         0,
-						Length:        4,
-						IsSigned:      true,
-						Scale:         1,
-						Offset:        -5,
-						Min:           -5,
-						Max:           5,
-						ReceiverNodes: []string{"MOTOR"},
-					},
-					{
-						Name:          "Drive",
-						Start:         4,
-						Length:        4,
-						Scale:         1,
-						Max:           9,
-						ReceiverNodes: []string{"MOTOR"},
-					},
-				},
-			},
-
-			{
-				ID:         200,
-				Name:       "SensorSonars",
-				Length:     8,
-				SenderNode: "SENSOR",
-				SendType:   descriptor.SendTypeCyclic,
-				CycleTime:  100 * time.Millisecond,
-				Signals: []*descriptor.Signal{
-					{
-						Name:          "Mux",
-						IsMultiplexer: true,
-						Start:         0,
-						Length:        4,
-						Scale:         1,
-						ReceiverNodes: []string{"DRIVER", "IO"},
-					},
-					{
-						Name:          "ErrCount",
-						Start:         4,
-						Length:        12,
-						Scale:         1,
-						ReceiverNodes: []string{"DRIVER", "IO"},
-					},
-					{
-						Name:             "Left",
-						IsMultiplexed:    true,
-						MultiplexerValue: 0,
-						Start:            16,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DRIVER", "IO"},
-					},
-					{
-						Name:             "NoFiltLeft",
-						IsMultiplexed:    true,
-						MultiplexerValue: 1,
-						Start:            16,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DBG"},
-					},
-					{
-						Name:             "Middle",
-						IsMultiplexed:    true,
-						MultiplexerValue: 0,
-						Start:            28,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DRIVER", "IO"},
-					},
-					{
-						Name:             "NoFiltMiddle",
-						IsMultiplexed:    true,
-						MultiplexerValue: 1,
-						Start:            28,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DBG"},
-					},
-					{
-						Name:             "Right",
-						IsMultiplexed:    true,
-						MultiplexerValue: 0,
-						Start:            40,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DRIVER", "IO"},
-					},
-					{
-						Name:             "NoFiltRight",
-						IsMultiplexed:    true,
-						MultiplexerValue: 1,
-						Start:            40,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DBG"},
-					},
-					{
-						Name:             "Rear",
-						IsMultiplexed:    true,
-						MultiplexerValue: 0,
-						Start:            52,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DRIVER", "IO"},
-					},
-					{
-						Name:             "NoFiltRear",
-						IsMultiplexed:    true,
-						MultiplexerValue: 1,
-						Start:            52,
-						Length:           12,
-						Scale:            0.1,
-						ReceiverNodes:    []string{"DBG"},
-					},
-				},
-			},
-
-			{
-				ID:         400,
-				Name:       "MotorStatus",
-				Length:     3,
-				SenderNode: "MOTOR",
-				SendType:   descriptor.SendTypeCyclic,
-				CycleTime:  100 * time.Millisecond,
-				Signals: []*descriptor.Signal{
-					{
-						Name:          "WheelError",
-						Start:         0,
-						Length:        1,
-						Scale:         1,
-						ReceiverNodes: []string{"DRIVER", "IO"},
-					},
-					{
-						Name:          "SpeedKph",
-						Start:         8,
-						Length:        16,
-						Scale:         0.001,
-						Unit:          "km/h",
-						ReceiverNodes: []string{"DRIVER", "IO"},
-					},
-				},
-			},
-
-			{
-				ID:         500,
-				Name:       "IODebug",
-				Length:     6,
-				SenderNode: "IO",
-				SendType:   descriptor.SendTypeEvent,
-				Signals: []*descriptor.Signal{
-					{
-						Name:          "TestUnsigned",
-						Start:         0,
-						Length:        8,
-						Scale:         1,
-						ReceiverNodes: []string{"DBG"},
-					},
-					{
-						Name:          "TestEnum",
-						Start:         8,
-						Length:        6,
-						Scale:         1,
-						ReceiverNodes: []string{"DBG"},
-						DefaultValue:  int(examplecan.IODebug_TestEnum_Two),
-						ValueDescriptions: []*descriptor.ValueDescription{
-							{Value: 1, Description: "One"},
-							{Value: 2, Description: "Two"},
-						},
-					},
-					{
-						Name:          "TestSigned",
-						Start:         16,
-						Length:        8,
-						IsSigned:      true,
-						Scale:         1,
-						ReceiverNodes: []string{"DBG"},
-					},
-					{
-						Name:          "TestFloat",
-						Start:         24,
-						Length:        8,
-						Scale:         0.5,
-						ReceiverNodes: []string{"DBG"},
-					},
-					{
-						Name:          "TestBoolEnum",
-						Start:         32,
-						Length:        1,
-						Scale:         1,
-						ReceiverNodes: []string{"DBG"},
-						ValueDescriptions: []*descriptor.ValueDescription{
-							{Value: 0, Description: "Zero"},
-							{Value: 1, Description: "One"},
-						},
-					},
-					{
-						Name:          "TestScaledEnum",
-						Start:         40,
-						Length:        2,
-						Scale:         2,
-						Min:           0,
-						Max:           6,
-						ReceiverNodes: []string{"DBG"},
-						ValueDescriptions: []*descriptor.ValueDescription{
-							{Value: 0, Description: "Zero"},
-							{Value: 1, Description: "Two"},
-							{Value: 2, Description: "Four"},
-							{Value: 3, Description: "Six"},
-						},
-					},
+				Name:          "Command",
+				Start:         0,
+				Length:        8,
+				Scale:         1,
+				ReceiverNodes: []string{"SENSOR", "MOTOR"},
+				ValueDescriptions: []*descriptor.ValueDescription{
+					{Value: 0, Description: "None"},
+					{Value: 1, Description: "Sync"},
+					{Value: 2, Description: "Reboot"},
+					{Value: 3, Description: "Headlights On"},
 				},
 			},
 			{
@@ -325,16 +97,275 @@ func TestCompile_ExampleDBC(t *testing.T) {
 			},
 		},
 	}
+	message101 := &descriptor.Message{
+		ID:         101,
+		Name:       "MotorCommand",
+		Length:     1,
+		SenderNode: "DRIVER",
+		SendType:   descriptor.SendTypeCyclic,
+		CycleTime:  100 * time.Millisecond,
+		Signals: []*descriptor.Signal{
+			{
+				Name:          "Steer",
+				Start:         0,
+				Length:        4,
+				IsSigned:      true,
+				Scale:         1,
+				Offset:        -5,
+				Min:           -5,
+				Max:           5,
+				ReceiverNodes: []string{"MOTOR"},
+			},
+			{
+				Name:          "Drive",
+				Start:         4,
+				Length:        4,
+				Scale:         1,
+				Max:           9,
+				ReceiverNodes: []string{"MOTOR"},
+			},
+		},
+	}
+	message200 := &descriptor.Message{
+		ID:         200,
+		Name:       "SensorSonars",
+		Length:     8,
+		SenderNode: "SENSOR",
+		SendType:   descriptor.SendTypeCyclic,
+		CycleTime:  100 * time.Millisecond,
+		Signals: []*descriptor.Signal{
+			{
+				Name:          "Mux",
+				IsMultiplexer: true,
+				Start:         0,
+				Length:        4,
+				Scale:         1,
+				ReceiverNodes: []string{"DRIVER", "IO"},
+			},
+			{
+				Name:          "ErrCount",
+				Start:         4,
+				Length:        12,
+				Scale:         1,
+				ReceiverNodes: []string{"DRIVER", "IO"},
+			},
+			{
+				Name:             "Left",
+				IsMultiplexed:    true,
+				MultiplexerValue: 0,
+				Start:            16,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DRIVER", "IO"},
+			},
+			{
+				Name:             "NoFiltLeft",
+				IsMultiplexed:    true,
+				MultiplexerValue: 1,
+				Start:            16,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DBG"},
+			},
+			{
+				Name:             "Middle",
+				IsMultiplexed:    true,
+				MultiplexerValue: 0,
+				Start:            28,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DRIVER", "IO"},
+			},
+			{
+				Name:             "NoFiltMiddle",
+				IsMultiplexed:    true,
+				MultiplexerValue: 1,
+				Start:            28,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DBG"},
+			},
+			{
+				Name:             "Right",
+				IsMultiplexed:    true,
+				MultiplexerValue: 0,
+				Start:            40,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DRIVER", "IO"},
+			},
+			{
+				Name:             "NoFiltRight",
+				IsMultiplexed:    true,
+				MultiplexerValue: 1,
+				Start:            40,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DBG"},
+			},
+			{
+				Name:             "Rear",
+				IsMultiplexed:    true,
+				MultiplexerValue: 0,
+				Start:            52,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DRIVER", "IO"},
+			},
+			{
+				Name:             "NoFiltRear",
+				IsMultiplexed:    true,
+				MultiplexerValue: 1,
+				Start:            52,
+				Length:           12,
+				Scale:            0.1,
+				ReceiverNodes:    []string{"DBG"},
+			},
+		},
+	}
+	message400 := &descriptor.Message{
+		ID:         400,
+		Name:       "MotorStatus",
+		Length:     3,
+		SenderNode: "MOTOR",
+		SendType:   descriptor.SendTypeCyclic,
+		CycleTime:  100 * time.Millisecond,
+		Signals: []*descriptor.Signal{
+			{
+				Name:          "WheelError",
+				Start:         0,
+				Length:        1,
+				Scale:         1,
+				ReceiverNodes: []string{"DRIVER", "IO"},
+			},
+			{
+				Name:          "SpeedKph",
+				Start:         8,
+				Length:        16,
+				Scale:         0.001,
+				Unit:          "km/h",
+				ReceiverNodes: []string{"DRIVER", "IO"},
+			},
+		},
+	}
+	message500 := &descriptor.Message{
+		ID:         500,
+		Name:       "IODebug",
+		Length:     6,
+		SenderNode: "IO",
+		SendType:   descriptor.SendTypeEvent,
+		Signals: []*descriptor.Signal{
+			{
+				Name:          "TestUnsigned",
+				Start:         0,
+				Length:        8,
+				Scale:         1,
+				ReceiverNodes: []string{"DBG"},
+			},
+			{
+				Name:          "TestEnum",
+				Start:         8,
+				Length:        6,
+				Scale:         1,
+				ReceiverNodes: []string{"DBG"},
+				DefaultValue:  int(examplecan.IODebug_TestEnum_Two),
+				ValueDescriptions: []*descriptor.ValueDescription{
+					{Value: 1, Description: "One"},
+					{Value: 2, Description: "Two"},
+				},
+			},
+			{
+				Name:          "TestSigned",
+				Start:         16,
+				Length:        8,
+				IsSigned:      true,
+				Scale:         1,
+				ReceiverNodes: []string{"DBG"},
+			},
+			{
+				Name:          "TestFloat",
+				Start:         24,
+				Length:        8,
+				Scale:         0.5,
+				ReceiverNodes: []string{"DBG"},
+			},
+			{
+				Name:          "TestBoolEnum",
+				Start:         32,
+				Length:        1,
+				Scale:         1,
+				ReceiverNodes: []string{"DBG"},
+				ValueDescriptions: []*descriptor.ValueDescription{
+					{Value: 0, Description: "Zero"},
+					{Value: 1, Description: "One"},
+				},
+			},
+			{
+				Name:          "TestScaledEnum",
+				Start:         40,
+				Length:        2,
+				Scale:         2,
+				Min:           0,
+				Max:           6,
+				ReceiverNodes: []string{"DBG"},
+				ValueDescriptions: []*descriptor.ValueDescription{
+					{Value: 0, Description: "Zero"},
+					{Value: 1, Description: "Two"},
+					{Value: 2, Description: "Four"},
+					{Value: 3, Description: "Six"},
+				},
+			},
+		},
+	}
+	allMessages := []*descriptor.Message{message1, message100, message101, message200, message400, message500}
+
 	input, err := os.ReadFile(exampleDBCFile)
 	assert.NilError(t, err)
-	result, err := Compile(exampleDBCFile, input)
-	if err != nil {
-		t.Fatal(err)
+
+	for _, tt := range []struct {
+		name             string
+		options          []CompileOption
+		expectedMessages []*descriptor.Message
+	}{
+		{
+			name:             "without option",
+			options:          []CompileOption{},
+			expectedMessages: allMessages,
+		}, {
+			name:             "allowed ids ok",
+			options:          []CompileOption{WithAllowedMessageIds([]uint32{message1.ID, message200.ID})},
+			expectedMessages: []*descriptor.Message{message1, message200},
+		}, {
+			name:             "allowed ids unsorted",
+			options:          []CompileOption{WithAllowedMessageIds([]uint32{message500.ID, message101.ID, message400.ID})},
+			expectedMessages: []*descriptor.Message{message101, message400, message500},
+		}, {
+			name:             "allowed ids empty",
+			options:          []CompileOption{WithAllowedMessageIds([]uint32{})},
+			expectedMessages: nil,
+		}, {
+			name:             "allowed ids unknown",
+			options:          []CompileOption{WithAllowedMessageIds([]uint32{42, 1234})},
+			expectedMessages: nil,
+		}, {
+			name:             "allowed ids some unknown",
+			options:          []CompileOption{WithAllowedMessageIds([]uint32{message101.ID, 42, message400.ID, 1234})},
+			expectedMessages: []*descriptor.Message{message101, message400},
+		},
+	} {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := Compile(exampleDBCFile, input, tt.options...)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(result.Warnings) > 0 {
+				t.Fatal(result.Warnings)
+			}
+			exampleDatabase.Messages = tt.expectedMessages
+			assert.DeepEqual(t, exampleDatabase, result.Database)
+		})
 	}
-	if len(result.Warnings) > 0 {
-		t.Fatal(result.Warnings)
-	}
-	assert.DeepEqual(t, exampleDatabase, result.Database)
 }
 
 func TestCompile_Float64SignalWarningExpected(t *testing.T) {
