@@ -38,6 +38,7 @@ import (
 func main() {
 	app := kingpin.New("cantool", "CAN tool for Go programmers")
 	generateCommand(app)
+	generateSingleCommand(app)
 	lintCommand(app)
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 }
@@ -68,6 +69,29 @@ func generateCommand(app *kingpin.Application) {
 			outputPath := filepath.Join(*outputDir, outputFile)
 			return genGo(p, outputPath)
 		})
+	})
+}
+
+func generateSingleCommand(app *kingpin.Application) {
+	command := app.Command("generate-single", "generate CAN messages for single DBC file")
+	inputFile := command.
+		Arg("input-file", "input file").
+		Required().
+		ExistingFile()
+	outputFile := command.
+		Arg("output-file", "output file").
+		Required().
+		String()
+	command.Action(func(_ *kingpin.ParseContext) error {
+		outputPath := filepath.Clean(*outputFile)
+		inputPath := filepath.Clean(*inputFile)
+		if filepath.Ext(outputPath) != ".go" {
+			return errors.New("output file must have .go extension")
+		}
+		if filepath.Ext(inputPath) != ".dbc" {
+			return errors.New("input file must have .dbc extension")
+		}
+		return genGo(inputPath, outputPath)
 	})
 }
 
