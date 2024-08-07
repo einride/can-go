@@ -151,7 +151,7 @@ func genGo(inputFile, outputFile string) error {
 	if err != nil {
 		return err
 	}
-	result, err := generate.Compile(inputFile, input)
+	result, err := dbc.Compile(inputFile, input)
 	if err != nil {
 		return err
 	}

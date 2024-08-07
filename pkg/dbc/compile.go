@@ -1,11 +1,10 @@
-package generate
+package dbc
 
 import (
 	"fmt"
 	"sort"
 	"time"
 
-	"go.einride.tech/can/pkg/dbc"
 	"go.einride.tech/can/pkg/descriptor"
 )
 
@@ -15,7 +14,7 @@ type CompileResult struct {
 }
 
 func Compile(sourceFile string, data []byte) (result *CompileResult, err error) {
-	p := dbc.NewParser(sourceFile, data)
+	p := NewParser(sourceFile, data)
 	if err := p.Parse(); err != nil {
 		return nil, fmt.Errorf("failed to parse DBC source file: %w", err)
 	}
@@ -31,7 +30,7 @@ func Compile(sourceFile string, data []byte) (result *CompileResult, err error) 
 }
 
 type compileError struct {
-	def    dbc.Def
+	def    Def
 	reason string
 }
 
@@ -41,7 +40,7 @@ func (e *compileError) Error() string {
 
 type compiler struct {
 	db       *descriptor.Database
-	defs     []dbc.Def
+	defs     []Def
 	warnings []error
 }
 
@@ -52,10 +51,10 @@ func (c *compiler) addWarning(warning error) {
 func (c *compiler) collectDescriptors() {
 	for _, def := range c.defs {
 		switch def := def.(type) {
-		case *dbc.VersionDef:
+		case *VersionDef:
 			c.db.Version = def.Version
-		case *dbc.MessageDef:
-			if def.MessageID == dbc.IndependentSignalsMessageID {
+		case *MessageDef:
+			if def.MessageID == IndependentSignalsMessageID {
 				continue // don't compile
 			}
 			message := &descriptor.Message{
@@ -87,7 +86,7 @@ func (c *compiler) collectDescriptors() {
 				message.Signals = append(message.Signals, signal)
 			}
 			c.db.Messages = append(c.db.Messages, message)
-		case *dbc.NodesDef:
+		case *NodesDef:
 			for _, node := range def.NodeNames {
 				c.db.Nodes = append(c.db.Nodes, &descriptor.Node{Name: string(node)})
 			}
@@ -98,16 +97,16 @@ func (c *compiler) collectDescriptors() {
 func (c *compiler) addMetadata() {
 	for _, def := range c.defs {
 		switch def := def.(type) {
-		case *dbc.SignalValueTypeDef:
+		case *SignalValueTypeDef:
 			signal, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
 			if !ok {
 				c.addWarning(&compileError{def: def, reason: "no declared signal"})
 				continue
 			}
 			switch def.SignalValueType {
-			case dbc.SignalValueTypeInt:
+			case SignalValueTypeInt:
 				signal.IsFloat = false
-			case dbc.SignalValueTypeFloat32:
+			case SignalValueTypeFloat32:
 				if signal.Length == 32 {
 					signal.IsFloat = true
 				} else {
@@ -118,10 +117,10 @@ func (c *compiler) addMetadata() {
 				reason := fmt.Sprintf("unsupported signal value type: %v", def.SignalValueType)
 				c.addWarning(&compileError{def: def, reason: reason})
 			}
-		case *dbc.CommentDef:
+		case *CommentDef:
 			switch def.ObjectType {
-			case dbc.ObjectTypeMessage:
-				if def.MessageID == dbc.IndependentSignalsMessageID {
+			case ObjectTypeMessage:
+				if def.MessageID == IndependentSignalsMessageID {
 					continue // don't compile
 				}
 				message, ok := c.db.Message(def.MessageID.ToCAN())
@@ -130,8 +129,8 @@ func (c *compiler) addMetadata() {
 					continue
 				}
 				message.Description = def.Comment
-			case dbc.ObjectTypeSignal:
-				if def.MessageID == dbc.IndependentSignalsMessageID {
+			case ObjectTypeSignal:
+				if def.MessageID == IndependentSignalsMessageID {
 					continue // don't compile
 				}
 				signal, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
@@ -140,7 +139,7 @@ func (c *compiler) addMetadata() {
 					continue
 				}
 				signal.Description = def.Comment
-			case dbc.ObjectTypeNetworkNode:
+			case ObjectTypeNetworkNode:
 				node, ok := c.db.Node(string(def.NodeName))
 				if !ok {
 					c.addWarning(&compileError{def: def, reason: "no declared node"})
@@ -148,11 +147,11 @@ func (c *compiler) addMetadata() {
 				}
 				node.Description = def.Comment
 			}
-		case *dbc.ValueDescriptionsDef:
-			if def.MessageID == dbc.IndependentSignalsMessageID {
+		case *ValueDescriptionsDef:
+			if def.MessageID == IndependentSignalsMessageID {
 				continue // don't compile
 			}
-			if def.ObjectType != dbc.ObjectTypeSignal {
+			if def.ObjectType != ObjectTypeSignal {
 				continue // don't compile
 			}
 			signal, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
@@ -166,9 +165,9 @@ func (c *compiler) addMetadata() {
 					Value:       int64(valueDescription.Value),
 				})
 			}
-		case *dbc.AttributeValueForObjectDef:
+		case *AttributeValueForObjectDef:
 			switch def.ObjectType {
-			case dbc.ObjectTypeMessage:
+			case ObjectTypeMessage:
 				msg, ok := c.db.Message(def.MessageID.ToCAN())
 				if !ok {
 					c.addWarning(&compileError{def: def, reason: "no declared message"})
@@ -185,7 +184,7 @@ func (c *compiler) addMetadata() {
 				case "GenMsgDelayTime":
 					msg.DelayTime = time.Duration(def.IntValue) * time.Millisecond
 				}
-			case dbc.ObjectTypeSignal:
+			case ObjectTypeSignal:
 				sig, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
 				if !ok {
 					c.addWarning(&compileError{def: def, reason: "no declared signal"})
