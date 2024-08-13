@@ -75,12 +75,51 @@ func main() {
 It is possible to generate Go code from a `.dbc` file.
 
 ```
-$ go run go.einride.tech/can/cmd/cantool generate <dbc file root folder> <output folder>
+$ go run go.einride.tech/can/cmd/cantool generate <input> <output folder>
 ```
+
+The INPUT argument can be either a directory containing DBC files, or the path
+to a single DBC file.
+
+#### Placement of generated code
+
+OUTPUT FOLDER is treated slightly different dependeing on whether INPUT is a
+file or a directory.
+
+When INPUT is a directory containing DBC files the generated files are created
+in OUTPUT-DIRECTORY relative to where they are found in INPUT.
+
+As an example, given the following directory structure:
+
+```
+dbc/
+   powertrain/pt.dbc
+   steering/steer.dbc
+   brake/brake.dbc
+```
+
+A `cantool generate dbc/ gen/go` call will generate the following structure:
+
+```
+gen/go/
+   powertrain/pt.dbc.go
+   steering/steer.dbc.go
+   brake/brake.dbc.go
+```
+
+When INPUT is a single DBC file it is generated directly in OUTPUT-DIRECTORY
+with its basename as the stem.
+
+`cantool generate dbc/steering/steer.dbc gen/go/steering` will therefore
+generate the gen/go/steering/steer.dbc.go.
+
+#### Linting
 
 In order to generate Go code that makes sense, we currently perform some
 validations when parsing the DBC file so there may need to be some changes on
 the DBC file to make it work
+
+#### Using generated code
 
 After generating Go code we can marshal a message to a frame:
 
