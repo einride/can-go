@@ -403,3 +403,17 @@ func Test_CopyFrom_PreservesOutOfRangeValues(t *testing.T) {
 		t.Errorf("Expected frames of messages to be identical (%v != %v)", m2.Frame(), original.Frame())
 	}
 }
+
+func TestCompile_MetadataInvalidSignalReference(t *testing.T) {
+	finish := runTestInDir(t, "../..")
+	defer finish()
+	const exampleDBCFile = "testdata/dbc-invalid/example/example_metadata_invalid_signal_reference.dbc"
+	input, err := os.ReadFile(exampleDBCFile)
+	assert.NilError(t, err)
+	result, err := Compile(exampleDBCFile, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// We expect one warning for incorrect signal length in declaration of float32 signal
+	assert.Equal(t, len(result.Warnings), 1)
+}

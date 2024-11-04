@@ -1,0 +1,14 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DBG IO
+
+BO_ 42 AMessage: 8 Vector__XXX
+ SG_ ASignal : 7|16@0- (1,0) [-32768|32767] "%" Vector__XXX
+
+BA_DEF_ SG_  "GenSigStartValue" FLOAT -3.4E+038 3.4E+038;
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_ "GenSigStartValue" SG_ 42 AnotherSignalName 0;

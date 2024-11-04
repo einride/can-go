@@ -189,6 +189,7 @@ func (c *compiler) addMetadata() {
 				sig, ok := c.db.Signal(def.MessageID.ToCAN(), string(def.SignalName))
 				if !ok {
 					c.addWarning(&compileError{def: def, reason: "no declared signal"})
+					continue
 				}
 				if def.AttributeName == "GenSigStartValue" {
 					sig.DefaultValue = int(def.IntValue)
