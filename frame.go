@@ -26,7 +26,7 @@ type Frame struct {
 	// ID is the CAN ID
 	ID uint32
 	// Length is the number of bytes of data in the frame.
-	Length uint8
+	Length uint16
 	// Data is the frame data.
 	Data Data
 	// IsRemote is true for remote frames.
@@ -114,7 +114,7 @@ func (f *Frame) UnmarshalString(s string) error {
 			if err != nil {
 				return fmt.Errorf("invalid remote length: %v: %w", s, err)
 			}
-			frame.Length = uint8(dataLength)
+			frame.Length = uint16(dataLength)
 		}
 		*f = frame
 		return nil
@@ -123,7 +123,7 @@ func (f *Frame) UnmarshalString(s string) error {
 	if len(dataPart) > 16 || len(dataPart)%2 != 0 {
 		return fmt.Errorf("invalid data length: %v", s)
 	}
-	frame.Length = uint8(len(dataPart) / 2)
+	frame.Length = uint16(len(dataPart) / 2)
 	// Parse: Data
 	decodedData, err := hex.DecodeString(dataPart)
 	if err != nil {

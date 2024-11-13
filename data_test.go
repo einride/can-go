@@ -331,3 +331,17 @@ func BenchmarkData_PackLittleEndian(b *testing.B) {
 		_ = data.PackLittleEndian()
 	}
 }
+
+func BenchmarkData_UnsignedBitsBigEndian(b *testing.B) {
+	var data Data
+	for i := 0; i < b.N; i++ {
+		_ = data.UnsignedBitsBigEndian(0, 16)
+	}
+}
+
+func BenchmarkData_UnsignedBitsLittleEndian(b *testing.B) {
+	var data Data
+	for i := 0; i < b.N; i++ {
+		_ = data.UnsignedBitsLittleEndian(0, 16)
+	}
+}
