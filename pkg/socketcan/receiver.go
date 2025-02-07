@@ -2,6 +2,7 @@ package socketcan
 
 import (
 	"bufio"
+	"context"
 	"io"
 
 	"go.einride.tech/can"
@@ -52,6 +53,29 @@ func (r *Receiver) Receive() bool {
 		}
 	}
 	return ok
+}
+
+func (r *Receiver) ReceiveWithContext(ctx context.Context) bool {
+	scanCh := make(chan bool, 1)
+
+	go func() {
+		ok := r.sc.Scan()
+		scanCh <- ok
+	}()
+
+	select {
+	case ok := <-scanCh:
+		if ok {
+			r.frame = frame{}
+			r.frame.unmarshalBinary(r.sc.Bytes())
+			if r.opts.frameInterceptor != nil {
+				r.opts.frameInterceptor(r.frame.decodeFrame())
+			}
+		}
+		return ok
+	case <-ctx.Done():
+		return false
+	}
 }
 
 func (r *Receiver) HasErrorFrame() bool {
