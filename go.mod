@@ -1,6 +1,6 @@
 module go.einride.tech/can
 
-go 1.19
+go 1.20
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
