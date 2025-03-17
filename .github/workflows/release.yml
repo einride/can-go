@@ -34,7 +34,7 @@ jobs:
 
       - name: Run goreleaser
         if: steps.release.outputs.version != ''
-        uses: goreleaser/goreleaser-action@v5.1.0
+        uses: goreleaser/goreleaser-action@v6.2.1
         with:
           version: latest
           args: release --rm-dist
