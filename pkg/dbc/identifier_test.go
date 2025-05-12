@@ -17,7 +17,6 @@ func TestIdentifier_Validate(t *testing.T) {
 		"_43",
 		Identifier(strings.Repeat("a", maxIdentifierLength)),
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
 			assert.NilError(t, tt.Validate())
 		})
@@ -34,7 +33,6 @@ func TestIdentifier_Validate_Error(t *testing.T) {
 		"foo bar",
 		Identifier(strings.Repeat("a", maxIdentifierLength+1)),
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
 			assert.ErrorContains(t, tt.Validate(), "invalid identifier")
 		})

@@ -87,7 +87,6 @@ func TestExampleDatabase_MarshalUnmarshal(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			f, err := tt.m.MarshalFrame()
 			assert.NilError(t, err)
@@ -132,7 +131,6 @@ func TestExampleDatabase_UnmarshalFrame_Error(t *testing.T) {
 			err:  "unmarshal SensorSonars: expects standard ID (got 000000C8#0000000000000000 with extended ID)",
 		},
 	} {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.err, tt.m.UnmarshalFrame(tt.f).Error())
 		})
@@ -210,7 +208,6 @@ func TestExampleDatabase_MultiplexedSignals(t *testing.T) {
 			expectedNoFiltRear:   90,
 		},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("mux=%v", tt.expectedMux), func(t *testing.T) {
 			unmarshal1 := examplecan.NewSensorSonars()
 			// When the multiplexer signal is 0 and we marshal the message

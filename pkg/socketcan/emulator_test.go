@@ -36,7 +36,6 @@ func TestEmulate_SendToAll(t *testing.T) {
 		{receivers: 5},
 		{receivers: 100},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("receivers:%v", tt.receivers), func(t *testing.T) {
 			// Given: A listener with an Emulator
 			ctx, cancel := context.WithCancel(context.Background())
@@ -108,7 +107,6 @@ func TestEmulate_ConnectMany(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		name := fmt.Sprintf("transmitters:%v,frames:%v", tt.noTransmitters, len(tt.canFrames))
 		t.Run(name, func(t *testing.T) {
 			// Given: A listener with an Emulator
@@ -124,7 +122,6 @@ func TestEmulate_ConnectMany(t *testing.T) {
 			receiver := errgroup.Group{}
 			receiver.Go(func() error {
 				for i := 0; i < len(tt.canFrames)*tt.noTransmitters; i++ {
-					i := i
 					if ok := r.Receive(); !ok {
 						cancel()
 						assert.NilError(t, eg.Wait())
@@ -179,7 +176,6 @@ func TestEmulate_SendReceive(t *testing.T) {
 			receivers:    50,
 		},
 	} {
-		tt := tt
 		name := fmt.Sprintf("transmitters: %v,receivers: %v", tt.transmitters, tt.receivers)
 		t.Run(name, func(t *testing.T) {
 			// Given: A listener and an emulator
@@ -261,7 +257,6 @@ func TestEmulator_Isolation(t *testing.T) {
 	rx := errgroup.Group{}
 	tx := errgroup.Group{}
 	for i := 0; i < nEmulators; i++ {
-		i := i
 		r, err := emulators[i].Receiver()
 		assert.NilError(t, err)
 		rx.Go(func() error {

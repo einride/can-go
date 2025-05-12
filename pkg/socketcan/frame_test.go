@@ -74,7 +74,6 @@ func TestFrame_EncodeDecode(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
 			t.Run("encode", func(t *testing.T) {
 				var actual frame
@@ -186,7 +185,6 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
 			assert.Equal(t, tt.expected, tt.f.decodeErrorFrame())
 		})

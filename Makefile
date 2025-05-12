@@ -10,7 +10,7 @@ sagefile := $(abspath $(cwd)/.sage/bin/sagefile)
 go := $(shell command -v go 2>/dev/null)
 export GOWORK ?= off
 ifndef go
-SAGE_GO_VERSION ?= 1.20.2
+SAGE_GO_VERSION ?= 1.23.4
 export GOROOT := $(abspath $(cwd)/.sage/tools/go/$(SAGE_GO_VERSION)/go)
 export PATH := $(PATH):$(GOROOT)/bin
 go := $(GOROOT)/bin/go
@@ -37,7 +37,7 @@ sage:
 
 .PHONY: update-sage
 update-sage: $(go)
-	@cd .sage && $(go) get -d go.einride.tech/sage@latest && $(go) mod tidy && $(go) run .
+	@cd .sage && $(go) get go.einride.tech/sage@latest && $(go) mod tidy && $(go) run .
 
 .PHONY: clean-sage
 clean-sage:

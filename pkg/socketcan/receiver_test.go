@@ -90,7 +90,6 @@ func TestReceiver_ReceiveFrames(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
 			receiver := NewReceiver(io.NopCloser(bytes.NewReader(tt.input)))
 			for i, expected := range tt.expectedFrames {

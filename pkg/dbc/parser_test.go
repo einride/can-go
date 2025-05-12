@@ -1020,7 +1020,6 @@ func TestParser_Parse(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewParser(tt.name, []byte(tt.text))
 			assert.NilError(t, p.Parse())
@@ -1062,7 +1061,6 @@ func TestParser_Parse_Error(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewParser(tt.name, []byte(tt.text))
 			assert.Error(t, p.Parse(), tt.err.Error())

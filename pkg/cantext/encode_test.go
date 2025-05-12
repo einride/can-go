@@ -44,7 +44,6 @@ MotorStatus
 			expectedCompact: `{WheelError: true, SpeedKph: 0.123km/h}`,
 		},
 	} {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run("standard", func(t *testing.T) {
 				txt := Marshal(tt.msg)

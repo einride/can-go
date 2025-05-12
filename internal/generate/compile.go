@@ -209,7 +209,6 @@ func (c *compiler) sortDescriptors() {
 		return c.db.Messages[i].ID < c.db.Messages[j].ID
 	})
 	for _, m := range c.db.Messages {
-		m := m
 		// Sort signals by start (and multiplexer value)
 		sort.Slice(m.Signals, func(j, k int) bool {
 			if m.Signals[j].MultiplexerValue < m.Signals[k].MultiplexerValue {
@@ -219,7 +218,6 @@ func (c *compiler) sortDescriptors() {
 		})
 		// Sort value descriptions by value
 		for _, s := range m.Signals {
-			s := s
 			sort.Slice(s.ValueDescriptions, func(k, l int) bool {
 				return s.ValueDescriptions[k].Value < s.ValueDescriptions[l].Value
 			})

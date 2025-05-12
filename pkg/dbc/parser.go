@@ -348,7 +348,7 @@ func (p *Parser) uint() uint64 {
 	return i
 }
 
-func (p *Parser) intInRange(min, max int) int {
+func (p *Parser) intInRange(rangeMin, rangeMax int) int {
 	var isNegative bool
 	if p.peekToken().typ == '-' {
 		p.token('-')
@@ -362,7 +362,7 @@ func (p *Parser) intInRange(min, max int) int {
 	if isNegative {
 		i *= -1
 	}
-	if i < min || i > max {
+	if i < rangeMin || i > rangeMax {
 		p.failf(tok.pos, "invalid value")
 	}
 	return i

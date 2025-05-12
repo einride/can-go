@@ -54,7 +54,6 @@ func TestErrorFrame_String(t *testing.T) {
 			expected: "TxTimeout (123456)",
 		},
 	} {
-		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
 			assert.Equal(t, tt.expected, tt.f.String())
 		})

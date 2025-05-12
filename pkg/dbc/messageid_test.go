@@ -18,7 +18,6 @@ func TestMessageID_Validate(t *testing.T) {
 		maxExtendedID | messageIDExtendedFlag,
 		messageIDIndependentSignals,
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
 			assert.NilError(t, tt.Validate())
 		})
@@ -31,7 +30,6 @@ func TestMessageID_Validate_Error(t *testing.T) {
 		(maxExtendedID + 1) | messageIDExtendedFlag,
 		0xffffffff,
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
 			assert.ErrorContains(t, tt.Validate(), "invalid")
 		})
@@ -47,7 +45,6 @@ func TestMessageID_ToCAN(t *testing.T) {
 		{messageID: messageIDIndependentSignals, expected: 0x40000000},
 		{messageID: 2566857156, expected: 419373508},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt.messageID), func(t *testing.T) {
 			assert.Equal(t, tt.expected, tt.messageID.ToCAN())
 		})
@@ -63,7 +60,6 @@ func TestMessageID_IsExtended(t *testing.T) {
 		{messageID: messageIDIndependentSignals, expected: false},
 		{messageID: 2566857156, expected: true},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt.messageID), func(t *testing.T) {
 			assert.Equal(t, tt.expected, tt.messageID.IsExtended())
 		})

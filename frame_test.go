@@ -19,7 +19,6 @@ func TestFrame_Validate_Error(t *testing.T) {
 		{ID: MaxID + 1},
 		{ID: MaxExtendedID + 1, IsExtended: true},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%v", tt), func(t *testing.T) {
 			assert.Check(t, tt.Validate() != nil, "should return validation error")
 		})

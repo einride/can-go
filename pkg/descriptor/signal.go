@@ -215,13 +215,13 @@ func (s *Signal) MaxFloat() float64 {
 
 // SaturatedCastSigned performs a saturated cast of an int64 to the value domain of the signal.
 func (s *Signal) SaturatedCastSigned(value int64) int64 {
-	min := s.MinSigned()
-	max := s.MaxSigned()
+	minValue := s.MinSigned()
+	maxValue := s.MaxSigned()
 	switch {
-	case value < min:
-		return min
-	case value > max:
-		return max
+	case value < minValue:
+		return minValue
+	case value > maxValue:
+		return maxValue
 	default:
 		return value
 	}
@@ -229,22 +229,22 @@ func (s *Signal) SaturatedCastSigned(value int64) int64 {
 
 // SaturatedCastUnsigned performs a saturated cast of a uint64 to the value domain of the signal.
 func (s *Signal) SaturatedCastUnsigned(value uint64) uint64 {
-	max := s.MaxUnsigned()
-	if value > max {
-		return max
+	maxValue := s.MaxUnsigned()
+	if value > maxValue {
+		return maxValue
 	}
 	return value
 }
 
 // SaturatedCastUnsigned performs a saturated cast of a uint64 to the value domain of the signal.
 func (s *Signal) SaturatedCastFloat(value float64) float64 {
-	min := s.MinFloat()
-	max := s.MaxFloat()
+	minValue := s.MinFloat()
+	maxValue := s.MaxFloat()
 	switch {
-	case value < min:
-		return min
-	case value > max:
-		return max
+	case value < minValue:
+		return minValue
+	case value > maxValue:
+		return maxValue
 	default:
 		return value
 	}

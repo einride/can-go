@@ -54,7 +54,6 @@ func TestFrame_String(t *testing.T) {
 			str:   "1234ABCD#",
 		},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("String|frame=%v,str=%v", tt.frame, tt.str), func(t *testing.T) {
 			assert.Check(t, is.Equal(tt.str, tt.frame.String()))
 		})
@@ -75,7 +74,6 @@ func TestParseFrame_Errors(t *testing.T) {
 		"0D23#F031",              // invalid ID length
 		"62E#104400000000000000", // invalid data length
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("str=%v", tt), func(t *testing.T) {
 			var frame Frame
 			err := frame.UnmarshalString(tt)
