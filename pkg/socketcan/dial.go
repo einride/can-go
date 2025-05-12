@@ -9,6 +9,14 @@ const udp = "udp"
 
 type DialOption func(*dialOpts)
 
+// IDFilter matches a frame when `frame.ID & filter.Mask == filter.ID & filter.Mask`
+type IDFilter struct {
+	ID   uint32
+	Mask uint32
+	// Set flag to filter out matching frames rather than include them
+	Exclude bool
+}
+
 // Dial connects to the address on the named net.
 //
 // Linux only: If net is "can" it creates a SocketCAN connection to the device

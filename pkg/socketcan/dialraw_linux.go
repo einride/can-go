@@ -12,6 +12,7 @@ import (
 
 type dialOpts struct {
 	errorFrameMask *int
+	rawFilters     []unix.CanFilter
 }
 
 func dialRaw(device string, opt ...DialOption) (conn net.Conn, err error) {
@@ -37,6 +38,11 @@ func dialRaw(device string, opt ...DialOption) (conn net.Conn, err error) {
 			return nil, fmt.Errorf("set error filter: %w", err)
 		}
 	}
+	if len(opts.rawFilters) != 0 {
+		if err = unix.SetsockoptCanRawFilter(fd, unix.SOL_CAN_RAW, unix.CAN_RAW_FILTER, opts.rawFilters); err != nil {
+			return nil, fmt.Errorf("set raw filter: %w", err)
+		}
+	}
 	// put fd in non-blocking mode so the created file will be registered by the runtime poller (Go >= 1.12)
 	if err := unix.SetNonblock(fd, true); err != nil {
 		return nil, fmt.Errorf("set nonblock: %w", err)
@@ -53,5 +59,24 @@ func WithReceiveErrorFrames() DialOption {
 	return func(o *dialOpts) {
 		canErrMask := unix.CAN_ERR_MASK
 		o.errorFrameMask = &canErrMask
+	}
+}
+
+// WithFilterReceivedFramesByID returns a DialOption which filters the
+// received CAN messages to include only frames with ID that match an
+// ID/Mask in one of the given IDFilters (or do not match, in the case
+// that the Exclude flag is set).
+func WithFilterReceivedFramesByID(filters []IDFilter) DialOption {
+	return func(o *dialOpts) {
+		for _, filter := range filters {
+			id := filter.ID
+			if filter.Exclude {
+				id |= unix.CAN_INV_FILTER
+			}
+			o.rawFilters = append(o.rawFilters, unix.CanFilter{
+				Id:   id,
+				Mask: filter.Mask,
+			})
+		}
 	}
 }
