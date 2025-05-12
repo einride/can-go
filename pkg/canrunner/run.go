@@ -83,7 +83,6 @@ func Run(ctx context.Context, n Node) error {
 		return RunMessageReceiver(ctx, rx, n, clock.System())
 	})
 	for _, m := range n.TransmittedMessages() {
-		m := m
 		g.Go(func() error {
 			tx := socketcan.NewTransmitter(conn)
 			return RunMessageTransmitter(ctx, tx, n, m, clock.System())

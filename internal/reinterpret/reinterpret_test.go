@@ -57,7 +57,6 @@ func TestReinterpretSign(t *testing.T) {
 		{unsigned: 0xe, length: 4, signed: -2},
 		{unsigned: 0xf, length: 4, signed: -1},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("%+v", tt), func(t *testing.T) {
 			assert.Equal(t, tt.signed, AsSigned(tt.unsigned, tt.length))
 			assert.Equal(t, tt.unsigned, AsUnsigned(tt.signed, tt.length))

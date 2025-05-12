@@ -28,7 +28,6 @@ func run(pass *analysis.Pass) error {
 			continue
 		}
 		for _, vd := range valueDescriptions {
-			vd := vd
 			if !identifiers.IsCamelCase(vd.Description) {
 				// Descriptor has format "<value> <quote><description>"
 				//

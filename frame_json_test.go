@@ -66,7 +66,6 @@ func TestFrame_JSON(t *testing.T) {
 			},
 		},
 	} {
-		tt := tt
 		t.Run(fmt.Sprintf("JSON|frame=%v", tt.frame), func(t *testing.T) {
 			assert.Check(t, is.Equal(tt.jsonFrame, tt.frame.JSON()))
 		})

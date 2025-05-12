@@ -35,7 +35,6 @@ func TestUnwrapPathError(t *testing.T) {
 			expected: &os.PathError{Op: "read", Err: innerErr},
 		},
 	} {
-		tt := tt
 		t.Run(tt.msg, func(t *testing.T) {
 			assert.Error(t, unwrapPathError(tt.err), tt.expected.Error())
 		})
@@ -59,7 +58,6 @@ func TestFileConn_ReadWrite(t *testing.T) {
 			mockFn: (*mocksocketcan.MockfileMockRecorder).Write,
 		},
 	} {
-		tt := tt
 		t.Run(tt.op, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
@@ -116,7 +114,6 @@ func TestFileConn_SetDeadlines(t *testing.T) {
 			mockFn: (*mocksocketcan.MockfileMockRecorder).SetWriteDeadline,
 		},
 	} {
-		tt := tt
 		t.Run(tt.op, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()

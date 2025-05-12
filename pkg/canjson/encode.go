@@ -19,7 +19,6 @@ func Marshal(m generated.Message) ([]byte, error) {
 	bytes := make([]byte, 0, len(m.Descriptor().Signals)*preAllocatedBytesPerSignal)
 	bytes = append(bytes, '{')
 	for i, s := range m.Descriptor().Signals {
-		s := s
 		bytes = append(bytes, '"')
 		bytes = append(bytes, s.Name...)
 		bytes = append(bytes, `":`...)

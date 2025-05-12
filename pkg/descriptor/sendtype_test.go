@@ -16,7 +16,6 @@ func TestSendType_UnmarshalString(t *testing.T) {
 		{str: "OnEvent", expected: SendTypeEvent},
 		{str: "Event", expected: SendTypeEvent},
 	} {
-		tt := tt
 		t.Run(tt.str, func(t *testing.T) {
 			var actual SendType
 			assert.NilError(t, actual.UnmarshalString(tt.str))
