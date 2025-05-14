@@ -76,7 +76,7 @@ type frame struct {
 	// idAndFlags is the combined CAN ID and flags.
 	idAndFlags uint32
 	// dataLengthCode is the frame payload length in bytes.
-	dataLengthCode uint8
+	dataLengthCode uint16
 	// padding+reserved fields
 	_ [3]byte
 	// bytes contains the frame payload.
@@ -86,14 +86,14 @@ type frame struct {
 func (f *frame) unmarshalBinary(b []byte) {
 	_ = b[lengthOfFrame-1] // bounds check
 	f.idAndFlags = binary.LittleEndian.Uint32(b[indexOfID : indexOfID+lengthOfID])
-	f.dataLengthCode = b[indexOfDataLengthCode]
+	f.dataLengthCode = uint16(b[indexOfDataLengthCode])
 	copy(f.data[:], b[indexOfData:lengthOfFrame])
 }
 
 func (f *frame) marshalBinary(b []byte) {
 	_ = b[lengthOfFrame-1] // bounds check
 	binary.LittleEndian.PutUint32(b[indexOfID:indexOfID+lengthOfID], f.idAndFlags)
-	b[indexOfDataLengthCode] = f.dataLengthCode
+	b[indexOfDataLengthCode] = uint8(f.dataLengthCode)
 	copy(b[indexOfData:], f.data[:])
 }
 
