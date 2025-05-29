@@ -360,6 +360,13 @@ func TestExample_Node_CopyFromRx(_ *testing.T) {
 	_ = examplecan.NewMotorCommand().CopyFrom(motor.Rx().MotorCommand())
 }
 
+func TestExample_AccessToNonCapitalizedSignal(t *testing.T) {
+	// Ensures that the generated accessor for non-capitalized signal is accessible.
+	var expectedValue int8 = 42
+	m := examplecan.NewSignalNameFormatting().Setnon_capitalized_signal(expectedValue)
+	assert.Equal(t, expectedValue, m.Non_capitalized_signal())
+}
+
 func requireVCAN0(t *testing.T) {
 	t.Helper()
 	if _, err := net.InterfaceByName("vcan0"); err != nil {

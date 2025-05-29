@@ -8,6 +8,8 @@ import (
 	"path"
 	"regexp"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/shurcooL/go-goon"
 	"go.einride.tech/can/pkg/descriptor"
@@ -182,14 +184,15 @@ func MessageType(f *File, m *descriptor.Message) {
 	f.P("type ", messageReaderInterface(m), " interface {")
 	f.P("can.FrameMarshaler")
 	for _, s := range m.Signals {
+		signalName := capitalize(s.Name)
 		if hasPhysicalRepresentation(s) {
-			f.P("// ", s.Name, " returns the physical value of the ", s.Name, " signal.")
-			f.P(s.Name, "() float64")
+			f.P("// ", signalName, " returns the physical value of the ", s.Name, " signal.")
+			f.P(signalName, "() float64")
 			f.P("// Raw", s.Name, " returns the raw (encoded) value of the ", s.Name, " signal.")
 			f.P("Raw", s.Name, "() ", signalType(m, s))
 		} else {
-			f.P("// ", s.Name, " returns the value of the ", s.Name, " signal.")
-			f.P(s.Name, "()", signalType(m, s))
+			f.P("// ", signalName, " returns the value of the ", s.Name, " signal.")
+			f.P(signalName, "()", signalType(m, s))
 		}
 	}
 	f.P("}")
@@ -253,8 +256,9 @@ func MessageType(f *File, m *descriptor.Message) {
 	f.P("}")
 	f.P()
 	for _, s := range m.Signals {
+		signalName := capitalize(s.Name)
 		if !hasPhysicalRepresentation(s) {
-			f.P("func (m *", messageStruct(m), ") ", s.Name, "() ", signalType(m, s), " {")
+			f.P("func (m *", messageStruct(m), ") ", signalName, "() ", signalType(m, s), " {")
 			f.P("return m.", signalField(s))
 			f.P("}")
 			f.P()
@@ -273,7 +277,7 @@ func MessageType(f *File, m *descriptor.Message) {
 			f.P()
 			continue
 		}
-		f.P("func (m *", messageStruct(m), ") ", s.Name, "() float64 {")
+		f.P("func (m *", messageStruct(m), ") ", signalName, "() float64 {")
 		f.P("return ", signalDescriptor(m, s), ".ToPhysical(float64(m.", signalField(s), "))")
 		f.P("}")
 		f.P()
@@ -922,4 +926,12 @@ func messageDescriptor(m *descriptor.Message) string {
 
 func signalDescriptor(m *descriptor.Message, s *descriptor.Signal) string {
 	return messageDescriptor(m) + "." + s.Name
+}
+
+func capitalize(s string) string {
+	r, size := utf8.DecodeRuneInString(s)
+	if r == utf8.RuneError {
+		panic("Should be valid UTF8 string")
+	}
+	return string(unicode.ToUpper(r)) + s[size:]
 }
