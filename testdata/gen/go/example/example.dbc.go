@@ -1255,6 +1255,98 @@ func (m *IOFloat32) UnmarshalFrame(f can.Frame) error {
 	return nil
 }
 
+// SignalNameFormattingReader provides read access to a SignalNameFormatting message.
+type SignalNameFormattingReader interface {
+	can.FrameMarshaler
+	// Non_capitalized_signal returns the value of the non_capitalized_signal signal.
+	Non_capitalized_signal() int8
+}
+
+// SignalNameFormattingWriter provides write access to a SignalNameFormatting message.
+type SignalNameFormattingWriter interface {
+	// CopyFrom copies all values from SignalNameFormatting.
+	CopyFrom(SignalNameFormattingReader) *SignalNameFormatting
+	// Setnon_capitalized_signal sets the value of the non_capitalized_signal signal.
+	Setnon_capitalized_signal(int8) *SignalNameFormatting
+}
+
+type SignalNameFormatting struct {
+	xxx_non_capitalized_signal int8
+}
+
+func NewSignalNameFormatting() *SignalNameFormatting {
+	m := &SignalNameFormatting{}
+	m.Reset()
+	return m
+}
+
+func (m *SignalNameFormatting) Reset() {
+	m.xxx_non_capitalized_signal = 0
+}
+
+func (m *SignalNameFormatting) CopyFrom(o SignalNameFormattingReader) *SignalNameFormatting {
+	f, _ := o.MarshalFrame()
+	_ = m.UnmarshalFrame(f)
+	return m
+}
+
+// Descriptor returns the SignalNameFormatting descriptor.
+func (m *SignalNameFormatting) Descriptor() *descriptor.Message {
+	return Messages().SignalNameFormatting.Message
+}
+
+// String returns a compact string representation of the message.
+func (m *SignalNameFormatting) String() string {
+	return cantext.MessageString(m)
+}
+
+func (m *SignalNameFormatting) Non_capitalized_signal() int8 {
+	return m.xxx_non_capitalized_signal
+}
+
+func (m *SignalNameFormatting) Setnon_capitalized_signal(v int8) *SignalNameFormatting {
+	m.xxx_non_capitalized_signal = int8(Messages().SignalNameFormatting.non_capitalized_signal.SaturatedCastSigned(int64(v)))
+	return m
+}
+
+// Frame returns a CAN frame representing the message.
+func (m *SignalNameFormatting) Frame() can.Frame {
+	md := Messages().SignalNameFormatting
+	f := can.Frame{ID: md.ID, IsExtended: md.IsExtended, Length: md.Length}
+	md.non_capitalized_signal.MarshalSigned(&f.Data, int64(m.xxx_non_capitalized_signal))
+	return f
+}
+
+// MarshalFrame encodes the message as a CAN frame.
+func (m *SignalNameFormatting) MarshalFrame() (can.Frame, error) {
+	return m.Frame(), nil
+}
+
+// UnmarshalFrame decodes the message from a CAN frame.
+func (m *SignalNameFormatting) UnmarshalFrame(f can.Frame) error {
+	md := Messages().SignalNameFormatting
+	switch {
+	case f.ID != md.ID:
+		return fmt.Errorf(
+			"unmarshal SignalNameFormatting: expects ID 700 (got %s with ID %d)", f.String(), f.ID,
+		)
+	case f.Length != md.Length:
+		return fmt.Errorf(
+			"unmarshal SignalNameFormatting: expects length 8 (got %s with length %d)", f.String(), f.Length,
+		)
+	case f.IsRemote:
+		return fmt.Errorf(
+			"unmarshal SignalNameFormatting: expects non-remote frame (got remote frame %s)", f.String(),
+		)
+	case f.IsExtended != md.IsExtended:
+		return fmt.Errorf(
+			"unmarshal SignalNameFormatting: expects standard ID (got %s with extended ID)", f.String(),
+		)
+	}
+	m.xxx_non_capitalized_signal = int8(md.non_capitalized_signal.UnmarshalSigned(f.Data))
+	return nil
+}
+
 type DBG interface {
 	sync.Locker
 	Tx() DBG_Tx
@@ -1267,6 +1359,7 @@ type DBG_Rx interface {
 	SensorSonars() DBG_Rx_SensorSonars
 	IODebug() DBG_Rx_IODebug
 	IOFloat32() DBG_Rx_IOFloat32
+	SignalNameFormatting() DBG_Rx_SignalNameFormatting
 }
 
 type DBG_Tx interface {
@@ -1287,6 +1380,12 @@ type DBG_Rx_IODebug interface {
 
 type DBG_Rx_IOFloat32 interface {
 	IOFloat32Reader
+	ReceiveTime() time.Time
+	SetAfterReceiveHook(h func(context.Context) error)
+}
+
+type DBG_Rx_SignalNameFormatting interface {
+	SignalNameFormattingReader
 	ReceiveTime() time.Time
 	SetAfterReceiveHook(h func(context.Context) error)
 }
@@ -1312,6 +1411,8 @@ func NewDBG(network, address string) DBG {
 	n.rx.xxx_IODebug.Reset()
 	n.rx.xxx_IOFloat32.init()
 	n.rx.xxx_IOFloat32.Reset()
+	n.rx.xxx_SignalNameFormatting.init()
+	n.rx.xxx_SignalNameFormatting.Reset()
 	return n
 }
 
@@ -1328,10 +1429,11 @@ func (n *xxx_DBG) Tx() DBG_Tx {
 }
 
 type xxx_DBG_Rx struct {
-	parentMutex      *sync.Mutex
-	xxx_SensorSonars xxx_DBG_Rx_SensorSonars
-	xxx_IODebug      xxx_DBG_Rx_IODebug
-	xxx_IOFloat32    xxx_DBG_Rx_IOFloat32
+	parentMutex              *sync.Mutex
+	xxx_SensorSonars         xxx_DBG_Rx_SensorSonars
+	xxx_IODebug              xxx_DBG_Rx_IODebug
+	xxx_IOFloat32            xxx_DBG_Rx_IOFloat32
+	xxx_SignalNameFormatting xxx_DBG_Rx_SignalNameFormatting
 }
 
 var _ DBG_Rx = &xxx_DBG_Rx{}
@@ -1343,6 +1445,7 @@ func (rx *xxx_DBG_Rx) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		&rx.xxx_SensorSonars,
 		&rx.xxx_IODebug,
 		&rx.xxx_IOFloat32,
+		&rx.xxx_SignalNameFormatting,
 	})
 }
 
@@ -1356,6 +1459,10 @@ func (rx *xxx_DBG_Rx) IODebug() DBG_Rx_IODebug {
 
 func (rx *xxx_DBG_Rx) IOFloat32() DBG_Rx_IOFloat32 {
 	return &rx.xxx_IOFloat32
+}
+
+func (rx *xxx_DBG_Rx) SignalNameFormatting() DBG_Rx_SignalNameFormatting {
+	return &rx.xxx_SignalNameFormatting
 }
 
 type xxx_DBG_Tx struct {
@@ -1386,6 +1493,8 @@ func (n *xxx_DBG) ReceivedMessage(id uint32) (canrunner.ReceivedMessage, bool) {
 		return &n.rx.xxx_IODebug, true
 	case 600:
 		return &n.rx.xxx_IOFloat32, true
+	case 700:
+		return &n.rx.xxx_SignalNameFormatting, true
 	default:
 		return nil, false
 	}
@@ -1478,6 +1587,34 @@ func (m *xxx_DBG_Rx_IOFloat32) SetReceiveTime(t time.Time) {
 }
 
 var _ canrunner.ReceivedMessage = &xxx_DBG_Rx_IOFloat32{}
+
+type xxx_DBG_Rx_SignalNameFormatting struct {
+	SignalNameFormatting
+	receiveTime      time.Time
+	afterReceiveHook func(context.Context) error
+}
+
+func (m *xxx_DBG_Rx_SignalNameFormatting) init() {
+	m.afterReceiveHook = func(context.Context) error { return nil }
+}
+
+func (m *xxx_DBG_Rx_SignalNameFormatting) SetAfterReceiveHook(h func(context.Context) error) {
+	m.afterReceiveHook = h
+}
+
+func (m *xxx_DBG_Rx_SignalNameFormatting) AfterReceiveHook() func(context.Context) error {
+	return m.afterReceiveHook
+}
+
+func (m *xxx_DBG_Rx_SignalNameFormatting) ReceiveTime() time.Time {
+	return m.receiveTime
+}
+
+func (m *xxx_DBG_Rx_SignalNameFormatting) SetReceiveTime(t time.Time) {
+	m.receiveTime = t
+}
+
+var _ canrunner.ReceivedMessage = &xxx_DBG_Rx_SignalNameFormatting{}
 
 type DRIVER interface {
 	sync.Locker
@@ -2610,13 +2747,14 @@ func Messages() *MessagesDescriptor {
 
 // MessagesDescriptor contains all example message descriptors.
 type MessagesDescriptor struct {
-	EmptyMessage    *EmptyMessageDescriptor
-	DriverHeartbeat *DriverHeartbeatDescriptor
-	MotorCommand    *MotorCommandDescriptor
-	SensorSonars    *SensorSonarsDescriptor
-	MotorStatus     *MotorStatusDescriptor
-	IODebug         *IODebugDescriptor
-	IOFloat32       *IOFloat32Descriptor
+	EmptyMessage         *EmptyMessageDescriptor
+	DriverHeartbeat      *DriverHeartbeatDescriptor
+	MotorCommand         *MotorCommandDescriptor
+	SensorSonars         *SensorSonarsDescriptor
+	MotorStatus          *MotorStatusDescriptor
+	IODebug              *IODebugDescriptor
+	IOFloat32            *IOFloat32Descriptor
+	SignalNameFormatting *SignalNameFormattingDescriptor
 }
 
 // UnmarshalFrame unmarshals the provided example CAN frame.
@@ -2660,6 +2798,12 @@ func (md *MessagesDescriptor) UnmarshalFrame(f can.Frame) (generated.Message, er
 		return &msg, nil
 	case md.IOFloat32.ID:
 		var msg IOFloat32
+		if err := msg.UnmarshalFrame(f); err != nil {
+			return nil, fmt.Errorf("unmarshal example frame: %w", err)
+		}
+		return &msg, nil
+	case md.SignalNameFormatting.ID:
+		var msg SignalNameFormatting
 		if err := msg.UnmarshalFrame(f); err != nil {
 			return nil, fmt.Errorf("unmarshal example frame: %w", err)
 		}
@@ -2720,6 +2864,11 @@ type IOFloat32Descriptor struct {
 	Float32WithRange    *descriptor.Signal
 }
 
+type SignalNameFormattingDescriptor struct {
+	*descriptor.Message
+	non_capitalized_signal *descriptor.Signal
+}
+
 // Database returns the example database descriptor.
 func (md *MessagesDescriptor) Database() *descriptor.Database {
 	return d
@@ -2777,6 +2926,10 @@ var md = &MessagesDescriptor{
 		Message:             d.Messages[6],
 		Float32ValueNoRange: d.Messages[6].Signals[0],
 		Float32WithRange:    d.Messages[6].Signals[1],
+	},
+	SignalNameFormatting: &SignalNameFormattingDescriptor{
+		Message:                d.Messages[7],
+		non_capitalized_signal: d.Messages[7].Signals[0],
 	},
 }
 
@@ -3428,6 +3581,41 @@ var d = (*descriptor.Database)(&descriptor.Database{
 					Scale:             (float64)(1),
 					Min:               (float64)(-100),
 					Max:               (float64)(100),
+					Unit:              (string)(""),
+					Description:       (string)(""),
+					ValueDescriptions: ([]*descriptor.ValueDescription)(nil),
+					ReceiverNodes: ([]string)([]string{
+						(string)("DBG"),
+					}),
+					DefaultValue: (int)(0),
+				}),
+			}),
+			SenderNode: (string)("IO"),
+			CycleTime:  (time.Duration)(0),
+			DelayTime:  (time.Duration)(0),
+		}),
+		(*descriptor.Message)(&descriptor.Message{
+			Name:        (string)("SignalNameFormatting"),
+			ID:          (uint32)(700),
+			IsExtended:  (bool)(false),
+			Length:      (uint8)(8),
+			SendType:    (descriptor.SendType)(0),
+			Description: (string)(""),
+			Signals: ([]*descriptor.Signal)([]*descriptor.Signal{
+				(*descriptor.Signal)(&descriptor.Signal{
+					Name:              (string)("non_capitalized_signal"),
+					Start:             (uint8)(0),
+					Length:            (uint8)(8),
+					IsBigEndian:       (bool)(false),
+					IsSigned:          (bool)(true),
+					IsFloat:           (bool)(false),
+					IsMultiplexer:     (bool)(false),
+					IsMultiplexed:     (bool)(false),
+					MultiplexerValue:  (uint)(0),
+					Offset:            (float64)(0),
+					Scale:             (float64)(1),
+					Min:               (float64)(0),
+					Max:               (float64)(0),
 					Unit:              (string)(""),
 					Description:       (string)(""),
 					ValueDescriptions: ([]*descriptor.ValueDescription)(nil),

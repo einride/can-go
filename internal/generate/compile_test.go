@@ -323,6 +323,23 @@ func TestCompile_ExampleDBC(t *testing.T) {
 					},
 				},
 			},
+			{
+				ID:         700,
+				Name:       "SignalNameFormatting",
+				Length:     8,
+				SenderNode: "IO",
+				SendType:   descriptor.SendTypeNone,
+				Signals: []*descriptor.Signal{
+					{
+						Name:          "non_capitalized_signal",
+						Length:        8,
+						IsSigned:      true,
+						IsFloat:       false,
+						Scale:         1,
+						ReceiverNodes: []string{"DBG"},
+					},
+				},
+			},
 		},
 	}
 	input, err := os.ReadFile(exampleDBCFile)

@@ -43,6 +43,9 @@ BO_ 600 IOFloat32: 8 IO
  SG_ Float32ValueNoRange : 0|32@1- (1,0) [0|0] "" DBG
  SG_ Float32WithRange : 32|32@1- (1,0) [-100|100] "" DBG
 
+BO_ 700 SignalNameFormatting: 8 IO
+ SG_ non_capitalized_signal : 0|8@1- (1,0) [0|0] "" DBG
+
 EV_ BrakeEngaged: 0 [0|1] "" 0 10 DUMMY_NODE_VECTOR0 Vector__XXX;
 EV_ Torque: 1 [0|30000] "mNm" 500 16 DUMMY_NODE_VECTOR0 Vector__XXX;
 
