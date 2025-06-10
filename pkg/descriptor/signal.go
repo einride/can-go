@@ -9,12 +9,14 @@ import (
 
 // Signal describes a CAN signal.
 type Signal struct {
-	// Description of the signal.
+	// Name of the signal.
 	Name string
+	// LongName of the signal.
+	LongName string
 	// Start bit.
-	Start uint8
+	Start uint16
 	// Length in bits.
-	Length uint8
+	Length uint16
 	// IsBigEndian is true if the signal is big-endian.
 	IsBigEndian bool
 	// IsSigned is true if the signal uses raw signed values.
@@ -45,6 +47,15 @@ type Signal struct {
 	ReceiverNodes []string
 	// DefaultValue of the signal.
 	DefaultValue int
+}
+
+type DecodedSignal struct {
+	// Value is the physical value of a decoded signal
+	Value float64
+	// Description physical description of a decoded signal
+	Description string
+	// Signal is a pointer to the dbc signal
+	Signal *Signal
 }
 
 // ValueDescription returns the value description for the provided value.
@@ -88,36 +99,125 @@ func (s *Signal) FromPhysical(physical float64) float64 {
 // UnmarshalPhysical returns the physical value of the signal in the provided CAN frame.
 func (s *Signal) UnmarshalPhysical(d can.Data) float64 {
 	switch {
-	case s.Length == 1:
-		if d.Bit(s.Start) {
+	case uint8(s.Length) == 1:
+		if d.Bit(uint8(s.Start)) {
 			return 1
 		}
 		return 0
 	case s.IsSigned:
 		var value int64
 		if s.IsBigEndian {
-			value = d.SignedBitsBigEndian(s.Start, s.Length)
+			value = d.SignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
 		} else {
-			value = d.SignedBitsLittleEndian(s.Start, s.Length)
+			value = d.SignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
 		}
 		return s.ToPhysical(float64(value))
 	default:
 		var value uint64
 		if s.IsBigEndian {
-			value = d.UnsignedBitsBigEndian(s.Start, s.Length)
+			value = d.UnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
 		} else {
-			value = d.UnsignedBitsLittleEndian(s.Start, s.Length)
+			value = d.UnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
 		}
 		return s.ToPhysical(float64(value))
+	}
+}
+
+// Decode returns the physical value of the signal in the provided CAN frame.
+func (s *Signal) Decode(d can.Data) float64 {
+	switch {
+	case uint8(s.Length) == 1:
+		if d.Bit(uint8(s.Start)) {
+			return 1
+		}
+		return 0
+	case s.IsSigned:
+		var value int64
+		if s.IsBigEndian {
+			value = d.SignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
+		} else {
+			value = d.SignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
+		}
+		return s.Offset + float64(value)*s.Scale
+	default:
+		var value uint64
+		if s.IsBigEndian {
+			value = d.UnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
+		} else {
+			value = d.UnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
+		}
+		return s.Offset + float64(value)*s.Scale
+	}
+}
+
+// UnmarshalPhysicalPayload returns the physical value of the signal in the provided CAN frame.
+func (s *Signal) UnmarshalPhysicalPayload(p *can.Payload) float64 {
+	switch {
+	case uint8(s.Length) == 1:
+		if p.Bit(s.Start) {
+			return 1
+		}
+		return 0
+	case s.IsSigned:
+		var value int64
+		if s.IsBigEndian {
+			value = p.SignedBitsBigEndian(s.Start, s.Length)
+		} else {
+			value = p.SignedBitsLittleEndian(s.Start, s.Length)
+		}
+		return s.ToPhysical(float64(value))
+	default:
+		var value uint64
+		if s.IsBigEndian {
+			value = p.UnsignedBitsBigEndian(s.Start, s.Length)
+		} else {
+			value = p.UnsignedBitsLittleEndian(s.Start, s.Length)
+		}
+		return s.ToPhysical(float64(value))
+	}
+}
+
+// DecodePayload returns the physical value of the signal in the provided CAN frame.
+func (s *Signal) DecodePayload(p *can.Payload) float64 {
+	switch {
+	case uint8(s.Length) == 1:
+		if p.Bit(s.Start) {
+			return 1
+		}
+		return 0
+	case s.IsSigned:
+		var value int64
+		if s.IsBigEndian {
+			value = p.SignedBitsBigEndian(s.Start, s.Length)
+		} else {
+			value = p.SignedBitsLittleEndian(s.Start, s.Length)
+		}
+		return s.Offset + float64(value)*s.Scale
+	default:
+		var value uint64
+		if s.IsBigEndian {
+			value = p.UnsignedBitsBigEndian(s.Start, s.Length)
+		} else {
+			value = p.UnsignedBitsLittleEndian(s.Start, s.Length)
+		}
+		return s.Offset + float64(value)*s.Scale
 	}
 }
 
 // UnmarshalUnsigned returns the unsigned value of the signal in the provided CAN frame.
 func (s *Signal) UnmarshalUnsigned(d can.Data) uint64 {
 	if s.IsBigEndian {
-		return d.UnsignedBitsBigEndian(s.Start, s.Length)
+		return d.UnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
 	}
-	return d.UnsignedBitsLittleEndian(s.Start, s.Length)
+	return d.UnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
+}
+
+// UnmarshalUnsignedPayload returns the unsigned value of the signal in the provided CAN frame.
+func (s *Signal) UnmarshalUnsignedPayload(p *can.Payload) uint64 {
+	if s.IsBigEndian {
+		return p.UnsignedBitsBigEndian(s.Start, s.Length)
+	}
+	return p.UnsignedBitsLittleEndian(s.Start, s.Length)
 }
 
 // UnmarshalValueDescription returns the value description of the signal in the provided CAN data.
@@ -134,17 +234,39 @@ func (s *Signal) UnmarshalValueDescription(d can.Data) (string, bool) {
 	return s.ValueDescription(intValue)
 }
 
+// UnmarshalValueDescriptionPayload returns the value description of the signal in the provided CAN data.
+func (s *Signal) UnmarshalValueDescriptionPayload(p *can.Payload) (string, bool) {
+	if len(s.ValueDescriptions) == 0 {
+		return "", false
+	}
+	var intValue int64
+	if s.IsSigned {
+		intValue = s.UnmarshalSignedPayload(p)
+	} else {
+		intValue = int64(s.UnmarshalUnsignedPayload(p))
+	}
+	return s.ValueDescription(intValue)
+}
+
 // UnmarshalSigned returns the signed value of the signal in the provided CAN frame.
 func (s *Signal) UnmarshalSigned(d can.Data) int64 {
 	if s.IsBigEndian {
-		return d.SignedBitsBigEndian(s.Start, s.Length)
+		return d.SignedBitsBigEndian(uint8(s.Start), uint8(s.Length))
 	}
-	return d.SignedBitsLittleEndian(s.Start, s.Length)
+	return d.SignedBitsLittleEndian(uint8(s.Start), uint8(s.Length))
+}
+
+// UnmarshalSignedPayload returns the signed value of the signal in the provided CAN frame.
+func (s *Signal) UnmarshalSignedPayload(p *can.Payload) int64 {
+	if s.IsBigEndian {
+		return p.SignedBitsBigEndian(s.Start, s.Length)
+	}
+	return p.SignedBitsLittleEndian(s.Start, s.Length)
 }
 
 // UnmarshalBool returns the bool value of the signal in the provided CAN frame.
 func (s *Signal) UnmarshalBool(d can.Data) bool {
-	return d.Bit(s.Start)
+	return d.Bit(uint8(s.Start))
 }
 
 // UnmarshalFloat returns the float64 value of the signam in the provided CAN frame.
@@ -161,24 +283,24 @@ func (s *Signal) UnmarshalFloat(d can.Data) float64 {
 // MarshalUnsigned sets the unsigned value of the signal in the provided CAN frame.
 func (s *Signal) MarshalUnsigned(d *can.Data, value uint64) {
 	if s.IsBigEndian {
-		d.SetUnsignedBitsBigEndian(s.Start, s.Length, value)
+		d.SetUnsignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	} else {
-		d.SetUnsignedBitsLittleEndian(s.Start, s.Length, value)
+		d.SetUnsignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
 	}
 }
 
 // MarshalSigned sets the signed value of the signal in the provided CAN frame.
 func (s *Signal) MarshalSigned(d *can.Data, value int64) {
 	if s.IsBigEndian {
-		d.SetSignedBitsBigEndian(s.Start, s.Length, value)
+		d.SetSignedBitsBigEndian(uint8(s.Start), uint8(s.Length), value)
 	} else {
-		d.SetSignedBitsLittleEndian(s.Start, s.Length, value)
+		d.SetSignedBitsLittleEndian(uint8(s.Start), uint8(s.Length), value)
 	}
 }
 
 // MarshalBool sets the bool value of the signal in the provided CAN frame.
 func (s *Signal) MarshalBool(d *can.Data, value bool) {
-	d.SetBit(s.Start, value)
+	d.SetBit(uint8(s.Start), value)
 }
 
 // Marshalfloat sets the float64 value of the signal in the provided CAN frame.
@@ -190,17 +312,17 @@ func (s *Signal) MarshalFloat(d *can.Data, value float64) {
 
 // MaxUnsigned returns the maximum unsigned value representable by the signal.
 func (s *Signal) MaxUnsigned() uint64 {
-	return (2 << (s.Length - 1)) - 1
+	return (2 << (uint8(s.Length) - 1)) - 1
 }
 
 // MinSigned returns the minimum signed value representable by the signal.
 func (s *Signal) MinSigned() int64 {
-	return (2 << (s.Length - 1) / 2) * -1
+	return (2 << (uint8(s.Length) - 1) / 2) * -1
 }
 
 // MaxSigned returns the maximum signed value representable by the signal.
 func (s *Signal) MaxSigned() int64 {
-	return (2 << (s.Length - 1) / 2) - 1
+	return (2 << (uint8(s.Length) - 1) / 2) - 1
 }
 
 // MinSigned returns the minimum signed value representable by the signal.
