@@ -38,4 +38,4 @@ We appreciate every contribution and will do our best to publicly
 
 [acknowledgments]: https://einride.tech/security-acknowledgments.txt
 [email]: mailto:oss-security@einride.tech
-[vdp]: https://www.einride.tech/vulnerability-disclosure-policy
+[vdp]: https://www.einride.tech/security/vulnerability-disclosure-policy
