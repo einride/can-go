@@ -1,22 +1,22 @@
 module go.einride.tech/can
 
-go 1.22.12
+go 1.23.0
 
 toolchain go1.24.2
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/golang/mock v1.6.0
 	github.com/mdlayher/netlink v1.7.2
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	go.uber.org/goleak v1.3.0
-	golang.org/x/net v0.35.0
-	golang.org/x/sync v0.11.0
-	golang.org/x/sys v0.30.0
-	golang.org/x/tools v0.30.0
-	gotest.tools/v3 v3.5.1
+	golang.org/x/net v0.42.0
+	golang.org/x/sync v0.16.0
+	golang.org/x/sys v0.34.0
+	golang.org/x/tools v0.35.0
+	gotest.tools/v3 v3.5.2
 )
 
 require (
@@ -28,5 +28,5 @@ require (
 	github.com/mdlayher/socket v0.4.1 // indirect
 	github.com/shurcooL/go v0.0.0-20190704215121-7189cc372560 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
-	golang.org/x/mod v0.23.0 // indirect
+	golang.org/x/mod v0.26.0 // indirect
 )
