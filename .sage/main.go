@@ -82,13 +82,13 @@ func GoGenerate(ctx context.Context) error {
 
 func Mockgen(ctx context.Context) error {
 	sg.Logger(ctx).Println("installing mockgen...")
-	_, err := sgtool.GoInstallWithModfile(ctx, "github.com/golang/mock/mockgen", sg.FromGitRoot("go.mod"))
+	_, err := sgtool.GoInstall(ctx, "github.com/golang/mock/mockgen", "v1.6.0")
 	return err
 }
 
 func Stringer(ctx context.Context) error {
 	sg.Logger(ctx).Println("installing stringer...")
-	_, err := sgtool.GoInstallWithModfile(ctx, "golang.org/x/tools/cmd/stringer", sg.FromGitRoot("go.mod"))
+	_, err := sgtool.GoInstall(ctx, "golang.org/x/tools/cmd/stringer", "v0.30.0")
 	return err
 }
 
