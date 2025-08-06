@@ -1,6 +1,6 @@
 module go.einride.tech/can
 
-go 1.22.12
+go 1.23.0
 
 toolchain go1.24.2
 
@@ -12,9 +12,9 @@ require (
 	github.com/mdlayher/netlink v1.7.2
 	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041
 	go.uber.org/goleak v1.3.0
-	golang.org/x/net v0.35.0
+	golang.org/x/net v0.38.0
 	golang.org/x/sync v0.11.0
-	golang.org/x/sys v0.30.0
+	golang.org/x/sys v0.31.0
 	gotest.tools/v3 v3.5.1
 )
 
