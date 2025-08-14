@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	CanLinkType  = "can"
-	VcanLinkType = "vcan"
+	CanLinkType   = "can"
+	VcanLinkType  = "vcan"
+	VxcanLinkType = "vxcan"
 )
 
 const (
@@ -545,7 +546,7 @@ func (li *linkInfoMsg) decode(nad *netlink.AttributeDecoder) error {
 		switch nad.Type() {
 		case unix.IFLA_INFO_KIND:
 			li.linkType = nad.String()
-			if (li.linkType != CanLinkType) && (li.linkType != VcanLinkType) {
+			if (li.linkType != CanLinkType) && (li.linkType != VcanLinkType) && (li.linkType != VxcanLinkType) {
 				return fmt.Errorf("not a CAN interface")
 			}
 		case unix.IFLA_INFO_DATA:
