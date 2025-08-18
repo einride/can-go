@@ -83,6 +83,8 @@ func (p *Parser) Parse() (err Error) {
 			def = &MessageDef{}
 		case KeywordSignal:
 			def = &SignalDef{}
+		case KeywordSignalMultiplexValue:
+			def = &SignalMultiplexValueDef{}
 		case KeywordEnvironmentVariable:
 			def = &EnvironmentVariableDef{}
 		case KeywordComment:
