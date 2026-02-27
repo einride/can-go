@@ -17,7 +17,7 @@ type Receiver struct {
 	opts  receiverOpts
 	rc    io.ReadCloser
 	sc    *bufio.Scanner
-	frame frame
+	frame Frame
 }
 
 func NewReceiver(rc io.ReadCloser, opt ...ReceiverOption) *Receiver {
@@ -44,26 +44,26 @@ func scanFrames(data []byte, _ bool) (int, []byte, error) {
 
 func (r *Receiver) Receive() bool {
 	ok := r.sc.Scan()
-	r.frame = frame{}
+	r.frame = Frame{}
 	if ok {
-		r.frame.unmarshalBinary(r.sc.Bytes())
+		r.frame.UnmarshalBinary(r.sc.Bytes())
 		if r.opts.frameInterceptor != nil {
-			r.opts.frameInterceptor(r.frame.decodeFrame())
+			r.opts.frameInterceptor(r.frame.DecodeFrame())
 		}
 	}
 	return ok
 }
 
 func (r *Receiver) HasErrorFrame() bool {
-	return r.frame.isError()
+	return r.frame.IsError()
 }
 
 func (r *Receiver) Frame() can.Frame {
-	return r.frame.decodeFrame()
+	return r.frame.DecodeFrame()
 }
 
 func (r *Receiver) ErrorFrame() ErrorFrame {
-	return r.frame.decodeErrorFrame()
+	return r.frame.DecodeErrorFrame()
 }
 
 func (r *Receiver) Err() error {
