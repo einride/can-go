@@ -1,6 +1,7 @@
 package dbc
 
 import (
+	"fmt"
 	"strconv"
 	"text/scanner"
 )
@@ -308,17 +309,22 @@ func (d *SignalDef) parseFrom(p *Parser) {
 		if tok.typ != scanner.Ident {
 			p.failf(tok.pos, "expected ident")
 		}
-		switch {
-		case tok.txt == "M":
-			d.IsMultiplexerSwitch = true
-		case tok.txt[0] == 'm' && len(tok.txt) > 1:
+		rem := tok.txt
+		if len(rem) > 1 && rem[0] == 'm' {
 			d.IsMultiplexed = true
-			i, err := strconv.Atoi(tok.txt[1:])
-			if err != nil || i < 0 {
+			var i uint64
+			n, err := fmt.Sscanf(rem[1:], "%d", &i)
+			if err != nil || n < 0 {
 				p.failf(tok.pos, "invalid multiplexer value")
 			}
 			d.MultiplexerSwitch = uint64(i)
-		default:
+			rem = rem[1+len(strconv.FormatUint(i, 10)):]
+		}
+		if len(rem) > 0 && rem[0] == 'M' {
+			d.IsMultiplexerSwitch = true
+			rem = rem[1:]
+		}
+		if rem != "" {
 			p.failf(tok.pos, "expected multiplexer")
 		}
 	}
@@ -350,6 +356,45 @@ func (d *SignalDef) parseFrom(p *Parser) {
 
 // Position returns the position of the definition.
 func (d *SignalDef) Position() scanner.Position {
+	return d.Pos
+}
+
+// SignalMultiplexValueDef defines a signal multiplex value within a message.
+type SignalMultiplexValueDef struct {
+	// Pos is the position of the definition.
+	Pos scanner.Position
+
+	// MessageID contains the message CAN ID associated with the signal multiplex value.
+	MessageID MessageID
+
+	// Signal in the message that is multiplexed.
+	Signal Identifier
+
+	// MultiplexerSwitch in the message.
+	MultiplexerSwitch Identifier
+
+	// RangeStart of the values of the MultiplexerSwitch that will trigger Signal.
+	RangeStart uint64
+
+	// RangeEnd of the values of the MultiplexerSwitch that will trigger Signal.
+	RangeEnd uint64
+}
+
+var _ Def = &SignalMultiplexValueDef{}
+
+func (d *SignalMultiplexValueDef) parseFrom(p *Parser) {
+	d.Pos = p.keyword(KeywordSignalMultiplexValue).pos
+	d.MessageID = p.messageID()
+	d.Signal = p.identifier()
+	d.MultiplexerSwitch = p.identifier()
+	d.RangeStart = p.uint()
+	p.token('-')
+	d.RangeEnd = p.uint()
+	p.token(';')
+}
+
+// Position returns the position of the definition.
+func (d *SignalMultiplexValueDef) Position() scanner.Position {
 	return d.Pos
 }
 
