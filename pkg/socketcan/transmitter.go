@@ -43,10 +43,10 @@ func (t *Transmitter) TransmitMessage(ctx context.Context, m can.Message) error 
 
 // TransmitFrame transmits a CAN frame.
 func (t *Transmitter) TransmitFrame(ctx context.Context, f can.Frame) error {
-	var scf frame
-	scf.encodeFrame(f)
+	var scf Frame
+	scf.EncodeFrame(f)
 	data := make([]byte, lengthOfFrame)
-	scf.marshalBinary(data)
+	scf.MarshalBinary(data)
 	if deadline, ok := ctx.Deadline(); ok {
 		if err := t.conn.SetWriteDeadline(deadline); err != nil {
 			return fmt.Errorf("transmit frame: %w", err)

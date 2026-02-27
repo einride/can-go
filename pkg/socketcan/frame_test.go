@@ -14,10 +14,10 @@ func TestFrame_MarshalUnmarshalBinary_Property_Idempotent(t *testing.T) {
 		return data
 	}
 	g := func(data [lengthOfFrame]byte) [lengthOfFrame]byte {
-		var f frame
-		f.unmarshalBinary(data[:])
+		var f Frame
+		f.UnmarshalBinary(data[:])
 		var newData [lengthOfFrame]byte
-		f.marshalBinary(newData[:])
+		f.MarshalBinary(newData[:])
 		return newData
 	}
 	assert.NilError(t, quick.CheckEqual(f, g, nil))
@@ -27,7 +27,7 @@ func TestFrame_EncodeDecode(t *testing.T) {
 	for _, tt := range []struct {
 		msg            string
 		frame          can.Frame
-		socketCANFrame frame
+		socketCANFrame Frame
 	}{
 		{
 			msg: "data",
@@ -36,7 +36,7 @@ func TestFrame_EncodeDecode(t *testing.T) {
 				Length: 8,
 				Data:   can.Data{1, 2, 3, 4, 5, 6, 7, 8},
 			},
-			socketCANFrame: frame{
+			socketCANFrame: Frame{
 				idAndFlags:     0x00000001,
 				dataLengthCode: 8,
 				data:           [8]byte{1, 2, 3, 4, 5, 6, 7, 8},
@@ -48,7 +48,7 @@ func TestFrame_EncodeDecode(t *testing.T) {
 				ID:         0x00000001,
 				IsExtended: true,
 			},
-			socketCANFrame: frame{
+			socketCANFrame: Frame{
 				idAndFlags: 0x80000001,
 			},
 		},
@@ -58,7 +58,7 @@ func TestFrame_EncodeDecode(t *testing.T) {
 				ID:       0x00000001,
 				IsRemote: true,
 			},
-			socketCANFrame: frame{
+			socketCANFrame: Frame{
 				idAndFlags: 0x40000001,
 			},
 		},
@@ -69,38 +69,38 @@ func TestFrame_EncodeDecode(t *testing.T) {
 				IsExtended: true,
 				IsRemote:   true,
 			},
-			socketCANFrame: frame{
+			socketCANFrame: Frame{
 				idAndFlags: 0xc0000001,
 			},
 		},
 	} {
 		t.Run(tt.msg, func(t *testing.T) {
 			t.Run("encode", func(t *testing.T) {
-				var actual frame
-				actual.encodeFrame(tt.frame)
+				var actual Frame
+				actual.EncodeFrame(tt.frame)
 				assert.Equal(t, tt.socketCANFrame, actual)
 			})
 			t.Run("decode", func(t *testing.T) {
-				assert.Equal(t, tt.frame, tt.socketCANFrame.decodeFrame())
+				assert.Equal(t, tt.frame, tt.socketCANFrame.DecodeFrame())
 			})
 		})
 	}
 }
 
 func TestFrame_IsError(t *testing.T) {
-	assert.Assert(t, (&frame{idAndFlags: 0x20000001}).isError())
-	assert.Assert(t, !(&frame{idAndFlags: 0x00000001}).isError())
+	assert.Assert(t, (&Frame{idAndFlags: 0x20000001}).IsError())
+	assert.Assert(t, !(&Frame{idAndFlags: 0x00000001}).IsError())
 }
 
 func TestFrame_DecodeErrorFrame(t *testing.T) {
 	for _, tt := range []struct {
 		msg      string
-		f        frame
+		f        Frame
 		expected ErrorFrame
 	}{
 		{
 			msg: "lost arbitration",
-			f: frame{
+			f: Frame{
 				idAndFlags:     0x20000002,
 				dataLengthCode: 8,
 				data: [8]byte{
@@ -114,7 +114,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 		},
 		{
 			msg: "controller",
-			f: frame{
+			f: Frame{
 				idAndFlags:     0x20000004,
 				dataLengthCode: 8,
 				data: [8]byte{
@@ -129,7 +129,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 		},
 		{
 			msg: "protocol violation",
-			f: frame{
+			f: Frame{
 				idAndFlags:     0x20000008,
 				dataLengthCode: 8,
 				data: [8]byte{
@@ -147,7 +147,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 		},
 		{
 			msg: "transceiver",
-			f: frame{
+			f: Frame{
 				idAndFlags:     0x20000010,
 				dataLengthCode: 8,
 				data: [8]byte{
@@ -165,7 +165,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 		},
 		{
 			msg: "controller-specific information",
-			f: frame{
+			f: Frame{
 				idAndFlags:     0x20000001,
 				dataLengthCode: 8,
 				data: [8]byte{
@@ -186,7 +186,7 @@ func TestFrame_DecodeErrorFrame(t *testing.T) {
 		},
 	} {
 		t.Run(tt.msg, func(t *testing.T) {
-			assert.Equal(t, tt.expected, tt.f.decodeErrorFrame())
+			assert.Equal(t, tt.expected, tt.f.DecodeErrorFrame())
 		})
 	}
 }

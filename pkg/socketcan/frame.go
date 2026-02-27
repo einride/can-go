@@ -60,7 +60,7 @@ const (
 // The interceptor is called if and only if the frame transmission/receival is a success.
 type FrameInterceptor func(fr can.Frame)
 
-// frame represents a SocketCAN frame.
+// Frame represents a SocketCAN frame.
 //
 // The format specified in the Linux SocketCAN kernel module:
 //
@@ -72,7 +72,7 @@ type FrameInterceptor func(fr can.Frame)
 //	        __u8    __res1;  /* reserved / padding */
 //	        __u8    data[8] __attribute__((aligned(8)));
 //	};
-type frame struct {
+type Frame struct {
 	// idAndFlags is the combined CAN ID and flags.
 	idAndFlags uint32
 	// dataLengthCode is the frame payload length in bytes.
@@ -83,21 +83,21 @@ type frame struct {
 	data [8]byte
 }
 
-func (f *frame) unmarshalBinary(b []byte) {
+func (f *Frame) UnmarshalBinary(b []byte) {
 	_ = b[lengthOfFrame-1] // bounds check
 	f.idAndFlags = binary.LittleEndian.Uint32(b[indexOfID : indexOfID+lengthOfID])
 	f.dataLengthCode = b[indexOfDataLengthCode]
 	copy(f.data[:], b[indexOfData:lengthOfFrame])
 }
 
-func (f *frame) marshalBinary(b []byte) {
+func (f *Frame) MarshalBinary(b []byte) {
 	_ = b[lengthOfFrame-1] // bounds check
 	binary.LittleEndian.PutUint32(b[indexOfID:indexOfID+lengthOfID], f.idAndFlags)
 	b[indexOfDataLengthCode] = f.dataLengthCode
 	copy(b[indexOfData:], f.data[:])
 }
 
-func (f *frame) decodeFrame() can.Frame {
+func (f *Frame) DecodeFrame() can.Frame {
 	return can.Frame{
 		ID:         f.id(),
 		Length:     f.dataLengthCode,
@@ -107,7 +107,7 @@ func (f *frame) decodeFrame() can.Frame {
 	}
 }
 
-func (f *frame) encodeFrame(cf can.Frame) {
+func (f *Frame) EncodeFrame(cf can.Frame) {
 	f.idAndFlags = cf.ID
 	if cf.IsRemote {
 		f.idAndFlags |= idFlagRemote
@@ -119,26 +119,26 @@ func (f *frame) encodeFrame(cf can.Frame) {
 	f.data = cf.Data
 }
 
-func (f *frame) isExtended() bool {
+func (f *Frame) isExtended() bool {
 	return f.idAndFlags&idFlagExtended > 0
 }
 
-func (f *frame) isRemote() bool {
+func (f *Frame) isRemote() bool {
 	return f.idAndFlags&idFlagRemote > 0
 }
 
-func (f *frame) isError() bool {
+func (f *Frame) IsError() bool {
 	return f.idAndFlags&idFlagError > 0
 }
 
-func (f *frame) id() uint32 {
+func (f *Frame) id() uint32 {
 	if f.isExtended() {
 		return f.idAndFlags & idMaskExtended
 	}
 	return f.idAndFlags & idMaskStandard
 }
 
-func (f *frame) decodeErrorFrame() ErrorFrame {
+func (f *Frame) DecodeErrorFrame() ErrorFrame {
 	return ErrorFrame{
 		ErrorClass:                     f.errorClass(),
 		LostArbitrationBit:             f.lostArbitrationBit(),
@@ -150,31 +150,31 @@ func (f *frame) decodeErrorFrame() ErrorFrame {
 	}
 }
 
-func (f *frame) errorClass() ErrorClass {
+func (f *Frame) errorClass() ErrorClass {
 	return ErrorClass(f.idAndFlags &^ idFlagError)
 }
 
-func (f *frame) lostArbitrationBit() uint8 {
+func (f *Frame) lostArbitrationBit() uint8 {
 	return f.data[indexOfLostArbitrationBit]
 }
 
-func (f *frame) controllerError() ControllerError {
+func (f *Frame) controllerError() ControllerError {
 	return ControllerError(f.data[indexOfControllerError])
 }
 
-func (f *frame) protocolError() ProtocolViolationError {
+func (f *Frame) protocolError() ProtocolViolationError {
 	return ProtocolViolationError(f.data[indexOfProtocolError])
 }
 
-func (f *frame) protocolErrorLocation() ProtocolViolationErrorLocation {
+func (f *Frame) protocolErrorLocation() ProtocolViolationErrorLocation {
 	return ProtocolViolationErrorLocation(f.data[indexOfProtocolViolationErrorLocation])
 }
 
-func (f *frame) transceiverError() TransceiverError {
+func (f *Frame) transceiverError() TransceiverError {
 	return TransceiverError(f.data[indexOfTransceiverError])
 }
 
-func (f *frame) controllerSpecificInformation() [LengthOfControllerSpecificInformation]byte {
+func (f *Frame) controllerSpecificInformation() [LengthOfControllerSpecificInformation]byte {
 	var ret [LengthOfControllerSpecificInformation]byte
 	start := indexOfControllerSpecificInformation
 	end := start + LengthOfControllerSpecificInformation
