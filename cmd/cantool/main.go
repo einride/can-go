@@ -44,25 +44,29 @@ func main() {
 
 func generateCommand(app *kingpin.Application) {
 	command := app.Command("generate", "generate CAN messages")
-	inputDir := command.
-		Arg("input-dir", "input directory").
+	fileOrDir := command.
+		Arg("input", "input DBC file, if <input> is a directory all contained DBC files will be generated").
 		Required().
-		ExistingDir()
+		ExistingFileOrDir()
 	outputDir := command.
 		Arg("output-dir", "output directory").
 		Required().
 		String()
 	command.Action(func(_ *kingpin.ParseContext) error {
-		return filepath.Walk(*inputDir, func(p string, i os.FileInfo, err error) error {
+		return filepath.Walk(*fileOrDir, func(p string, i os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
 			if i.IsDir() || filepath.Ext(p) != ".dbc" {
 				return nil
 			}
-			relPath, err := filepath.Rel(*inputDir, p)
+			relPath, err := filepath.Rel(*fileOrDir, p)
 			if err != nil {
 				return err
+			}
+			if relPath == "." {
+				// happens if fileOrDir points directly to the DBC file
+				relPath = filepath.Base(*fileOrDir)
 			}
 			outputFile := relPath + ".go"
 			outputPath := filepath.Join(*outputDir, outputFile)
