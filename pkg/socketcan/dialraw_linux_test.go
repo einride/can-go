@@ -197,6 +197,120 @@ func TestConn_ReadErrorFrame(t *testing.T) {
 	assert.Equal(t, errorFrame.ErrorClass, ErrorClassBusError)
 }
 
+func TestConn_IDFilterInclude(t *testing.T) {
+	requireVCAN0(t)
+	// filter to receive only frames with this CAN ID
+	id := uint32(32)
+	filters := []IDFilter{
+		{ID: id, Mask: unix.CAN_SFF_MASK},
+	}
+	// given a reader and writer
+	reader, err := Dial("can", "vcan0", WithFilterReceivedFramesByID(filters))
+	assert.NilError(t, err)
+	writer, err := Dial("can", "vcan0")
+	assert.NilError(t, err)
+	// when the reader reads
+	var g errgroup.Group
+	var hasReadFrame bool
+	var readFrame can.Frame
+	g.Go(func() error {
+		rec := NewReceiver(reader)
+		if !rec.Receive() {
+			return fmt.Errorf("receive")
+		}
+		readFrame = rec.Frame()
+		hasReadFrame = true
+		return reader.Close()
+	})
+	// and the writer writes a frame
+	writeFrame := can.Frame{ID: id}
+	tr := NewTransmitter(writer)
+	ctx, done := context.WithTimeout(context.Background(), time.Second)
+	defer done()
+	assert.NilError(t, tr.TransmitFrame(ctx, writeFrame))
+	assert.NilError(t, writer.Close())
+	// expecting to receive the frame with id in the filter list
+	assert.NilError(t, g.Wait())
+	assert.Assert(t, hasReadFrame)
+	assert.Equal(t, readFrame.ID, id)
+}
+
+func TestConn_IDFilterIgnore(t *testing.T) {
+	requireVCAN0(t)
+	// filter to receive only frames with this CAN ID
+	includeId := uint32(32)
+	filters := []IDFilter{
+		{ID: includeId, Mask: unix.CAN_SFF_MASK},
+	}
+	// send frame with this CAN ID
+	excludeId := uint32(64)
+	// given a reader and writer
+	reader, err := Dial("can", "vcan0", WithFilterReceivedFramesByID(filters))
+	assert.NilError(t, err)
+	writer, err := Dial("can", "vcan0")
+	assert.NilError(t, err)
+	assert.NilError(t, reader.SetDeadline(time.Now().Add(time.Second)))
+	// when the reader reads
+	var g errgroup.Group
+	var hasReadFrame bool
+	g.Go(func() error {
+		rec := NewReceiver(reader)
+		if !rec.Receive() {
+			return fmt.Errorf("receive")
+		}
+		_ = rec.Frame()
+		hasReadFrame = true
+		return reader.Close()
+	})
+	// and the writer writes a frame
+	writeFrame := can.Frame{ID: excludeId}
+	tr := NewTransmitter(writer)
+	ctx, done := context.WithTimeout(context.Background(), time.Second)
+	defer done()
+	assert.NilError(t, tr.TransmitFrame(ctx, writeFrame))
+	assert.NilError(t, writer.Close())
+	// expecting not to receive the frame with id not in the filter list
+	assert.Error(t, g.Wait(), "receive")
+	assert.Assert(t, !hasReadFrame)
+}
+
+func TestConn_IDFilterExclude(t *testing.T) {
+	requireVCAN0(t)
+	// filter to receive only frames WITHOUT this CAN ID
+	id := uint32(32)
+	filters := []IDFilter{
+		{ID: id, Mask: unix.CAN_SFF_MASK, Exclude: true},
+	}
+	// given a reader and writer
+	reader, err := Dial("can", "vcan0", WithFilterReceivedFramesByID(filters))
+	assert.NilError(t, err)
+	writer, err := Dial("can", "vcan0")
+	assert.NilError(t, err)
+	assert.NilError(t, reader.SetDeadline(time.Now().Add(time.Second)))
+	// when the reader reads
+	var g errgroup.Group
+	var hasReadFrame bool
+	g.Go(func() error {
+		rec := NewReceiver(reader)
+		if !rec.Receive() {
+			return fmt.Errorf("receive")
+		}
+		_ = rec.Frame()
+		hasReadFrame = true
+		return reader.Close()
+	})
+	// and the writer writes a frame
+	writeFrame := can.Frame{ID: id}
+	tr := NewTransmitter(writer)
+	ctx, done := context.WithTimeout(context.Background(), time.Second)
+	defer done()
+	assert.NilError(t, tr.TransmitFrame(ctx, writeFrame))
+	assert.NilError(t, writer.Close())
+	// expecting not to receive the frame with id excluded by the filter list
+	assert.Error(t, g.Wait(), "receive")
+	assert.Assert(t, !hasReadFrame)
+}
+
 func requireVCAN0(t *testing.T) {
 	t.Helper()
 	if _, err := net.InterfaceByName("vcan0"); err != nil {
