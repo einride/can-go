@@ -33,6 +33,112 @@ func main() {
 }
 ```
 
+### Decoding CAN messages
+
+Decoding CAN messages from byte arrays can be done using `can.Payload`  
+
+```go
+func main() {
+	// DBC file
+	var dbcFile = []byte(`
+	VERSION ""
+    NS_ :
+    BS_:
+    BU_: DBG DRIVER IO MOTOR SENSOR
+    
+    BO_ 400 MOTOR_STATUS: 3 MOTOR
+	  SG_ MOTOR_STATUS_wheel_error : 0|1@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ MOTOR_STATUS_speed_kph : 8|16@1+ (0.001,0) [0|0] "kph" DRIVER,IO
+
+	BO_ 200 SENSOR_SONARS: 8 SENSOR
+	  SG_ SENSOR_SONARS_mux M : 0|4@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_err_count : 4|12@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_left m0 : 16|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_middle m0 : 28|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_right m0 : 40|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_rear m0 : 52|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_no_filt_left m1 : 16|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_middle m1 : 28|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_right m1 : 40|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_rear m1 : 52|12@1+ (0.1,0) [0|0] "" DBG
+    `)
+
+	// Create payload from hex string
+	byteStringHex := "004faf"
+	p, _ := can.PayloadFromHex(byteStringHex)
+
+	// Load example dbc file
+	c, _ := generate.Compile("test.dbc", dbcFile)
+	db := *c.Database
+
+	// Decode message frame ID 400
+	message, _ := db.Message(uint32(400))
+	decodedSignals := message.Decode(&p)
+	for _, signal := range decodedSignals {
+		fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+	}
+}
+```
+
+```
+Signal: MOTOR_STATUS_wheel_error, Value: 0.000000, Description: 
+Signal: MOTOR_STATUS_speed_kph, Value: 44.879000, Description: 
+```  
+
+#### Multiplexed Signals  
+
+```go
+func main() {
+	// DBC file
+	var dbcFile = []byte(`
+	VERSION ""
+    NS_ :
+    BS_:
+    BU_: DBG DRIVER IO MOTOR SENSOR
+    
+    BO_ 400 MOTOR_STATUS: 3 MOTOR
+	  SG_ MOTOR_STATUS_wheel_error : 0|1@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ MOTOR_STATUS_speed_kph : 8|16@1+ (0.001,0) [0|0] "kph" DRIVER,IO
+
+	BO_ 200 SENSOR_SONARS: 8 SENSOR
+	  SG_ SENSOR_SONARS_mux M : 0|4@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_err_count : 4|12@1+ (1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_left m0 : 16|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_middle m0 : 28|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_right m0 : 40|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_rear m0 : 52|12@1+ (0.1,0) [0|0] "" DRIVER,IO
+	  SG_ SENSOR_SONARS_no_filt_left m1 : 16|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_middle m1 : 28|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_right m1 : 40|12@1+ (0.1,0) [0|0] "" DBG
+	  SG_ SENSOR_SONARS_no_filt_rear m1 : 52|12@1+ (0.1,0) [0|0] "" DBG
+    `)
+
+	// Create payload from hex string
+	byteStringHex := "01af79f4aa3b459f"
+	p, _ := can.PayloadFromHex(byteStringHex)
+
+	// Load example dbc file
+	c, _ := generate.Compile("test.dbc", dbcFile)
+	db := *c.Database
+
+	// Decode message frame ID 200
+	message, _ := db.Message(uint32(200))
+	decodedSignals := message.Decode(&p)
+	for _, signal := range decodedSignals {
+		fmt.Printf("Signal: %s, Value: %f, Description: %s\n", signal.Signal.Name, signal.Value, signal.Description)
+	}
+}
+```  
+
+```
+Signal: SENSOR_SONARS_mux, Value: 1.000000, Description: 
+Signal: SENSOR_SONARS_err_count, Value: 2800.000000, Description: 
+Signal: SENSOR_SONARS_no_filt_left, Value: 114.500000, Description: 
+Signal: SENSOR_SONARS_no_filt_middle, Value: 273.500000, Description: 
+Signal: SENSOR_SONARS_no_filt_right, Value: 133.900000, Description: 
+Signal: SENSOR_SONARS_no_filt_rear, Value: 254.800000, Description: 
+```
+
 ### Receiving CAN frames
 
 Receiving CAN frames from a socketcan interface.

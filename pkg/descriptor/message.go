@@ -1,6 +1,10 @@
 package descriptor
 
-import "time"
+import (
+	"time"
+
+	"go.einride.tech/can"
+)
 
 // Message describes a CAN message.
 type Message struct {
@@ -10,10 +14,10 @@ type Message struct {
 	ID uint32
 	// IsExtended is true if the message is an extended CAN message.
 	IsExtended bool
-	// Length in bytes.
-	Length uint8
 	// SendType is the message's send type.
 	SendType SendType
+	// Length in bytes.
+	Length uint16
 	// Description of the message.
 	Description string
 	// Signals in the message payload.
@@ -34,4 +38,52 @@ func (m *Message) MultiplexerSignal() (*Signal, bool) {
 		}
 	}
 	return nil, false
+}
+
+// Decode decodes a can Payload into a decoded signal array.
+func (m *Message) Decode(p *can.Payload) []DecodedSignal {
+	var data can.Data
+	if m.Length <= 8 {
+		copy(data[:], p.Data)
+	}
+
+	// Check for multiplexing
+	var multiplexerValue uint
+	multiplexerSignal, isMultiplexed := m.MultiplexerSignal()
+	if isMultiplexed {
+		if m.Length > 8 {
+			multiplexerValue = uint(multiplexerSignal.DecodePayload(p))
+		} else {
+			multiplexerValue = uint(multiplexerSignal.Decode(data))
+		}
+	}
+
+	var signals []DecodedSignal
+	for _, signal := range m.Signals {
+		var valueDesc string
+		var value float64
+
+		if signal.IsMultiplexed {
+			if signal.MultiplexerValue != multiplexerValue {
+				continue
+			}
+		}
+
+		if m.Length > 8 {
+			valueDesc, _ = signal.UnmarshalValueDescriptionPayload(p)
+			value = signal.DecodePayload(p)
+		} else {
+			valueDesc, _ = signal.UnmarshalValueDescription(data)
+			value = signal.Decode(data)
+		}
+
+		s := DecodedSignal{
+			Value:       value,
+			Description: valueDesc,
+			Signal:      signal,
+		}
+
+		signals = append(signals, s)
+	}
+	return signals
 }
