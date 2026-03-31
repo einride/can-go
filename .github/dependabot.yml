@@ -8,12 +8,9 @@ updates:
       day: "monday"
       time: "05:06"
       timezone: "Europe/Stockholm"
-
     cooldown:
       default-days: 7
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
+
   - package-ecosystem: gomod
     directory: /
     schedule:
@@ -28,12 +25,12 @@ updates:
         update-types:
           - "minor"
           - "patch"
-
     cooldown:
       default-days: 7
       semver-major-days: 30
       semver-minor-days: 7
       semver-patch-days: 3
+
   - package-ecosystem: gomod
     directory: .sage
     schedule:
