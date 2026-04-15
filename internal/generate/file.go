@@ -140,15 +140,30 @@ func SignalCustomType(f *File, m *descriptor.Message, s *descriptor.Signal) {
 	f.P()
 	f.P("// Value descriptions for the ", s.Name, " signal of the ", m.Name, " message.")
 	f.P("const (")
+	used := map[string]struct{}{}
 	for _, vd := range s.ValueDescriptions {
-		desc := slugifyString(vd.Description)
+		name := slugifyString(vd.Description)
+		if _, exists := used[name]; exists {
+			name = fmt.Sprintf("%s_%d", name, vd.Value)
+			if _, exists := used[name]; exists {
+				for i := 2; ; i++ {
+					cand := fmt.Sprintf("%s_%d_%d", name, vd.Value, i)
+					if _, exists := used[cand]; !exists {
+						name = cand
+						break
+					}
+				}
+			}
+		}
+		used[name] = struct{}{}
+
 		switch {
 		case s.Length == 1 && vd.Value == 1:
-			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = true")
+			f.P(signalType(m, s), "_", name, " ", signalType(m, s), " = true")
 		case s.Length == 1 && vd.Value == 0:
-			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = false")
+			f.P(signalType(m, s), "_", name, " ", signalType(m, s), " = false")
 		default:
-			f.P(signalType(m, s), "_", desc, " ", signalType(m, s), " = ", vd.Value)
+			f.P(signalType(m, s), "_", name, " ", signalType(m, s), " = ", vd.Value)
 		}
 	}
 	f.P(")")
