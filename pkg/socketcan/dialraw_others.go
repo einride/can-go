@@ -19,3 +19,8 @@ func WithReceiveErrorFrames() DialOption {
 	return func(o *dialOpts) {
 	}
 }
+
+func WithFilterReceivedFramesByID(filters []IDFilter) DialOption {
+	return func(o *dialOpts) {
+	}
+}
