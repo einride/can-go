@@ -10,7 +10,7 @@ import (
 	"unicode/utf8"
 )
 
-const defaultScannerMode = scanner.ScanIdents | scanner.ScanFloats
+const defaultScannerMode = scanner.ScanIdents | scanner.ScanFloats | scanner.ScanComments | scanner.SkipComments
 
 const (
 	defaultWhitespace  = scanner.GoWhitespace
