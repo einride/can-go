@@ -1,7 +1,5 @@
 module go.einride.tech/can/.sage
 
-go 1.22.12
+go 1.25.7
 
-toolchain go1.24.2
-
-require go.einride.tech/sage v0.371.0
+require go.einride.tech/sage v0.410.1
