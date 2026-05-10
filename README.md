@@ -75,7 +75,7 @@ func main() {
 It is possible to generate Go code from a `.dbc` file.
 
 ```
-$ go run go.einride.tech/can/cmd/cantool generate <dbc file root folder> <output folder>
+$ go run go.einride.tech/can/cmd/cantool generate <dbc file root folder> <output folder> [<allowed-message-ids>...]
 ```
 
 In order to generate Go code that makes sense, we currently perform some
